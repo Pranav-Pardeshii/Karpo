@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-canvas: #0A0C10;
+    --bg-surface: #101319;
+    --bg-panel: #161A22;
+    --text-chalk: #F5F4EF;
+    --text-dim: #8694B0;
+    --signal-red: #FF2A2A;
+    --border-grid: #262C3A;
+    --border-light: #31384A;
+  }
+
+  * {
+    border-radius: 0 !important;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #0A0C10;
+    color: #F5F4EF;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Universal input, select & textarea brutalist dark overrides */
+  input, select, textarea {
+    background-color: #0E1117 !important;
+    color: #F5F4EF !important;
+    border-color: #262C3A !important;
+    border-radius: 0 !important;
+    font-family: "JetBrains Mono", monospace !important;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #FF2A2A !important;
+    background-color: #141822 !important;
+    outline: none !important;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #55607C !important;
+  }
+
+  /* Chrome autofill dark reset */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #F5F4EF !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0E1117 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Sharp Industrial Scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0C10;
+    border-left: 1px solid #1D222E;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #262C3A;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF2A2A;
+  }
+
+  /* Accessibility focus ring */
+  *:focus-visible {
+    outline: 2px solid #FF2A2A;
+    outline-offset: 1px;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Mechanical crosshair reticle marker */
+  .reticle-corner {
+    position: relative;
+  }
+  .reticle-corner::before,
+  .reticle-corner::after {
+    content: "+";
+    position: absolute;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    line-height: 1;
+    color: #414A60;
+    pointer-events: none;
+    user-select: none;
+  }
+  .reticle-corner::before {
+    top: -5px;
+    left: -5px;
+  }
+  .reticle-corner::after {
+    bottom: -5px;
+    right: -5px;
+  }
+
+  /* Industrial technical grid backdrop */
+  .grid-pattern-dark {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(49, 56, 74, 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(49, 56, 74, 0.25) 1px, transparent 1px);
+  }
+
+  .grid-pattern-subtle {
+    background-size: 16px 16px;
+    background-image: 
+      linear-gradient(to right, rgba(38, 44, 58, 0.35) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(38, 44, 58, 0.35) 1px, transparent 1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
