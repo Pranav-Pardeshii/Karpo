@@ -1,0 +1,79 @@
+"""
+FastAPI Dependency Injection Providers.
+Provides service singletons, AnyIO concurrency limiters, and readiness checks.
+"""
+
+import anyio
+from fastapi import HTTPException, Request, status
+
+from crop_advisory.ml.crop_recommender import CropRecommender
+from crop_advisory.ml.yield_predictor import YieldPredictor
+from crop_advisory.services.cultivation_cost_service import CultivationCostService
+from crop_advisory.services.financial_analysis_service import (
+    FinancialAnalysisService,
+    get_financial_service,
+)
+from crop_advisory.services.market_service import MarketPriceService
+
+# Service singletons
+_recommender_singleton: CropRecommender = None
+_yield_predictor_singleton: YieldPredictor = None
+_price_service_singleton: MarketPriceService = None
+_cost_service_singleton: CultivationCostService = None
+
+
+def get_crop_recommender() -> CropRecommender:
+    """Dependency provider for CropRecommender instance."""
+    global _recommender_singleton
+    if _recommender_singleton is None:
+        _recommender_singleton = CropRecommender()
+    return _recommender_singleton
+
+
+def get_yield_predictor() -> YieldPredictor:
+    """Dependency provider for YieldPredictor instance."""
+    global _yield_predictor_singleton
+    if _yield_predictor_singleton is None:
+        _yield_predictor_singleton = YieldPredictor()
+    return _yield_predictor_singleton
+
+
+def get_price_service() -> MarketPriceService:
+    """Dependency provider for MarketPriceService instance."""
+    global _price_service_singleton
+    if _price_service_singleton is None:
+        _price_service_singleton = MarketPriceService()
+    return _price_service_singleton
+
+
+def get_cost_service() -> CultivationCostService:
+    """Dependency provider for CultivationCostService instance."""
+    global _cost_service_singleton
+    if _cost_service_singleton is None:
+        _cost_service_singleton = CultivationCostService()
+    return _cost_service_singleton
+
+
+def get_financial_service_dep() -> FinancialAnalysisService:
+    """Dependency provider for FinancialAnalysisService orchestrator."""
+    return get_financial_service()
+
+
+def get_inference_limiter(request: Request) -> anyio.CapacityLimiter:
+    """Dependency provider for application AnyIO concurrency limiter."""
+    limiter = getattr(request.app.state, "inference_limiter", None)
+    if limiter is None:
+        # Fallback if accessed outside standard lifespan
+        limiter = anyio.CapacityLimiter(10)
+        request.app.state.inference_limiter = limiter
+    return limiter
+
+
+def require_readiness(request: Request) -> None:
+    """Dependency enforcing that backend models and datasets are loaded and ready."""
+    is_ready = getattr(request.app.state, "is_ready", False)
+    if not is_ready:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Application models or datasets are not fully initialized.",
+        )
