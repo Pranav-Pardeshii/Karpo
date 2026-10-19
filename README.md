@@ -1,9 +1,12 @@
-# 🌾 Smart Crop Advisory System (ML)
+# 🌾 Karpo — Smart Crop Advisory System (ML)
 ### Machine Learning-Powered Crop Recommendation, Yield Forecasting & Farm Financial Optimization
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Packaging](https://img.shields.io/badge/Packaging-uv%20%7C%20pyproject.toml-DE5FE9?style=for-the-badge&logo=astral&logoColor=white)](https://astral.sh/uv)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](frontend/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](frontend/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](frontend/)
 [![Machine Learning](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Gradient Boosting](https://img.shields.io/badge/XGBoost-1199EE?style=for-the-badge&logo=XGBoost&logoColor=white)](https://xgboost.readthedocs.io/)
 [![Framework](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
@@ -16,7 +19,7 @@
 
 Agriculture remains the backbone of the rural economy, yet farmers frequently face compounding vulnerabilities: choosing crops ill-suited to their soil chemistry and microclimate, misjudging yields due to weather variability, and enduring financial distress from volatile mandi prices and escalating input costs.
 
-The **Smart Crop Advisory System** is an end-to-end agricultural decision support platform. It integrates:
+**Karpo** is an end-to-end agricultural decision support and intelligence platform named after the Greek goddess of fruits and harvest. It integrates:
 1. **Soil & Climatic Crop Recommendation** via multi-class ensemble classification.
 2. **Precision Yield Prediction** via gradient boosted regression trained on 198,000+ national harvest records.
 3. **Real-Time Mandi Market Intelligence** using benchmark modal and minimum support prices (Agmarknet).
@@ -254,10 +257,17 @@ smart-crop-advisory-ml/
 
 ## 🚀 Quickstart Guide
 
-### Supported Python Version
-- **Python 3.10, 3.11, or 3.12** (pinned to Python 3.12 in `.python-version`).
+### Prerequisites
+- **Python 3.10, 3.11, or 3.12** (pinned to Python 3.12 in `.python-version`)
+- **Node.js 18+** (for React frontend)
 
-### 1. Install `uv`
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Pranav-Pardeshii/Karpo.git
+cd Karpo
+```
+
+### 2. Install `uv`
 `uv` is an ultra-fast Python package and project manager. Install it via:
 ```bash
 # Windows (PowerShell)
@@ -270,7 +280,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 pip install uv
 ```
 
-### 2. Set Up Virtual Environment & Dependencies
+
+### 3. Set Up Virtual Environment & Dependencies
 Synchronize dependencies and create the `.venv` virtual environment in seconds:
 ```bash
 # Sync all direct runtime, API, and development dependencies
@@ -282,7 +293,7 @@ Alternatively, use the `Makefile`:
 make install
 ```
 
-### 3. Launch the FastAPI Asynchronous REST API
+### 4. Launch the FastAPI Asynchronous REST API
 Start the high-performance ASGI server with auto-reload:
 
 ```bash
@@ -300,8 +311,19 @@ uv run uvicorn crop_advisory.api.main:app --host 0.0.0.0 --port 8000 --workers 2
 - Full API documentation: [docs/api.md](docs/api.md)
 - Operational and deployment guide: [docs/operations.md](docs/operations.md)
 
-### 4. Launch the Streamlit Web Application
-The existing Streamlit dashboard remains fully operational and shares the same domain and ML models:
+### 5. Launch the KARPO // FIELD//SIGNAL Brutalist Web Interface
+The experimental industrial brutalist React application connects directly to the FastAPI backend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Open [http://localhost:5173](http://localhost:5173) in your browser.*
+For comprehensive frontend architecture, design tokens, and components, see [frontend/README.md](frontend/README.md).
+
+### 6. Launch the Streamlit Web Application
+The Streamlit dashboard remains fully operational and shares the same domain and ML models:
 
 ```bash
 # Primary package entry point
@@ -315,18 +337,7 @@ make run
 ```
 *Open [http://localhost:8501](http://localhost:8501) in your browser.*
 
-### 5. Launch the KARPO // FIELD//SIGNAL Brutalist Web Interface
-The experimental industrial brutalist React application connects directly to the FastAPI backend:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-*Open [http://localhost:5173](http://localhost:5173) in your browser.*
-For comprehensive frontend architecture, design tokens, and components, see [frontend/README.md](frontend/README.md).
-
-### 6. Run the Automated Test Suite
+### 7. Run the Automated Test Suite
 Execute the 66 automated unit, integration, API, and concurrency tests:
 ```bash
 # Run full test suite
@@ -342,7 +353,7 @@ uv run pytest tests/unit
 uv run pytest tests/integration
 ```
 
-### 7. Linting, Formatting & Type Checking
+### 8. Linting, Formatting & Type Checking
 Enforce code quality standards with Ruff and MyPy:
 ```bash
 # Lint checks
@@ -355,7 +366,7 @@ uv run ruff format --check .
 uv run mypy src/crop_advisory/api
 ```
 
-### 8. Container Deployment (Docker)
+### 9. Container Deployment (Docker)
 Build and run the production-grade multi-stage container:
 ```bash
 # Build image
@@ -410,11 +421,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 👨‍💻 Author & Acknowledgements
 
-Developed by **[Ruturaj Vyavahare](https://github.com/RuturajVyavahare)**. Modernized and refactored into clean architecture with `uv`.
+Developed & Maintained by **[Pranav Pardeshi](https://github.com/Pranav-Pardeshii)**.
 
 Special thanks to:
 - **Directorate of Economics and Statistics (DES)** and **CACP**, Government of India, for public agricultural data.
-- **Agmarknet** for transparent Mandi market pricing information.
-- The open-source scientific Python community for Scikit-Learn, XGBoost, Streamlit, and Astral `uv`.
-#   K a r p o  
- 
+- **ICAR** and **Agmarknet** for research benchmarks and transparent Mandi market pricing information.
+- The open-source scientific Python and web community for Scikit-Learn, XGBoost, FastAPI, Streamlit, React, and Astral `uv`.
