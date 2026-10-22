@@ -3,6 +3,7 @@ Smart Crop Advisory System — Streamlit Web Application.
 Machine Learning Based Crop Recommendation, Yield Prediction & Profit Estimation.
 Integrates Random Forest & XGBoost ML pipelines, CACP Cultivation Costs,
 and Mandi Market Prices into a unified agronomic decision engine.
+Supports English, Marathi (मराठी), and Hindi (हिंदी).
 """
 
 import json
@@ -27,6 +28,11 @@ from crop_advisory.domain.crop_mapping import (
 )
 from crop_advisory.ml.crop_recommender import CropRecommender
 from crop_advisory.ml.yield_predictor import YieldPredictor
+from crop_advisory.presentation.translations import (
+    LANGUAGE_OPTIONS,
+    get_translated_crop_name,
+    t,
+)
 from crop_advisory.services.cultivation_cost_service import (
     get_available_states,
     get_cultivation_cost,
@@ -55,18 +61,19 @@ def main():
         
         /* Top title styling */
         .hero-title {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: #1b5e20;
             margin-bottom: 0.2rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            line-height: 1.2;
         }
         .hero-subtitle {
-            font-size: 1.05rem;
+            font-size: 1.0rem;
             color: #475569;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             font-weight: 500;
         }
         
@@ -147,6 +154,42 @@ def main():
     )
 
     # ---------------------------------------------------------
+    # LANGUAGE STATE & TOP APP HEADER WITH LANGUAGE SELECTOR
+    # ---------------------------------------------------------
+    if "app_language" not in st.session_state:
+        st.session_state["app_language"] = "English"
+
+    current_lang = st.session_state["app_language"]
+
+    # Prominent Top Bar: App Header & Language Switcher
+    top_col1, top_col2 = st.columns([3.6, 1.4], vertical_alignment="center")
+    with top_col1:
+        st.markdown(
+            f'<div class="hero-title">{t("hero_title", current_lang)}</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f'<div class="hero-subtitle">{t("hero_subtitle", current_lang)}</div>',
+            unsafe_allow_html=True,
+        )
+    with top_col2:
+        lang_idx = 0
+        if "मराठी" in current_lang:
+            lang_idx = 1
+        elif "हिंदी" in current_lang:
+            lang_idx = 2
+        selected_lang = st.selectbox(
+            f"🌐 {t('language', current_lang)} / Language",
+            options=LANGUAGE_OPTIONS,
+            index=lang_idx,
+            key="top_app_language_selector",
+            help="Select preferred language / भाषा निवडा / भाषा चुनें (English, Marathi, Hindi)",
+        )
+        if selected_lang != st.session_state["app_language"]:
+            st.session_state["app_language"] = selected_lang
+            st.rerun()
+
+    # ---------------------------------------------------------
     # CACHED MODEL & DATA LOADERS
     # ---------------------------------------------------------
     @st.cache_resource(show_spinner=False)
@@ -185,19 +228,21 @@ def main():
     # SIDEBAR: PARAMETERS & INPUT CONFIGURATION
     # ---------------------------------------------------------
     st.sidebar.image("https://img.icons8.com/color/96/000000/wheat.png", width=64)
-    st.sidebar.markdown("### 🌾 Farm & Environment Setup")
+    st.sidebar.markdown(f"### {t('sidebar_farm_setup', current_lang)}")
 
-    # Preset Selector
-    preset = st.sidebar.selectbox(
-        "⚡ Select Agro-Climatic Preset:",
-        [
-            "Custom Parameters",
-            "🌾 Gangetic Plains (Alluvial / Rice-Wheat)",
-            "🌿 Deccan Plateau (Black Soil / Cotton-Gram)",
-            "☀️ Semi-Arid Rajasthan (Bajra / Pulses)",
-            "🌴 Coastal Humid (Paddy / Plantation)",
-        ],
+    # Preset Selector with Multilingual Labels
+    preset_map = {
+        t("preset_custom", current_lang): "custom",
+        t("preset_gangetic", current_lang): "gangetic",
+        t("preset_deccan", current_lang): "deccan",
+        t("preset_semiarid", current_lang): "semiarid",
+        t("preset_coastal", current_lang): "coastal",
+    }
+    preset_chosen = st.sidebar.selectbox(
+        t("preset_label", current_lang),
+        list(preset_map.keys()),
     )
+    preset_key = preset_map.get(preset_chosen, "custom")
 
     # Preset Values Configuration
     defaults = {
@@ -215,7 +260,7 @@ def main():
         "unit": "acre",
     }
 
-    if "Gangetic Plains" in preset:
+    if preset_key == "gangetic":
         defaults.update(
             {
                 "n": 95.0,
@@ -230,7 +275,7 @@ def main():
                 "season": "Kharif",
             }
         )
-    elif "Deccan Plateau" in preset:
+    elif preset_key == "deccan":
         defaults.update(
             {
                 "n": 115.0,
@@ -245,7 +290,7 @@ def main():
                 "season": "Kharif",
             }
         )
-    elif "Semi-Arid" in preset:
+    elif preset_key == "semiarid":
         defaults.update(
             {
                 "n": 40.0,
@@ -260,7 +305,7 @@ def main():
                 "season": "Kharif",
             }
         )
-    elif "Coastal Humid" in preset:
+    elif preset_key == "coastal":
         defaults.update(
             {
                 "n": 80.0,
@@ -277,15 +322,19 @@ def main():
         )
 
     # Collapsible Sidebar Sections
-    with st.sidebar.expander("🧪 Soil Nutrients (NPK & pH)", expanded=True):
+    with st.sidebar.expander(t("sec_soil", current_lang), expanded=True):
         col_n, col_p = st.columns(2)
         with col_n:
             input_n = st.number_input(
-                "Nitrogen (N) kg/ha", min_value=0.0, max_value=250.0, value=defaults["n"], step=1.0
+                t("nitrogen", current_lang),
+                min_value=0.0,
+                max_value=250.0,
+                value=defaults["n"],
+                step=1.0,
             )
         with col_p:
             input_p = st.number_input(
-                "Phosphorus (P) kg/ha",
+                t("phosphorus", current_lang),
                 min_value=0.0,
                 max_value=200.0,
                 value=defaults["p"],
@@ -295,31 +344,47 @@ def main():
         col_k, col_ph = st.columns(2)
         with col_k:
             input_k = st.number_input(
-                "Potassium (K) kg/ha", min_value=0.0, max_value=250.0, value=defaults["k"], step=1.0
+                t("potassium", current_lang),
+                min_value=0.0,
+                max_value=250.0,
+                value=defaults["k"],
+                step=1.0,
             )
         with col_ph:
             input_ph = st.number_input(
-                "Soil pH", min_value=3.5, max_value=10.0, value=defaults["ph"], step=0.1
+                t("ph", current_lang), min_value=3.5, max_value=10.0, value=defaults["ph"], step=0.1
             )
 
-    with st.sidebar.expander("🌦️ Climate & Weather Parameters", expanded=True):
+    with st.sidebar.expander(t("sec_climate", current_lang), expanded=True):
         input_temp = st.slider(
-            "Temperature (°C)", min_value=8.0, max_value=48.0, value=defaults["temp"], step=0.5
+            t("temperature", current_lang),
+            min_value=8.0,
+            max_value=48.0,
+            value=defaults["temp"],
+            step=0.5,
         )
         input_hum = st.slider(
-            "Humidity (%)", min_value=10.0, max_value=100.0, value=defaults["hum"], step=1.0
+            t("humidity", current_lang),
+            min_value=10.0,
+            max_value=100.0,
+            value=defaults["hum"],
+            step=1.0,
         )
         input_rain = st.slider(
-            "Rainfall (mm)", min_value=10.0, max_value=500.0, value=defaults["rain"], step=5.0
+            t("rainfall", current_lang),
+            min_value=10.0,
+            max_value=500.0,
+            value=defaults["rain"],
+            step=5.0,
         )
 
-    with st.sidebar.expander("📍 Geographic & Agronomic Profile", expanded=True):
+    with st.sidebar.expander(t("sec_geography", current_lang), expanded=True):
         state_index = (
             available_states.index(defaults["state"])
             if defaults["state"] in available_states
             else 0
         )
-        input_state = st.selectbox("State:", available_states, index=state_index)
+        input_state = st.selectbox(t("state", current_lang), available_states, index=state_index)
 
         soil_types = [
             "Vertisols (Black)",
@@ -330,40 +395,35 @@ def main():
             "Entisols",
         ]
         default_soil_idx = 1 if "Inceptisols" in defaults["soil"] else 0
-        input_soil = st.selectbox("Soil Classification:", soil_types, index=default_soil_idx).split(
-            " "
-        )[0]
+        input_soil = st.selectbox(
+            t("soil_class", current_lang), soil_types, index=default_soil_idx
+        ).split(" ")[0]
 
         seasons = ["Kharif (Monsoon)", "Rabi (Winter)", "Whole Year / Zaid (Summer)"]
         default_season_idx = 0 if "Kharif" in defaults["season"] else 1
-        input_season = st.selectbox("Cropping Season:", seasons, index=default_season_idx).split(
-            " "
-        )[0]
+        input_season = st.selectbox(
+            t("season", current_lang), seasons, index=default_season_idx
+        ).split(" ")[0]
 
-    with st.sidebar.expander("📐 Landholding & Farm Area", expanded=True):
+    with st.sidebar.expander(t("sec_land", current_lang), expanded=True):
         col_a1, col_a2 = st.columns([2, 1.2])
         with col_a1:
             farm_area_val = st.number_input(
-                "Farm Size:", min_value=0.1, max_value=500.0, value=defaults["area"], step=0.5
+                t("farm_size", current_lang),
+                min_value=0.1,
+                max_value=500.0,
+                value=defaults["area"],
+                step=0.5,
             )
         with col_a2:
-            farm_area_unit = st.selectbox("Unit:", ["Acre", "Hectare"], index=0).lower()
+            unit_display = [t("unit_acre", current_lang), t("unit_hectare", current_lang)]
+            selected_unit_display = st.selectbox(t("unit", current_lang), unit_display, index=0)
+            farm_area_unit = (
+                "acre" if selected_unit_display == t("unit_acre", current_lang) else "hectare"
+            )
 
     st.sidebar.markdown("---")
-    st.sidebar.caption(
-        "Smart Crop Advisory System | Powered by Deep Learning & Agronomic Economics"
-    )
-
-    # ---------------------------------------------------------
-    # APP HEADER
-    # ---------------------------------------------------------
-    st.markdown(
-        '<div class="hero-title">🌾 Smart Crop Advisory System</div>', unsafe_allow_html=True
-    )
-    st.markdown(
-        '<div class="hero-subtitle">Machine Learning Based Crop Recommendation, Yield Prediction & Profit Estimation</div>',
-        unsafe_allow_html=True,
-    )
+    st.sidebar.caption(t("sidebar_footer", current_lang))
 
     # ---------------------------------------------------------
     # RUN MODEL PREDICTION PIPELINE
@@ -381,6 +441,7 @@ def main():
     )
     recommended_crop = rec_result["primary_crop"]
     crop_meta = get_crop_metadata(recommended_crop)
+    localized_crop_name = get_translated_crop_name(recommended_crop, current_lang)
 
     # 2. Yield Prediction Model
     yield_result = yield_predictor.predict(
@@ -421,7 +482,11 @@ def main():
     # MAIN NAVIGATION TABS
     # ---------------------------------------------------------
     tab_dashboard, tab_technical, tab_price_explorer = st.tabs(
-        ["🌾 Advisory Dashboard", "📊 Model Metrics & Visualizations", "💰 Price & Cost Reference"]
+        [
+            t("tab_advisory", current_lang),
+            t("tab_metrics", current_lang),
+            t("tab_price_explorer", current_lang),
+        ]
     )
 
     # =========================================================================
@@ -435,9 +500,9 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">🌱 Recommended Crop</div>
-                <div class="metric-value" style="font-size: 1.35rem; color: #15803d;">{rec_result["display_name"]}</div>
-                <div class="metric-sub">Confidence: <b>{rec_result["confidence_percent"]:.1f}%</b></div>
+                <div class="metric-title">{t("metric_recommended_crop", current_lang)}</div>
+                <div class="metric-value" style="font-size: 1.25rem; color: #15803d;">{localized_crop_name}</div>
+                <div class="metric-sub">{t("metric_confidence", current_lang)} <b>{rec_result["confidence_percent"]:.1f}%</b></div>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -447,8 +512,8 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">📊 Predicted Yield</div>
-                <div class="metric-value">{financials["yield_quintals_per_acre"]:.1f} <span style="font-size:0.95rem; font-weight:500;">Q/Acre</span></div>
+                <div class="metric-title">{t("metric_predicted_yield", current_lang)}</div>
+                <div class="metric-value">{financials["yield_quintals_per_acre"]:.1f} <span style="font-size:0.95rem; font-weight:500;">Q/{t("unit_acre", current_lang)}</span></div>
                 <div class="metric-sub">{financials["yield_kg_per_ha"]:,.0f} kg/ha ({financials["yield_quintals_per_ha"]:.1f} Q/ha)</div>
             </div>
             """,
@@ -464,9 +529,9 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">💰 Market Price</div>
+                <div class="metric-title">{t("metric_market_price", current_lang)}</div>
                 <div class="metric-value">{format_inr(price_data["modal_rs_per_quintal"])}</div>
-                <div class="metric-sub">Per Quintal (₹{price_data["price_per_kg"]:.1f}/kg){msp_tag}</div>
+                <div class="metric-sub">{t("per_quintal", current_lang)} (₹{price_data["price_per_kg"]:.1f}/kg){msp_tag}</div>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -476,9 +541,9 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">💵 Cultivation Cost</div>
+                <div class="metric-title">{t("metric_cultivation_cost", current_lang)}</div>
                 <div class="metric-value">{format_inr(cost_data["cul_cost_c2_per_acre"])}</div>
-                <div class="metric-sub">Per Acre ({format_inr(cost_data["cul_cost_c2_per_ha"])}/ha)</div>
+                <div class="metric-sub">{t("per_acre", current_lang)} ({format_inr(cost_data["cul_cost_c2_per_ha"])}/ha)</div>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -488,9 +553,9 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">📈 Total Revenue</div>
+                <div class="metric-title">{t("metric_total_revenue", current_lang)}</div>
                 <div class="metric-value">{financials["formatted_revenue_short"]}</div>
-                <div class="metric-sub">Production: {financials["total_production_quintals"]} Quintals</div>
+                <div class="metric-sub">{t("production", current_lang)} {financials["total_production_quintals"]} {t("quintals", current_lang)}</div>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -501,9 +566,9 @@ def main():
             st.markdown(
                 f"""
             <div class="metric-card">
-                <div class="metric-title">🟢 Estimated Profit</div>
+                <div class="metric-title">{t("metric_estimated_profit", current_lang)}</div>
                 <div class="metric-value {profit_class}">{financials["formatted_profit_short"]}</div>
-                <div class="metric-sub">ROI: <b>{financials["roi_percent"]:.1f}%</b> | {format_inr(financials["profit_per_acre"])}/Acre</div>
+                <div class="metric-sub">{t("roi", current_lang)} <b>{financials["roi_percent"]:.1f}%</b> | {format_inr(financials["profit_per_acre"])}/{t("unit_acre", current_lang)}</div>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -515,20 +580,24 @@ def main():
 
         with dash_col1:
             with st.container(border=True):
-                st.markdown("### 🌱 Crop Recommendation Analysis")
+                st.markdown(f"### {t('rec_analysis_title', current_lang)}")
                 st.write(
-                    f"**Primary Agronomic Match:** {rec_result['display_name']} ({rec_result['category']})"
+                    f"**{t('primary_match', current_lang)}** {localized_crop_name} ({rec_result['category']})"
                 )
-                st.info(f"💡 **Description:** {crop_meta.get('description', '')}")
+                st.info(
+                    f"💡 **{t('description_label', current_lang)}** {crop_meta.get('description', '')}"
+                )
 
-                st.markdown("##### 🏆 Top Candidate Crops by Model Confidence:")
+                st.markdown(f"##### {t('top_candidates_title', current_lang)}")
                 recs = rec_result["recommendations"]
                 rec_df = pd.DataFrame(
                     [
                         {
-                            "Candidate Crop": r["display_name"],
-                            "Category": r["category"],
-                            "Confidence Score (%)": r["confidence_score"],
+                            t("candidate_crop", current_lang): get_translated_crop_name(
+                                r.get("primary_crop", r["display_name"]), current_lang
+                            ),
+                            t("category", current_lang): r["category"],
+                            t("confidence_score", current_lang): r["confidence_score"],
                         }
                         for r in recs
                     ]
@@ -536,57 +605,64 @@ def main():
                 st.dataframe(rec_df, hide_index=True, use_container_width=True)
 
                 # Soil nutrient advisory
-                st.markdown("##### 🧪 Agronomic Soil Diagnosis:")
+                st.markdown(f"##### {t('soil_diag_title', current_lang)}")
                 if rec_result["soil_advisory_notes"]:
                     for note in rec_result["soil_advisory_notes"]:
                         st.warning(f"⚠️ {note}")
                 else:
-                    st.success(
-                        "✅ Soil NPK nutrients and pH are within optimal agronomic thresholds for this crop."
-                    )
+                    st.success(t("soil_optimal", current_lang))
 
         with dash_col2:
             with st.container(border=True):
-                st.markdown("### 📊 Financial & Production Breakdown")
+                st.markdown(f"### {t('fin_breakdown_title', current_lang)}")
 
                 fin_table_data = [
                     (
-                        "Farm Operational Size",
+                        t("param_farm_size", current_lang),
                         f"{financials['input_area']} {financials['input_unit'].title()} ({financials['area_hectares']} ha)",
                     ),
                     (
-                        "Total Expected Harvest",
-                        f"{financials['total_production_quintals']:,.1f} Quintals ({financials['total_production_kg']:,.0f} kg)",
+                        t("param_total_harvest", current_lang),
+                        f"{financials['total_production_quintals']:,.1f} {t('quintals', current_lang)} ({financials['total_production_kg']:,.0f} kg)",
                     ),
-                    ("Gross Revenue (Market Sale)", f"{financials['formatted_revenue']}"),
-                    ("Comprehensive Cultivation Cost (C2)", f"{financials['formatted_cost']}"),
-                    ("Estimated Net Profit", f"{financials['formatted_profit']}"),
-                    ("Net Profit Per Acre", f"{financials['formatted_profit_per_acre']}"),
-                    ("Return on Investment (ROI)", f"{financials['roi_percent']:.1f} %"),
+                    (t("param_gross_revenue", current_lang), f"{financials['formatted_revenue']}"),
+                    (t("param_cul_cost", current_lang), f"{financials['formatted_cost']}"),
+                    (t("param_net_profit", current_lang), f"{financials['formatted_profit']}"),
                     (
-                        "Break-Even Harvest Yield",
+                        t("param_profit_per_acre", current_lang),
+                        f"{financials['formatted_profit_per_acre']}",
+                    ),
+                    (t("param_roi", current_lang), f"{financials['roi_percent']:.1f} %"),
+                    (
+                        t("param_breakeven_yield", current_lang),
                         f"{financials['breakeven_yield_kg_per_ha']:,.0f} kg/ha",
                     ),
                     (
-                        "Break-Even Market Price",
-                        f"{format_inr(financials['breakeven_price_per_quintal'])} / Quintal",
+                        t("param_breakeven_price", current_lang),
+                        f"{format_inr(financials['breakeven_price_per_quintal'])} / {t('quintals', current_lang).rstrip('s')}",
                     ),
                 ]
-                fin_df = pd.DataFrame(fin_table_data, columns=["Parameter", "Estimated Value"])
+                fin_df = pd.DataFrame(
+                    fin_table_data,
+                    columns=[
+                        t("col_parameter", current_lang),
+                        t("col_estimated_val", current_lang),
+                    ],
+                )
                 st.dataframe(fin_df, hide_index=True, use_container_width=True)
 
                 # Input Cost Composition
-                st.markdown("##### 💵 C2 Cost Composition per Hectare:")
+                st.markdown(f"##### {t('cost_comp_title', current_lang)}")
                 cost_breakdown = pd.DataFrame(
                     {
-                        "Input Category": [
-                            "Seed & Planting",
-                            "Fertilizers & Nutrients",
-                            "Human Labor",
-                            "Machinery & Fuel",
-                            "Land Rent & Fixed Capital",
+                        t("input_category", current_lang): [
+                            t("cost_seed", current_lang),
+                            t("cost_fertilizer", current_lang),
+                            t("cost_labor", current_lang),
+                            t("cost_machinery", current_lang),
+                            t("cost_rent", current_lang),
                         ],
-                        "Amount (₹/ha)": [
+                        t("amount_rs_ha", current_lang): [
                             cost_data["seed_cost_per_ha"],
                             cost_data["fertilizer_cost_per_ha"],
                             cost_data["labor_cost_per_ha"],
@@ -604,21 +680,19 @@ def main():
                         ],
                     }
                 )
-                st.bar_chart(cost_breakdown.set_index("Input Category"))
+                st.bar_chart(cost_breakdown.set_index(t("input_category", current_lang)))
 
         # SENSITIVITY & SCENARIO ANALYSIS
-        with st.expander("📈 Dynamic Price & Yield Scenario Simulation", expanded=False):
-            st.markdown(
-                "Simulate how market price fluctuations or weather variability impact your bottom line:"
-            )
+        with st.expander(t("scenario_title", current_lang), expanded=False):
+            st.markdown(t("scenario_desc", current_lang))
             sim_col1, sim_col2 = st.columns(2)
             with sim_col1:
                 sim_price_delta = st.slider(
-                    "Market Price Change (%)", min_value=-40, max_value=60, value=0, step=5
+                    t("sim_price_delta", current_lang), min_value=-40, max_value=60, value=0, step=5
                 )
             with sim_col2:
                 sim_yield_delta = st.slider(
-                    "Harvest Yield Change (%)", min_value=-40, max_value=60, value=0, step=5
+                    t("sim_yield_delta", current_lang), min_value=-40, max_value=60, value=0, step=5
                 )
 
             adjusted_price = modal_price * (1.0 + sim_price_delta / 100.0)
@@ -633,16 +707,18 @@ def main():
 
             sim_c1, sim_c2, sim_c3 = st.columns(3)
             sim_c1.metric(
-                "Simulated Revenue",
+                t("sim_revenue", current_lang),
                 sim_financials["formatted_revenue"],
                 f"{sim_price_delta + sim_yield_delta}%",
             )
             sim_c2.metric(
-                "Simulated Net Profit",
+                t("sim_profit", current_lang),
                 sim_financials["formatted_profit"],
                 f"{sim_financials['roi_percent']:.1f}% ROI",
             )
-            sim_c3.metric("Profit Per Acre", sim_financials["formatted_profit_per_acre"])
+            sim_c3.metric(
+                t("sim_profit_acre", current_lang), sim_financials["formatted_profit_per_acre"]
+            )
 
         # Download summary report
         st.markdown("<br>", unsafe_allow_html=True)
@@ -663,7 +739,7 @@ def main():
         }
         report_csv = pd.DataFrame(report_dict).to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Download Advisory Report as CSV",
+            label=t("download_csv", current_lang),
             data=report_csv,
             file_name=f"crop_advisory_{recommended_crop}_{input_state}.csv",
             mime="text/csv",
@@ -671,9 +747,9 @@ def main():
 
         # DISCLAIMER BOX
         st.markdown(
-            """
+            f"""
             <div class="disclaimer-box">
-                <b>⚠️ Official Disclaimer:</b> Profit and revenue values are estimates based on the selected reference price and cultivation-cost data and may vary with actual market and farming conditions.
+                {t("disclaimer", current_lang)}
             </div>
             """,
             unsafe_allow_html=True,
@@ -683,10 +759,8 @@ def main():
     # TAB 2: TECHNICAL & MODEL EVALUATION
     # =========================================================================
     with tab_technical:
-        st.markdown("### 🔬 Machine Learning Model Evaluation & Visualizations")
-        st.markdown(
-            "Both tasks evaluate **Random Forest** and **XGBoost** algorithms with reproducible seeds and automated winning model selection."
-        )
+        st.markdown(t("tech_title", current_lang))
+        st.markdown(t("tech_desc", current_lang))
 
         # Metric summary cards
         if training_metrics:
@@ -696,27 +770,27 @@ def main():
             mcol1, mcol2 = st.columns(2)
             with mcol1:
                 with st.container(border=True):
-                    st.markdown("#### 🌱 1. Crop Recommendation Model")
-                    st.markdown(f"**Winning Model:** `{crm.get('best_model')}`")
-                    st.write(f"- **Test Accuracy:** `{crm.get('accuracy')}%`")
-                    st.write(f"- **Weighted F1-Score:** `{crm.get('f1_score')}`")
+                    st.markdown(t("tech_model_rec", current_lang))
+                    st.markdown(f"**{t('winning_model', current_lang)}** `{crm.get('best_model')}`")
+                    st.write(f"- **{t('test_accuracy', current_lang)}** `{crm.get('accuracy')}%`")
+                    st.write(f"- **{t('weighted_f1', current_lang)}** `{crm.get('f1_score')}`")
                     st.write(
                         f"- **RF Accuracy:** `{crm.get('rf_accuracy')}%` | **XGB Accuracy:** `{crm.get('xgb_accuracy')}%`"
                     )
 
             with mcol2:
                 with st.container(border=True):
-                    st.markdown("#### 📊 2. Yield Prediction Regressor")
-                    st.markdown(f"**Winning Model:** `{ypm.get('best_model')}`")
-                    st.write(f"- **Coefficient of Determination (R²):** `{ypm.get('r2_score')}`")
-                    st.write(f"- **Root Mean Squared Error (RMSE):** `{ypm.get('rmse')} kg/ha`")
-                    st.write(f"- **Mean Absolute Error (MAE):** `{ypm.get('mae')} kg/ha`")
+                    st.markdown(t("tech_model_yield", current_lang))
+                    st.markdown(f"**{t('winning_model', current_lang)}** `{ypm.get('best_model')}`")
+                    st.write(f"- **{t('r2_score', current_lang)}** `{ypm.get('r2_score')}`")
+                    st.write(f"- **{t('rmse', current_lang)}** `{ypm.get('rmse')} kg/ha`")
+                    st.write(f"- **{t('mae', current_lang)}** `{ypm.get('mae')} kg/ha`")
                     st.write(
                         f"- **RF R²:** `{ypm.get('rf_r2')}` | **XGB R²:** `{ypm.get('xgb_r2')}`"
                     )
 
         # EVALUATION PLOTS
-        st.markdown("#### 📈 Saved Model Evaluation Plots")
+        st.markdown(t("tech_plots_title", current_lang))
         pcol1, pcol2 = st.columns(2)
 
         cm_img_path = get_artifact_path(CROP_REC_CONFUSION_MATRIX_FILENAME)
@@ -756,16 +830,16 @@ def main():
     # TAB 3: PRICE & COST EXPLORER
     # =========================================================================
     with tab_price_explorer:
-        st.markdown("### 💰 Mandi Market Price & CACP Cultivation Cost Explorer")
-        st.markdown(
-            "Inspect reference datasets covering **122 market prices** and **CACP field crop cultivation cost surveys**."
-        )
+        st.markdown(t("mandi_title", current_lang))
+        st.markdown(t("mandi_desc", current_lang))
 
-        exp_tab1, exp_tab2 = st.tabs(["Mandi Market Prices", "Cost of Cultivation"])
+        exp_tab1, exp_tab2 = st.tabs(
+            [t("mandi_market_prices", current_lang), t("cost_of_cultivation", current_lang)]
+        )
 
         with exp_tab1:
             prices_df = load_prices_dataset()
-            search_crop = st.text_input("🔍 Filter Market Prices by Crop Name:", "")
+            search_crop = st.text_input(t("filter_crop", current_lang), "")
             if search_crop:
                 filtered_prices = prices_df[
                     prices_df["crop"].str.contains(search_crop, case=False, na=False)
@@ -790,9 +864,9 @@ def main():
         with exp_tab2:
             cost_df = load_cost_dataset()
             cost_state_filter = st.selectbox(
-                "Filter Cost Data by State:", ["All States"] + available_states
+                t("filter_state", current_lang), [t("all_states", current_lang)] + available_states
             )
-            if cost_state_filter != "All States":
+            if cost_state_filter != t("all_states", current_lang):
                 filtered_cost = cost_df[cost_df["state_name"] == cost_state_filter]
             else:
                 filtered_cost = cost_df

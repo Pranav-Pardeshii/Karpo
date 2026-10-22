@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowRight, DollarSign, Sliders, Zap, ArrowUpRight } from "lucide-react";
 import { api, ApiError } from "../api/client";
@@ -21,8 +21,22 @@ import {
   CartesianGrid,
   Cell,
 } from "recharts";
+import { useLanguage } from "../context/LanguageContext";
+
+interface FinLocationState {
+  crop?: string;
+  yield_kg_per_ha?: number;
+  state?: string;
+  farm_area?: number;
+  area_unit?: "acre" | "hectare" | "bigha";
+  fromYieldForecast?: boolean;
+}
 
 export const FinancialAnalysisPage: React.FC = () => {
+  const { t, getCropName, getStateName, getUnitName } = useLanguage();
+  const location = useLocation();
+  const locationState = location.state as FinLocationState | null;
+
   const [formData, setFormData] = useState<FinancialAnalysisRequest>({
     yield_kg_per_ha: 3500.0,
     farm_area: 2.5,
@@ -66,6 +80,30 @@ export const FinancialAnalysisPage: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    if (!locationState) return;
+
+    if (locationState.crop) {
+      setLookupCrop(locationState.crop.toLowerCase().trim());
+    }
+    if (locationState.state) {
+      setLookupState(locationState.state);
+    }
+    if (locationState.yield_kg_per_ha != null) {
+      setFormData((prev) => ({
+        ...prev,
+        yield_kg_per_ha: Math.round(locationState.yield_kg_per_ha!),
+        farm_area: locationState.farm_area ?? prev.farm_area,
+        area_unit: locationState.area_unit ?? prev.area_unit,
+      }));
+    }
+
+    const cropToLookup = locationState.crop || lookupCrop;
+    const stateToLookup = locationState.state || lookupState;
+    costLookupMutation.mutate({ crop_name: cropToLookup, state_name: stateToLookup });
+    priceLookupMutation.mutate(cropToLookup);
+  }, [locationState]);
+
   const mutation = useMutation<
     FinancialAnalysisResponse,
     ApiError,
@@ -99,10 +137,10 @@ export const FinancialAnalysisPage: React.FC = () => {
   // Chart data for revenue vs expenditure vs profit
   const financialChartData = result
     ? [
-        { name: "Gross Revenue", amount: result.total_revenue, fill: "#EDEDED" },
-        { name: "Total Cost", amount: result.total_cost, fill: "#414A60" },
+        { name: t("fin_gross_revenue"), amount: result.total_revenue, fill: "#EDEDED" },
+        { name: t("fin_total_cost"), amount: result.total_cost, fill: "#414A60" },
         {
-          name: "Net Profit",
+          name: t("fin_net_profit"),
           amount: Math.max(0, result.net_profit),
           fill: result.net_profit >= 0 ? "#22C55E" : "#FF2A2A",
         },
@@ -115,10 +153,10 @@ export const FinancialAnalysisPage: React.FC = () => {
       <div className="border-b border-obsidian-750 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-chalk-50 uppercase">
-            Farm Economic Feasibility
+            {t("fin_page_title")}
           </h1>
           <p className="font-sans text-xs sm:text-sm text-obsidian-300 mt-1 max-w-2xl leading-relaxed">
-            Simulate operational revenue, cultivation costs, net profit, and critical break-even thresholds for your farm acreage.
+            {t("fin_page_desc")}
           </p>
         </div>
 
@@ -132,7 +170,7 @@ export const FinancialAnalysisPage: React.FC = () => {
             >
               {supportedCrops.map((c) => (
                 <option key={c.canonical_name} value={c.canonical_name}>
-                  {c.display_name}
+                  {getCropName(c.canonical_name) || c.display_name}
                 </option>
               ))}
             </select>
@@ -144,7 +182,7 @@ export const FinancialAnalysisPage: React.FC = () => {
             >
               {states.map((st) => (
                 <option key={st} value={st}>
-                  {st}
+                  {getStateName(st) || st}
                 </option>
               ))}
             </select>
@@ -157,7 +195,7 @@ export const FinancialAnalysisPage: React.FC = () => {
             className="px-3 py-1 bg-obsidian-850 hover:bg-signal-red hover:text-white border border-obsidian-700 text-chalk-200 font-mono text-[10px] uppercase tracking-technical flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40"
           >
             <Zap className="w-3 h-3 text-signal-red" />
-            <span>SYNC BENCHMARKS</span>
+            <span>{t("sync_benchmarks")}</span>
           </button>
         </div>
       </div>
@@ -172,16 +210,29 @@ export const FinancialAnalysisPage: React.FC = () => {
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-signal-red" />
-              Economic Simulation Inputs
+              {t("econ_sim_inputs")}
             </span>
           </div>
+
+          {/* Retention Notification */}
+          {locationState?.fromYieldForecast && (
+            <div className="p-3 bg-obsidian-900 border border-signal-red/60 text-xs font-mono text-chalk-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-brutal-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
+                <span>
+                  {t("retained_from_yield")}:{" "}
+                  <strong className="text-white uppercase">{getCropName(lookupCrop)}</strong> ({Math.round(formData.yield_kg_per_ha).toLocaleString()} kg/ha &bull; {getStateName(lookupState)})
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Land Scale & Area */}
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Farm Area
+                  {t("fin_farm_area")}
                 </label>
                 <input
                   type="number"
@@ -197,7 +248,7 @@ export const FinancialAnalysisPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Measurement Unit
+                  {t("fin_area_unit")}
                 </label>
                 <select
                   name="area_unit"
@@ -205,16 +256,16 @@ export const FinancialAnalysisPage: React.FC = () => {
                   onChange={handleInputChange}
                   className="w-full bg-obsidian-900 border border-obsidian-700 text-chalk-100 px-3 py-2 font-mono text-xs focus:border-signal-red focus:outline-none uppercase"
                 >
-                  <option value="acre">Acres</option>
-                  <option value="hectare">Hectares</option>
-                  <option value="bigha">Bigha</option>
+                  <option value="acre">{getUnitName("acre")}</option>
+                  <option value="hectare">{getUnitName("hectare")}</option>
+                  <option value="bigha">{getUnitName("bigha")}</option>
                 </select>
               </div>
             </div>
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Projected Yield (kg / Hectare)
+                {t("fin_yield")}
               </label>
               <input
                 type="number"
@@ -231,12 +282,12 @@ export const FinancialAnalysisPage: React.FC = () => {
           {/* Pricing & Cost Structures */}
           <div className="space-y-3 pt-4 border-t border-obsidian-800">
             <span className="font-mono text-[11px] text-obsidian-400 font-semibold tracking-technical uppercase block">
-              Market Rate &amp; Cost Standards
+              {t("market_rate_standards")}
             </span>
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Mandi Price (₹ / Quintal)
+                {t("fin_price")}
               </label>
               <input
                 type="number"
@@ -251,7 +302,7 @@ export const FinancialAnalysisPage: React.FC = () => {
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Cultivation Cost C2 (₹ / Hectare)
+                {t("fin_cost")}
               </label>
               <input
                 type="number"
@@ -270,7 +321,7 @@ export const FinancialAnalysisPage: React.FC = () => {
             isLoading={mutation.isPending}
             className="w-full py-3.5 flex items-center justify-center gap-2"
           >
-            <span>Compute Economic Feasibility</span>
+            <span>{t("fin_btn")}</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
         </form>
@@ -280,7 +331,7 @@ export const FinancialAnalysisPage: React.FC = () => {
           {mutation.isError && (
             <StatusBanner
               type="error"
-              title="FINANCIAL ANALYSIS FAILED"
+              title={t("fin_failed")}
               message={mutation.error.message}
               requestId={mutation.error.requestId}
               onRetry={() => mutation.mutate(formData)}
@@ -294,10 +345,10 @@ export const FinancialAnalysisPage: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3 mb-6">
                   <div>
                     <span className="font-mono text-xs text-obsidian-400 uppercase tracking-widest block mb-0.5">
-                      FEASIBILITY SUMMARY &bull; {result.input_area} {result.input_unit.toUpperCase()}S
+                      {t("feasibility_summary")} &bull; {result.input_area} {getUnitName(result.input_unit).toUpperCase()}
                     </span>
                     <h2 className="font-display font-black text-2xl sm:text-3xl text-chalk-50 uppercase tracking-tight">
-                      NET FARM PROFIT
+                      {t("net_farm_profit")}
                     </h2>
                   </div>
                   <SignalBadge
@@ -311,31 +362,31 @@ export const FinancialAnalysisPage: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                   <div className="p-4 bg-obsidian-900 border border-obsidian-800">
                     <span className="font-mono text-[10px] text-obsidian-400 uppercase tracking-technical block mb-1">
-                      GROSS REVENUE
+                      {t("fin_gross_revenue")}
                     </span>
                     <div className="font-display font-black text-2xl text-chalk-100 tabular-nums">
                       {result.formatted_revenue}
                     </div>
                     <span className="font-mono text-[10px] text-obsidian-400 block mt-1">
-                      {result.total_production_quintals.toFixed(1)} Q harvest
+                      {result.total_production_quintals.toFixed(1)} {t("q_harvest")}
                     </span>
                   </div>
 
                   <div className="p-4 bg-obsidian-900 border border-obsidian-800">
                     <span className="font-mono text-[10px] text-obsidian-400 uppercase tracking-technical block mb-1">
-                      TOTAL EXPENDITURE
+                      {t("fin_total_cost")}
                     </span>
                     <div className="font-display font-black text-2xl text-obsidian-300 tabular-nums">
                       {result.formatted_cost}
                     </div>
                     <span className="font-mono text-[10px] text-obsidian-400 block mt-1">
-                      Comprehensive C2
+                      {t("comprehensive_c2")}
                     </span>
                   </div>
 
                   <div className="p-4 bg-obsidian-900 border border-obsidian-800">
                     <span className="font-mono text-[10px] text-obsidian-400 uppercase tracking-technical block mb-1">
-                      NET OPERATING PROFIT
+                      {t("fin_net_profit")}
                     </span>
                     <div
                       className={`font-display font-black text-2xl tabular-nums ${
@@ -345,7 +396,7 @@ export const FinancialAnalysisPage: React.FC = () => {
                       {result.formatted_profit}
                     </div>
                     <span className="font-mono text-[10px] text-obsidian-400 block mt-1">
-                      Margin: {result.profit_margin_percent.toFixed(1)}%
+                      {t("margin")}: {result.profit_margin_percent.toFixed(1)}%
                     </span>
                   </div>
                 </div>
@@ -353,15 +404,15 @@ export const FinancialAnalysisPage: React.FC = () => {
                 {/* Per-Unit Metrics */}
                 <div className="grid grid-cols-2 gap-3 pt-4 border-t border-obsidian-800">
                   <MetricCard
-                    label="PROFIT PER ACRE"
+                    label={t("profit_per_acre")}
                     value={result.formatted_profit_per_acre}
-                    secondary="Normalized acreage net income"
+                    secondary={t("normalized_acreage_income")}
                     variant="dark"
                   />
                   <MetricCard
-                    label="PROFIT PER HECTARE"
+                    label={t("profit_per_ha")}
                     value={result.formatted_profit_per_ha}
-                    secondary="Standard metric realization"
+                    secondary={t("standard_metric_realization")}
                     variant="dark"
                   />
                 </div>
@@ -371,7 +422,7 @@ export const FinancialAnalysisPage: React.FC = () => {
               <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-4">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <h3 className="font-display font-bold text-base sm:text-lg text-chalk-100 uppercase tracking-tight">
-                    Revenue vs. Expenditure Breakdown
+                    {t("rev_vs_exp_breakdown")}
                   </h3>
                 </div>
 
@@ -394,10 +445,10 @@ export const FinancialAnalysisPage: React.FC = () => {
                         dataKey="name"
                         stroke="#414A60"
                         tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#AEBAD1" }}
-                        width={95}
+                        width={130}
                       />
                       <Tooltip
-                        formatter={(val: number) => [`₹${val.toLocaleString()}`, "Amount"]}
+                        formatter={(val: number) => [`₹${val.toLocaleString()}`, t("amount_label")]}
                         contentStyle={{
                           backgroundColor: "#060709",
                           color: "#F5F4EF",
@@ -407,7 +458,7 @@ export const FinancialAnalysisPage: React.FC = () => {
                           fontSize: 12,
                         }}
                       />
-                      <Bar dataKey="amount" name="Amount (₹)">
+                      <Bar dataKey="amount" name={`${t("amount_label")} (₹)`}>
                         {financialChartData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
                         ))}
@@ -422,43 +473,50 @@ export const FinancialAnalysisPage: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <div className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
                     <Sliders className="w-4 h-4 text-signal-red" />
-                    <span>Critical Break-Even Thresholds</span>
+                    <span>{t("critical_breakeven_thresholds")}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 font-mono text-xs">
                   <div className="p-3 bg-obsidian-900 border border-obsidian-800">
                     <span className="text-[10px] text-obsidian-400 uppercase tracking-widest block mb-1">
-                      Break-Even Yield (kg/ha)
+                      {t("fin_breakeven_yield")} (kg/ha)
                     </span>
                     <div className="font-display font-black text-2xl text-chalk-100 tabular-nums">
                       {Math.round(result.breakeven_yield_kg_per_ha).toLocaleString()}
                     </div>
                     <span className="text-[10px] text-obsidian-400 block mt-1">
-                      Minimum harvest to cover operational costs
+                      {t("min_harvest_operational_costs")}
                     </span>
                   </div>
 
                   <div className="p-3 bg-obsidian-900 border border-obsidian-800">
                     <span className="text-[10px] text-obsidian-400 uppercase tracking-widest block mb-1">
-                      Break-Even Price (₹/Quintal)
+                      {t("fin_breakeven_price")} (₹/Q)
                     </span>
                     <div className="font-display font-black text-2xl text-chalk-100 tabular-nums">
                       ₹{Math.round(result.breakeven_price_per_quintal).toLocaleString()}
                     </div>
                     <span className="text-[10px] text-obsidian-400 block mt-1">
-                      Floor market realization price
+                      {t("floor_market_price")}
                     </span>
                   </div>
                 </div>
 
                 <div className="pt-3 border-t border-obsidian-800 flex items-center justify-between text-[11px] font-mono text-obsidian-400">
-                  <span>CACP METHODOLOGY STANDARDS</span>
+                  <span>{t("cacp_methodology_standards")}</span>
                   <Link
                     to="/advisory"
+                    state={{
+                      crop: lookupCrop,
+                      state: lookupState,
+                      farm_area: formData.farm_area,
+                      area_unit: formData.area_unit,
+                      fromFinancials: true,
+                    }}
                     className="text-signal-red font-bold hover:underline flex items-center gap-1 uppercase"
                   >
-                    Generate Full Advisory Report <ArrowUpRight className="w-3.5 h-3.5" />
+                    {t("generate_full_advisory_link")} <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
@@ -466,10 +524,10 @@ export const FinancialAnalysisPage: React.FC = () => {
           ) : (
             <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
-                Awaiting Financial Inputs
+                {t("awaiting_fin_title")}
               </h2>
               <p className="font-sans text-xs text-obsidian-400 max-w-md mx-auto">
-                Enter farm area, expected yield, and market rates on the left, or use "Sync Benchmarks" to auto-populate state cost standards.
+                {t("awaiting_fin_desc")}
               </p>
             </div>
           )}

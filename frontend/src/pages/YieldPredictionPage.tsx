@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowRight, BarChart2, Compass, ArrowUpRight } from "lucide-react";
 import { api, ApiError } from "../api/client";
@@ -8,6 +8,7 @@ import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
+import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
   Bar,
@@ -29,7 +30,26 @@ const SOIL_TYPES = [
   "Mollisols",
 ];
 
+interface LocationState {
+  crop?: string;
+  season?: string;
+  state?: string;
+  soil_type?: string;
+  temperature?: number;
+  rainfall?: number;
+  humidity?: number;
+  ph?: number;
+  nitrogen?: number;
+  phosphorus?: number;
+  potassium?: number;
+  fromRecommendation?: boolean;
+}
+
 export const YieldPredictionPage: React.FC = () => {
+  const { t, getCropName, getCategoryName, getSeasonName, getSoilName, getStateName } = useLanguage();
+  const location = useLocation();
+  const locationState = location.state as LocationState | null;
+
   const [formData, setFormData] = useState<YieldPredictionRequest>({
     crop: "rice",
     season: "Kharif",
@@ -61,13 +81,39 @@ export const YieldPredictionPage: React.FC = () => {
     "Punjab",
     "Uttar Pradesh",
     "Gujarat",
-    "Haryana",
-    "Madhya Pradesh",
     "Karnataka",
     "Tamil Nadu",
-    "Andhra Pradesh",
-    "West Bengal",
   ];
+
+  useEffect(() => {
+    if (!locationState) return;
+
+    setFormData((prev) => {
+      const next = { ...prev };
+      if (locationState.crop) next.crop = locationState.crop.toLowerCase().trim();
+      if (locationState.temperature != null) next.temperature = locationState.temperature;
+      if (locationState.rainfall != null) next.rainfall = locationState.rainfall;
+      if (locationState.humidity != null) next.humidity = locationState.humidity;
+      if (locationState.ph != null) next.ph = locationState.ph;
+      if (locationState.nitrogen != null) next.nitrogen = locationState.nitrogen;
+      if (locationState.phosphorus != null) next.phosphorus = locationState.phosphorus;
+      if (locationState.potassium != null) next.potassium = locationState.potassium;
+      if (locationState.season) next.season = locationState.season;
+      if (locationState.state) next.state = locationState.state;
+      if (locationState.soil_type) next.soil_type = locationState.soil_type;
+
+      const cropMeta = supportedCrops.find(
+        (c) => c.canonical_name.toLowerCase() === (locationState.crop || "").toLowerCase()
+      );
+      if (cropMeta) {
+        if (!locationState.season && cropMeta.default_season) next.season = cropMeta.default_season;
+        if (!locationState.soil_type && cropMeta.default_soil) next.soil_type = cropMeta.default_soil;
+        if (cropMeta.default_fertilizer) next.fertilizer = cropMeta.default_fertilizer;
+        if (cropMeta.default_pesticide) next.pesticide = cropMeta.default_pesticide;
+      }
+      return next;
+    });
+  }, [locationState, supportedCrops]);
 
   const mutation = useMutation<
     YieldPredictionResponse,
@@ -126,10 +172,10 @@ export const YieldPredictionPage: React.FC = () => {
       <div className="border-b border-obsidian-750 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-chalk-50 uppercase">
-            Crop Yield Forecasting
+            {t("yield_page_title")}
           </h1>
           <p className="font-sans text-xs sm:text-sm text-obsidian-300 mt-1 max-w-2xl leading-relaxed">
-            Project expected harvest volume per hectare and acre based on crop choice, regional climate, soil classification, and input applications.
+            {t("yield_page_desc")}
           </p>
         </div>
       </div>
@@ -144,15 +190,31 @@ export const YieldPredictionPage: React.FC = () => {
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
               <Compass className="w-4 h-4 text-signal-red" />
-              Field &amp; Environmental Settings
+              {t("soil_env_inputs")}
             </span>
           </div>
+
+          {/* Retention Notification */}
+          {locationState?.fromRecommendation && (
+            <div className="p-3 bg-obsidian-900 border border-signal-red/60 text-xs font-mono text-chalk-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-brutal-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
+                <span>
+                  {t("retained_from_rec")}:{" "}
+                  <strong className="text-white uppercase">{getCropName(formData.crop)}</strong>
+                </span>
+              </div>
+              <span className="text-[10px] text-obsidian-400">
+                NPK: {formData.nitrogen}-{formData.phosphorus}-{formData.potassium} &bull; pH {formData.ph} &bull; {formData.temperature}°C &bull; {formData.rainfall}mm
+              </span>
+            </div>
+          )}
 
           {/* Regional & Taxonomic Settings */}
           <div className="space-y-3">
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Target Crop
+                {t("yield_crop_label")}
               </label>
               <select
                 name="crop"
@@ -163,11 +225,11 @@ export const YieldPredictionPage: React.FC = () => {
                 {supportedCrops.length > 0 ? (
                   supportedCrops.map((c) => (
                     <option key={c.canonical_name} value={c.canonical_name}>
-                      {c.display_name} ({c.category})
+                      {getCropName(c.display_name)} ({getCategoryName(c.category)})
                     </option>
                   ))
                 ) : (
-                  <option value="rice">Rice (Cereal)</option>
+                  <option value="rice">{getCropName("Rice")}</option>
                 )}
               </select>
             </div>
@@ -175,7 +237,7 @@ export const YieldPredictionPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Agro-Climatic Region
+                  {t("yield_state_label")}
                 </label>
                 <select
                   name="state"
@@ -185,7 +247,7 @@ export const YieldPredictionPage: React.FC = () => {
                 >
                   {states.map((st) => (
                     <option key={st} value={st}>
-                      {st}
+                      {getStateName(st) || st}
                     </option>
                   ))}
                 </select>
@@ -193,7 +255,7 @@ export const YieldPredictionPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Season
+                  {t("yield_season_label")}
                 </label>
                 <select
                   name="season"
@@ -203,7 +265,7 @@ export const YieldPredictionPage: React.FC = () => {
                 >
                   {SEASONS.map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {getSeasonName(s)}
                     </option>
                   ))}
                 </select>
@@ -212,7 +274,7 @@ export const YieldPredictionPage: React.FC = () => {
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Soil Order
+                {t("yield_soil_label")}
               </label>
               <select
                 name="soil_type"
@@ -222,7 +284,7 @@ export const YieldPredictionPage: React.FC = () => {
               >
                 {SOIL_TYPES.map((st) => (
                   <option key={st} value={st}>
-                    {st}
+                    {getSoilName(st)}
                   </option>
                 ))}
               </select>
@@ -232,13 +294,13 @@ export const YieldPredictionPage: React.FC = () => {
           {/* Environmental Conditions */}
           <div className="space-y-3 pt-4 border-t border-obsidian-800">
             <span className="font-mono text-[11px] text-obsidian-400 font-semibold tracking-technical uppercase block">
-              Weather &amp; Rain Conditions
+              {t("climatic_metrics")}
             </span>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Temperature (°C)
+                  {t("temp_label")}
                 </label>
                 <input
                   type="number"
@@ -253,7 +315,7 @@ export const YieldPredictionPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Total Rainfall (mm)
+                  {t("rainfall_label")}
                 </label>
                 <input
                   type="number"
@@ -271,13 +333,13 @@ export const YieldPredictionPage: React.FC = () => {
           {/* Agricultural Inputs (Fertilizer & Pesticide) */}
           <div className="space-y-3 pt-4 border-t border-obsidian-800">
             <span className="font-mono text-[11px] text-obsidian-400 font-semibold tracking-technical uppercase block">
-              Application Rates
+              {t("yield_fertilizer_label")} &amp; {t("yield_pesticide_label")}
             </span>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Fertilizer Rate (kg/ha)
+                  {t("yield_fertilizer_label")}
                 </label>
                 <input
                   type="number"
@@ -292,7 +354,7 @@ export const YieldPredictionPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Pesticide Rate (kg/ha)
+                  {t("yield_pesticide_label")}
                 </label>
                 <input
                   type="number"
@@ -312,7 +374,7 @@ export const YieldPredictionPage: React.FC = () => {
             isLoading={mutation.isPending}
             className="w-full py-3.5 flex items-center justify-center gap-2"
           >
-            <span>Project Harvest Yield</span>
+            <span>{mutation.isPending ? t("yield_computing") : t("yield_btn")}</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
         </form>
@@ -336,10 +398,10 @@ export const YieldPredictionPage: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3 mb-6">
                   <div>
                     <span className="font-mono text-xs text-obsidian-400 uppercase tracking-widest block mb-0.5">
-                      CROP: {result.crop.toUpperCase()} &bull; REGION: {formData.state}
+                      {getCropName(result.crop)} &bull; {formData.state}
                     </span>
                     <h2 className="font-display font-black text-2xl sm:text-3xl text-chalk-50 uppercase tracking-tight">
-                      PROJECTED HARVEST CAPACITY
+                      {t("yield_predicted_label")}
                     </h2>
                   </div>
                   <SignalBadge label="HARVEST FORECAST" variant="signal" size="sm" />
@@ -465,9 +527,15 @@ export const YieldPredictionPage: React.FC = () => {
                   <span>DES HISTORICAL BASELINE</span>
                   <Link
                     to="/financials"
+                    state={{
+                      crop: result.crop,
+                      yield_kg_per_ha: result.predicted_yield_kg_ha,
+                      state: formData.state,
+                      fromYieldForecast: true,
+                    }}
                     className="text-signal-red font-bold hover:underline flex items-center gap-1"
                   >
-                    Calculate Farm Economics <ArrowUpRight className="w-3.5 h-3.5" />
+                    {t("yield_proceed_fin")} <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
@@ -475,10 +543,10 @@ export const YieldPredictionPage: React.FC = () => {
           ) : (
             <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
-                Awaiting Forecast Parameters
+                {t("awaiting_yield_title")}
               </h2>
               <p className="font-sans text-xs text-obsidian-400 max-w-md mx-auto">
-                Specify crop, region, and application rates on the left, then click "Project Harvest Yield" to compute anticipated production.
+                {t("awaiting_yield_desc")}
               </p>
             </div>
           )}

@@ -2,11 +2,14 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { ContourGrid } from "../visual/ContourGrid";
+import { useLanguage } from "../../context/LanguageContext";
 
 export const Layout: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col bg-obsidian-900 text-chalk-100 relative selection:bg-signal-red selection:text-white">
-      {/* Compact Predictable Brand Header & Navigation */}
+      {/* Compact Predictable Brand Header & Navigation with Language Selector */}
       <Header />
 
       <main className="flex-1 relative">
@@ -21,20 +24,19 @@ export const Layout: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 font-mono text-xs text-obsidian-400">
           <div>
             <div className="font-bold text-chalk-100 tracking-technical uppercase mb-1">
-              KARPO — AGRICULTURAL INTELLIGENCE
+              KARPO — {t("brand_sub")}
             </div>
             <p className="max-w-xl text-[11px] text-obsidian-400 leading-relaxed">
-              Empirical decision support bridging soil-climatic suitability classification,
-              yield forecasting, mandi market intelligence, and farm economic feasibility.
+              {t("footer_desc")}
             </p>
           </div>
 
           <div className="flex flex-col sm:text-right shrink-0 gap-1 text-[11px]">
             <span className="text-chalk-300 font-semibold uppercase">
-              DATA SOURCES: AGMARKNET &bull; DES &bull; CACP
+              {t("footer_sources")}
             </span>
             <span className="text-signal-red font-medium">
-              Probabilistic advisory &bull; Realized yields and prices vary with local conditions
+              {t("footer_disclaimer")}
             </span>
           </div>
         </div>

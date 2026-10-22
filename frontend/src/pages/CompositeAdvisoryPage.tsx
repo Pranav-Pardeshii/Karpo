@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
@@ -16,6 +17,7 @@ import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
+import { useLanguage } from "../context/LanguageContext";
 
 const SEASONS = ["Kharif", "Rabi", "Whole Year", "Summer", "Autumn", "Winter"];
 const SOIL_TYPES = [
@@ -27,7 +29,28 @@ const SOIL_TYPES = [
   "Mollisols",
 ];
 
+interface AdvLocationState {
+  crop?: string;
+  state?: string;
+  farm_area?: number;
+  area_unit?: "acre" | "hectare" | "bigha";
+  fromFinancials?: boolean;
+}
+
 export const CompositeAdvisoryPage: React.FC = () => {
+  const {
+    t,
+    getCropName,
+    getCategoryName,
+    getSeasonName,
+    getSoilName,
+    getStateName,
+    getUnitName,
+  } = useLanguage();
+
+  const location = useLocation();
+  const locationState = location.state as AdvLocationState | null;
+
   const [formData, setFormData] = useState<FullAdvisoryRequest>({
     n: 90.0,
     p: 42.0,
@@ -57,6 +80,17 @@ export const CompositeAdvisoryPage: React.FC = () => {
     "Karnataka",
     "Tamil Nadu",
   ];
+
+  useEffect(() => {
+    if (!locationState) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      state: locationState.state || prev.state,
+      farm_area: locationState.farm_area ?? prev.farm_area,
+      area_unit: locationState.area_unit ?? prev.area_unit,
+    }));
+  }, [locationState]);
 
   const mutation = useMutation<
     FullAdvisoryResponse,
@@ -93,10 +127,10 @@ export const CompositeAdvisoryPage: React.FC = () => {
       <div className="border-b border-obsidian-750 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-chalk-50 uppercase">
-            Composite Farm Advisory
+            {t("adv_page_title")}
           </h1>
           <p className="font-sans text-xs sm:text-sm text-obsidian-300 mt-1 max-w-2xl leading-relaxed">
-            Execute the complete agronomic decision workflow: analyzes soil suitability, projects expected yield, references wholesale mandi rates, applies CACP cost benchmarks, and calculates net profitability.
+            {t("adv_page_desc")}
           </p>
         </div>
 
@@ -108,7 +142,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
             className="flex items-center gap-2 shrink-0 print:hidden"
           >
             <Printer className="w-4 h-4" />
-            <span>Print Dossier</span>
+            <span>{t("adv_print")}</span>
           </Button>
         )}
       </div>
@@ -123,16 +157,29 @@ export const CompositeAdvisoryPage: React.FC = () => {
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
               <Sliders className="w-3.5 h-3.5 text-signal-red" />
-              Comprehensive Inputs
+              {t("comprehensive_inputs")}
             </span>
           </div>
+
+          {/* Retention Notification */}
+          {locationState?.fromFinancials && (
+            <div className="p-3 bg-obsidian-900 border border-signal-red/60 text-xs font-mono text-chalk-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-brutal-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
+                <span>
+                  {t("retained_from_fin")}:{" "}
+                  <strong className="text-white">{formData.farm_area} {getUnitName(formData.area_unit || "acre")}</strong> ({getStateName(formData.state || "Maharashtra")})
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Regional Settings */}
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Region
+                  {t("yield_state_label")}
                 </label>
                 <select
                   name="state"
@@ -142,7 +189,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
                 >
                   {states.map((st) => (
                     <option key={st} value={st}>
-                      {st}
+                      {getStateName(st) || st}
                     </option>
                   ))}
                 </select>
@@ -150,7 +197,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Season
+                  {t("yield_season_label")}
                 </label>
                 <select
                   name="season"
@@ -160,7 +207,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
                 >
                   {SEASONS.map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {getSeasonName(s) || s}
                     </option>
                   ))}
                 </select>
@@ -169,7 +216,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Soil Order
+                {t("yield_soil_label")}
               </label>
               <select
                 name="soil_type"
@@ -179,7 +226,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
               >
                 {SOIL_TYPES.map((st) => (
                   <option key={st} value={st}>
-                    {st}
+                    {getSoilName(st) || st}
                   </option>
                 ))}
               </select>
@@ -188,7 +235,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Farm Area
+                  {t("fin_farm_area")}
                 </label>
                 <input
                   type="number"
@@ -204,7 +251,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                  Unit
+                  {t("fin_area_unit")}
                 </label>
                 <select
                   name="area_unit"
@@ -212,9 +259,9 @@ export const CompositeAdvisoryPage: React.FC = () => {
                   onChange={handleInputChange}
                   className="w-full bg-obsidian-900 border border-obsidian-700 text-chalk-100 px-2.5 py-1.5 font-mono text-xs focus:border-signal-red focus:outline-none uppercase"
                 >
-                  <option value="acre">Acres</option>
-                  <option value="hectare">Hectares</option>
-                  <option value="bigha">Bigha</option>
+                  <option value="acre">{getUnitName("acre")}</option>
+                  <option value="hectare">{getUnitName("hectare")}</option>
+                  <option value="bigha">{getUnitName("bigha")}</option>
                 </select>
               </div>
             </div>
@@ -223,13 +270,13 @@ export const CompositeAdvisoryPage: React.FC = () => {
           {/* Soil Chemistry (NPK) */}
           <div className="space-y-3 pt-3 border-t border-obsidian-800">
             <span className="font-mono text-[10px] text-obsidian-400 font-semibold tracking-technical uppercase block">
-              Soil Chemistry (N-P-K &amp; pH)
+              {t("soil_chemistry_title")}
             </span>
 
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="block font-mono text-[9px] uppercase text-obsidian-400 mb-1">
-                  N
+                  {t("nitrogen_label")}
                 </label>
                 <input
                   type="number"
@@ -243,7 +290,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[9px] uppercase text-obsidian-400 mb-1">
-                  P
+                  {t("phosphorus_label")}
                 </label>
                 <input
                   type="number"
@@ -257,7 +304,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[9px] uppercase text-obsidian-400 mb-1">
-                  K
+                  {t("potassium_label")}
                 </label>
                 <input
                   type="number"
@@ -272,7 +319,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
             <div>
               <label className="block font-mono text-[10px] uppercase text-obsidian-300 mb-1">
-                Soil Reaction (pH)
+                {t("soil_reaction")}
               </label>
               <input
                 type="number"
@@ -289,13 +336,13 @@ export const CompositeAdvisoryPage: React.FC = () => {
           {/* Microclimate */}
           <div className="space-y-3 pt-3 border-t border-obsidian-800">
             <span className="font-mono text-[10px] text-obsidian-400 font-semibold tracking-technical uppercase block">
-              Weather Metrics
+              {t("climatic_metrics")}
             </span>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block font-mono text-[9px] uppercase text-obsidian-400 mb-1">
-                  Temp (°C)
+                  {t("temp_label")}
                 </label>
                 <input
                   type="number"
@@ -310,7 +357,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
               <div>
                 <label className="block font-mono text-[9px] uppercase text-obsidian-400 mb-1">
-                  Rainfall (mm)
+                  {t("rainfall_label")}
                 </label>
                 <input
                   type="number"
@@ -330,7 +377,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
             isLoading={mutation.isPending}
             className="w-full py-3.5 flex items-center justify-center gap-2"
           >
-            <span>Generate Full Advisory</span>
+            <span>{t("adv_btn")}</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
         </form>
@@ -340,7 +387,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
           {mutation.isError && (
             <StatusBanner
               type="error"
-              title="ADVISORY GENERATION FAILED"
+              title={t("adv_failed")}
               message={mutation.error.message}
               requestId={mutation.error.requestId}
               onRetry={() => mutation.mutate(formData)}
@@ -355,11 +402,11 @@ export const CompositeAdvisoryPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Sprout className="w-4 h-4 text-signal-red" />
                     <span className="font-mono text-xs font-bold uppercase tracking-technical text-signal-red">
-                      CROP RECOMMENDATION
+                      {t("crop_recommendation_tag")}
                     </span>
                   </div>
                   <SignalBadge
-                    label={`${report.recommendation.confidence_percent.toFixed(1)}% MATCH`}
+                    label={`${report.recommendation.confidence_percent.toFixed(1)}% ${t("match_badge")}`}
                     variant="signal"
                     size="sm"
                   />
@@ -368,10 +415,10 @@ export const CompositeAdvisoryPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
                   <div>
                     <span className="font-mono text-xs text-obsidian-400 uppercase tracking-widest block">
-                      {report.recommendation.category}
+                      {getCategoryName(report.recommendation.category)}
                     </span>
                     <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-chalk-50 tracking-tight uppercase">
-                      {report.recommendation.display_name}
+                      {getCropName(report.recommendation.display_name) || report.recommendation.display_name}
                     </h2>
                   </div>
                 </div>
@@ -388,13 +435,13 @@ export const CompositeAdvisoryPage: React.FC = () => {
                   <div className="flex items-center justify-between border-b border-obsidian-800 pb-2">
                     <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-chalk-100 uppercase">
                       <TrendingUp className="w-3.5 h-3.5 text-signal-red" />
-                      <span>Projected Yield</span>
+                      <span>{t("projected_yield_title")}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
                     <span className="font-mono text-[10px] text-obsidian-400 uppercase">
-                      Metric Density
+                      {t("metric_density")}
                     </span>
                     <div className="font-display font-black text-2xl text-chalk-100 tabular-nums">
                       {report.yield_prediction.predicted_yield_kg_ha.toLocaleString()}{" "}
@@ -403,9 +450,9 @@ export const CompositeAdvisoryPage: React.FC = () => {
                   </div>
 
                   <div className="pt-2 border-t border-obsidian-800 text-xs font-mono text-obsidian-300">
-                    <span>Farm Standard: </span>
+                    <span>{t("farm_standard")} </span>
                     <strong className="text-chalk-100">
-                      {report.yield_prediction.predicted_yield_quintals_acre.toFixed(2)} Q/acre
+                      {report.yield_prediction.predicted_yield_quintals_acre.toFixed(2)} Q/{getUnitName("acre")}
                     </strong>
                   </div>
                 </div>
@@ -415,13 +462,13 @@ export const CompositeAdvisoryPage: React.FC = () => {
                   <div className="flex items-center justify-between border-b border-obsidian-800 pb-2">
                     <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-chalk-100 uppercase">
                       <Database className="w-3.5 h-3.5 text-signal-red" />
-                      <span>Mandi Wholesale Price</span>
+                      <span>{t("mandi_wholesale_price")}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
                     <span className="font-mono text-[10px] text-obsidian-400 uppercase">
-                      Modal Wholesale Rate
+                      {t("modal_wholesale_rate")}
                     </span>
                     <div className="font-display font-black text-2xl text-chalk-100 tabular-nums">
                       ₹{report.market_price.modal_rs_per_quintal.toLocaleString()}{" "}
@@ -434,7 +481,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
                     {report.market_price.msp_rs_per_quintal && (
                       <span className="inline-flex items-center gap-1 text-emerald-400 text-[10px]">
                         <ShieldCheck className="w-3 h-3" />
-                        MSP: ₹{report.market_price.msp_rs_per_quintal.toLocaleString()}
+                        {t("msp_label")} ₹{report.market_price.msp_rs_per_quintal.toLocaleString()}
                       </span>
                     )}
                   </div>
@@ -446,32 +493,34 @@ export const CompositeAdvisoryPage: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-2">
                   <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-chalk-100 uppercase">
                     <DollarSign className="w-3.5 h-3.5 text-signal-red" />
-                    <span>Cultivation Expenditure Breakdown (CACP C2)</span>
+                    <span>{t("cultivation_expenditure_breakdown")}</span>
                   </div>
-                  <span className="font-mono text-[10px] text-obsidian-400">STATE: {report.cultivation_cost.applied_state}</span>
+                  <span className="font-mono text-[10px] text-obsidian-400">
+                    {t("state_applied")} {getStateName(report.cultivation_cost.applied_state) || report.cultivation_cost.applied_state}
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
                   <div className="p-2.5 bg-obsidian-900 border border-obsidian-800">
-                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">Seed Cost</span>
+                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">{t("cost_seed")}</span>
                     <span className="font-bold text-chalk-200">₹{Math.round(report.cultivation_cost.seed_cost_per_ha).toLocaleString()}</span>
                   </div>
                   <div className="p-2.5 bg-obsidian-900 border border-obsidian-800">
-                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">Fertilizer</span>
+                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">{t("cost_fertilizer")}</span>
                     <span className="font-bold text-chalk-200">₹{Math.round(report.cultivation_cost.fertilizer_cost_per_ha).toLocaleString()}</span>
                   </div>
                   <div className="p-2.5 bg-obsidian-900 border border-obsidian-800">
-                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">Human Labor</span>
+                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">{t("cost_labor")}</span>
                     <span className="font-bold text-chalk-200">₹{Math.round(report.cultivation_cost.labor_cost_per_ha).toLocaleString()}</span>
                   </div>
                   <div className="p-2.5 bg-obsidian-900 border border-obsidian-800">
-                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">Machinery</span>
+                    <span className="text-[10px] text-obsidian-400 uppercase block mb-0.5">{t("cost_machinery")}</span>
                     <span className="font-bold text-chalk-200">₹{Math.round(report.cultivation_cost.machinery_cost_per_ha).toLocaleString()}</span>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-obsidian-800 flex items-center justify-between font-mono text-xs text-obsidian-300">
-                  <span>Total Cost per Hectare:</span>
+                  <span>{t("total_cost_per_ha")}</span>
                   <strong className="text-chalk-100 font-display font-black text-sm">
                     ₹{report.cultivation_cost.cul_cost_c2_per_ha.toLocaleString()} / ha
                   </strong>
@@ -482,7 +531,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
               <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-4">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100">
-                    Farm Profitability &amp; Return on Investment
+                    {t("farm_profitability_roi")}
                   </span>
                   <SignalBadge
                     label={`${report.financials.roi_percent.toFixed(1)}% ROI`}
@@ -493,21 +542,21 @@ export const CompositeAdvisoryPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <MetricCard
-                    label="GROSS REVENUE"
+                    label={t("fin_gross_revenue")}
                     value={report.financials.formatted_revenue}
-                    secondary={`Total harvest: ${report.financials.total_production_quintals.toFixed(1)} Q`}
+                    secondary={`${t("total_harvest_label")} ${report.financials.total_production_quintals.toFixed(1)} Q`}
                     variant="dark"
                   />
                   <MetricCard
-                    label="TOTAL EXPENDITURE"
+                    label={t("fin_total_cost")}
                     value={report.financials.formatted_cost}
-                    secondary={`Acre cost: ₹${Math.round(report.financials.cost_per_acre).toLocaleString()}`}
+                    secondary={`${t("acre_cost_label")} ₹${Math.round(report.financials.cost_per_acre).toLocaleString()}`}
                     variant="dark"
                   />
                   <MetricCard
-                    label="NET OPERATING PROFIT"
+                    label={t("fin_net_profit")}
                     value={report.financials.formatted_profit}
-                    secondary={`Profit: ${report.financials.formatted_profit_per_acre} / acre`}
+                    secondary={`${t("profit_label")} ${report.financials.formatted_profit_per_acre} / ${getUnitName("acre")}`}
                     variant={report.financials.net_profit >= 0 ? "dark" : "signal"}
                   />
                 </div>
@@ -516,10 +565,10 @@ export const CompositeAdvisoryPage: React.FC = () => {
           ) : (
             <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
-                Awaiting Advisory Parameters
+                {t("awaiting_adv_title")}
               </h2>
               <p className="font-sans text-xs text-obsidian-400 max-w-md mx-auto">
-                Configure soil parameters, region, and farm area on the left, then click "Generate Full Advisory" to run the integrated analysis.
+                {t("awaiting_adv_desc")}
               </p>
             </div>
           )}

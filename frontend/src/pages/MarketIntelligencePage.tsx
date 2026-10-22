@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Database, ShieldCheck, ChevronLeft, ChevronRight, TrendingUp } from "lucide-react";
 import { api } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 
 export const MarketIntelligencePage: React.FC = () => {
+  const { t, getCropName } = useLanguage();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -43,10 +45,10 @@ export const MarketIntelligencePage: React.FC = () => {
       <div className="border-b border-obsidian-750 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-chalk-50 uppercase">
-            Mandi Price Intelligence
+            {t("mandi_page_title")}
           </h1>
           <p className="font-sans text-xs sm:text-sm text-obsidian-300 mt-1 max-w-2xl leading-relaxed">
-            Agricultural Produce Market Committee (APMC) modal wholesale auction rates, price spreads, and statutory Minimum Support Price (MSP) benchmarks across India.
+            {t("mandi_page_desc")}
           </p>
         </div>
 
@@ -63,7 +65,7 @@ export const MarketIntelligencePage: React.FC = () => {
             <Search className="w-4 h-4 absolute left-3 top-3 text-obsidian-400" />
             <input
               type="text"
-              placeholder="Filter by commodity (e.g. Rice, Wheat, Cotton, Maize, Mustard)..."
+              placeholder={t("mandi_search_placeholder")}
               value={searchQuery}
               onChange={handleSearchChange}
               className="w-full bg-obsidian-900 border border-obsidian-700 text-chalk-100 pl-10 pr-4 py-2 font-mono text-xs uppercase placeholder:text-obsidian-500 focus:outline-none focus:border-signal-red"
@@ -90,7 +92,7 @@ export const MarketIntelligencePage: React.FC = () => {
                   : "bg-obsidian-900 text-obsidian-400 border-obsidian-750 hover:bg-obsidian-850 hover:text-chalk-100"
               }`}
             >
-              {crop}
+              {crop === "ALL" ? "ALL" : getCropName(crop)}
             </button>
           ))}
         </div>
@@ -101,18 +103,18 @@ export const MarketIntelligencePage: React.FC = () => {
         <table className="w-full text-left border-collapse font-mono text-xs">
           <thead>
             <tr className="border-b border-obsidian-750 bg-obsidian-900 text-obsidian-300 uppercase text-[11px] tracking-technical">
-              <th className="p-3.5 border-r border-obsidian-800 font-bold">Commodity</th>
+              <th className="p-3.5 border-r border-obsidian-800 font-bold">{t("col_commodity")}</th>
               <th className="p-3.5 border-r border-obsidian-800 font-bold text-right">
-                Modal Auction (₹/Q)
+                {t("col_modal_price")}
               </th>
               <th className="p-3.5 border-r border-obsidian-800 font-bold text-right">
                 Price Spread (₹/Q)
               </th>
               <th className="p-3.5 border-r border-obsidian-800 font-bold text-right">
-                Statutory MSP
+                {t("col_msp")}
               </th>
               <th className="p-3.5 border-r border-obsidian-800 font-bold text-right">
-                Unit Rate (₹/kg)
+                {t("col_unit_price")}
               </th>
               <th className="p-3.5 font-bold">Source Registry</th>
             </tr>
@@ -137,7 +139,7 @@ export const MarketIntelligencePage: React.FC = () => {
                   className="hover:bg-obsidian-900/80 transition-colors duration-100"
                 >
                   <td className="p-3.5 border-r border-obsidian-800 font-bold text-chalk-100 uppercase flex items-center gap-2">
-                    <span className="text-white">{item.matched_crop_name}</span>
+                    <span className="text-white">{getCropName(item.matched_crop_name)}</span>
                     <span className="text-[10px] text-obsidian-400 font-normal">
                       [{item.canonical_name}]
                     </span>

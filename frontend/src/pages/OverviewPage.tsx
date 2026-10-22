@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { api } from "../api/client";
 import { MetricCard } from "../components/ui/MetricCard";
 import { AgroSystemVisual } from "../components/visual/AgroSystemVisual";
+import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
   Bar,
@@ -17,6 +18,7 @@ import {
 } from "recharts";
 
 export const OverviewPage: React.FC = () => {
+  const { t, getCropName, getCategoryName, getSeasonName } = useLanguage();
   const [selectedCropCategory, setSelectedCropCategory] = useState<string>("ALL");
 
   const { data: health } = useQuery({
@@ -97,6 +99,7 @@ export const OverviewPage: React.FC = () => {
     return {
       name: shortName,
       fullName: b.crop,
+      localizedName: getCropName(b.crop),
       median: medianVal,
       min: minVal,
       max: maxVal,
@@ -119,17 +122,17 @@ export const OverviewPage: React.FC = () => {
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-3">
               <span className="font-mono text-xs text-signal-red uppercase font-semibold tracking-technical">
-                AGRICULTURAL INTELLIGENCE
+                {t("brand_sub")}
               </span>
 
               {/* Memorable Headline */}
               <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-chalk-50 leading-[0.98] uppercase">
-                THE LAND IS A SYSTEM.
+                {t("hero_headline")}
               </h1>
 
-              {/* Concise Supporting Copy: No more than 2 short sentences */}
+              {/* Concise Supporting Copy */}
               <p className="font-sans text-sm sm:text-base text-obsidian-300 leading-relaxed max-w-xl">
-                KARPO analyzes environmental conditions, crop suitability, expected yields, and agricultural economics in one unified platform. Make informed planting decisions backed by empirical agronomic data.
+                {t("hero_subheadline")}
               </p>
             </div>
 
@@ -139,7 +142,7 @@ export const OverviewPage: React.FC = () => {
                 to="/recommend"
                 className="px-6 py-3.5 bg-signal-red text-white hover:bg-signal-darkred border border-signal-red shadow-brutal flex items-center justify-center gap-3 font-mono text-xs font-bold tracking-technical uppercase transition-all duration-150 group"
               >
-                <span>Explore Crop Recommendation</span>
+                <span>{t("explore_crop_rec")}</span>
                 <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
               </Link>
 
@@ -147,7 +150,7 @@ export const OverviewPage: React.FC = () => {
                 to="/advisory"
                 className="px-6 py-3.5 bg-obsidian-850 text-chalk-100 hover:bg-obsidian-800 hover:text-white border border-obsidian-700 shadow-brutal flex items-center justify-center gap-3 font-mono text-xs font-bold tracking-technical uppercase transition-all duration-150"
               >
-                <span>View Full Advisory</span>
+                <span>{t("view_full_advisory")}</span>
               </Link>
             </div>
           </div>
@@ -163,40 +166,40 @@ export const OverviewPage: React.FC = () => {
       <section className="space-y-4">
         <div className="flex items-center justify-between border-b border-obsidian-800 pb-2 font-mono text-xs text-obsidian-400">
           <span className="font-bold uppercase tracking-technical text-chalk-200">
-            SYSTEM INVENTORY
+            {t("system_inventory")}
           </span>
           <span className="text-[11px] text-obsidian-400">
-            OFFICIAL REFERENCE DATASETS
+            {t("official_datasets")}
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
-            label="SUPPORTED CROPS"
+            label={t("supported_crops")}
             value={supportedCrops.length > 0 ? supportedCrops.length : 22}
-            unit="SPECIES"
-            secondary="Across 6 agricultural categories"
+            unit={t("species_unit")}
+            secondary={t("across_categories")}
             variant="dark"
           />
           <MetricCard
-            label="MANDI COVERAGE"
+            label={t("mandi_coverage")}
             value={health?.details?.datasets?.prices_count ?? 122}
-            unit="COMMODITIES"
-            secondary="APMC wholesale market prices & MSP"
+            unit={t("commodities_unit")}
+            secondary={t("mandi_sub")}
             variant="dark"
           />
           <MetricCard
-            label="COST BENCHMARKS"
+            label={t("cost_benchmarks")}
             value={health?.details?.datasets?.cost_records_count ?? 3880}
-            unit="RECORDS"
-            secondary="CACP state cultivation expenditure"
+            unit={t("records_unit")}
+            secondary={t("cacp_sub")}
             variant="dark"
           />
           <MetricCard
-            label="HISTORICAL HARVESTS"
+            label={t("historical_harvests")}
             value="198,369"
-            unit="SURVEYS"
-            secondary="Longitudinal crop yield data records"
+            unit={t("surveys_unit")}
+            secondary={t("yield_sub")}
             variant="dark"
           />
         </div>
@@ -213,11 +216,11 @@ export const OverviewPage: React.FC = () => {
                   <div className="flex items-center gap-2 mb-1">
                     <BarChart3 className="w-4 h-4 text-signal-red" />
                     <h2 className="font-display font-bold text-lg text-chalk-100 uppercase tracking-tight">
-                      Historical Yield Reference Benchmarks
+                      {t("benchmarks_heading")}
                     </h2>
                   </div>
                   <p className="font-mono text-xs text-obsidian-400">
-                    National Median Harvest ({selectedYieldUnit}) across Indian Agro-Climatic Zones
+                    {t("benchmarks_sub")} ({selectedYieldUnit})
                   </p>
                 </div>
 
@@ -261,7 +264,7 @@ export const OverviewPage: React.FC = () => {
                         : "bg-obsidian-900 text-obsidian-400 border-obsidian-750 hover:bg-obsidian-850 hover:text-chalk-100"
                     }`}
                   >
-                    {cat}
+                    {getCategoryName(cat)}
                   </button>
                 ))}
               </div>
@@ -283,6 +286,7 @@ export const OverviewPage: React.FC = () => {
                       angle={-20}
                       textAnchor="end"
                       height={45}
+                      tickFormatter={(val) => getCropName(val)}
                     />
                     <YAxis
                       stroke="#414A60"
@@ -303,19 +307,19 @@ export const OverviewPage: React.FC = () => {
                         return (
                           <div className="bg-obsidian-950 border border-obsidian-700 p-3 shadow-brutal font-mono text-xs space-y-1.5 min-w-[210px]">
                             <div className="font-bold text-chalk-100 flex items-center justify-between border-b border-obsidian-800 pb-1">
-                              <span>{item.fullName ?? item.name}</span>
+                              <span>{item.localizedName ?? item.name}</span>
                               <span className="text-[10px] text-signal-red uppercase font-semibold">
-                                {item.category}
+                                {getCategoryName(item.category)}
                               </span>
                             </div>
                             <div className="text-chalk-200 flex justify-between">
-                              <span className="text-obsidian-400">Median Harvest:</span>
+                              <span className="text-obsidian-400">{t("median_harvest")}</span>
                               <span className="font-bold text-signal-red">
                                 {item.median.toLocaleString()} {selectedYieldUnit}
                               </span>
                             </div>
                             <div className="text-obsidian-300 text-[11px] flex justify-between">
-                              <span className="text-obsidian-400">Historical Range:</span>
+                              <span className="text-obsidian-400">{t("historical_range")}</span>
                               <span>
                                 {item.min.toLocaleString()} – {item.max.toLocaleString()} {selectedYieldUnit}
                               </span>
@@ -357,12 +361,12 @@ export const OverviewPage: React.FC = () => {
           </div>
 
           <div className="mt-4 pt-3 border-t border-obsidian-800 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-obsidian-400">
-            <span>SOURCE: DIRECTORATE OF ECONOMICS &amp; STATISTICS</span>
+            <span>{t("source_des")}</span>
             <Link
               to="/yield"
               className="text-signal-red font-semibold hover:underline flex items-center gap-1 uppercase"
             >
-              Forecast Harvest Yield <ArrowRight className="w-3 h-3" />
+              {t("forecast_yield_btn")} <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
@@ -371,66 +375,66 @@ export const OverviewPage: React.FC = () => {
         <div className="lg:col-span-5 border border-obsidian-750 bg-obsidian-850 p-6 divide-y divide-obsidian-800">
           <div className="pb-4">
             <h2 className="font-display font-bold text-lg text-chalk-100 uppercase tracking-tight mb-1">
-              Core Capabilities
+              {t("core_capabilities")}
             </h2>
             <p className="font-sans text-xs text-obsidian-300">
-              Integrated agronomic and economic tools
+              {t("integrated_tools")}
             </p>
           </div>
 
           <div className="py-4 space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono font-bold text-xs uppercase text-chalk-100">
-                Crop Suitability
+                {t("suitability_title")}
               </span>
               <Link to="/recommend" className="text-signal-red font-mono text-[11px] hover:underline">
-                Explore →
+                {t("explore_arrow")}
               </Link>
             </div>
             <p className="font-sans text-xs text-obsidian-300 leading-relaxed">
-              Evaluates soil macronutrients (NPK), chemical reaction (pH), and local climate to recommend best-matched crops.
+              {t("suitability_desc")}
             </p>
           </div>
 
           <div className="py-4 space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono font-bold text-xs uppercase text-chalk-100">
-                Yield Forecasting
+                {t("yield_forecasting_title")}
               </span>
               <Link to="/yield" className="text-signal-red font-mono text-[11px] hover:underline">
-                Explore →
+                {t("explore_arrow")}
               </Link>
             </div>
             <p className="font-sans text-xs text-obsidian-300 leading-relaxed">
-              Projects expected production in both metric (kg/ha) and farm (quintals/acre) units based on regional conditions.
+              {t("yield_forecasting_desc")}
             </p>
           </div>
 
           <div className="py-4 space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono font-bold text-xs uppercase text-chalk-100">
-                Mandi Market Intelligence
+                {t("mandi_intel_title")}
               </span>
               <Link to="/market" className="text-signal-red font-mono text-[11px] hover:underline">
-                Explore →
+                {t("explore_arrow")}
               </Link>
             </div>
             <p className="font-sans text-xs text-obsidian-300 leading-relaxed">
-              Provides official APMC wholesale commodity auction rates, min/max ranges, and statutory Minimum Support Prices.
+              {t("mandi_intel_desc")}
             </p>
           </div>
 
           <div className="pt-4 space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-mono font-bold text-xs uppercase text-chalk-100">
-                Farm Economic Feasibility
+                {t("farm_econ_title")}
               </span>
               <Link to="/financials" className="text-signal-red font-mono text-[11px] hover:underline">
-                Explore →
+                {t("explore_arrow")}
               </Link>
             </div>
             <p className="font-sans text-xs text-obsidian-300 leading-relaxed">
-              Simulates operational revenue, comprehensive C2 costs, net profit, and break-even thresholds per acre and hectare.
+              {t("farm_econ_desc")}
             </p>
           </div>
         </div>
@@ -441,10 +445,10 @@ export const OverviewPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-obsidian-800 pb-4 mb-6">
           <div>
             <h2 className="font-display font-bold text-xl text-chalk-100 uppercase tracking-tight">
-              Supported Agricultural Crops (22 Species)
+              {t("supported_crops_heading")}
             </h2>
             <p className="font-sans text-xs text-obsidian-400 mt-0.5">
-              Agricultural inventory supported across the suitability and yield models
+              {t("supported_crops_sub")}
             </p>
           </div>
 
@@ -460,7 +464,7 @@ export const OverviewPage: React.FC = () => {
                     : "bg-obsidian-900 text-obsidian-400 border-obsidian-750 hover:bg-obsidian-850 hover:text-chalk-100"
                 }`}
               >
-                {cat}
+                {getCategoryName(cat)}
               </button>
             ))}
           </div>
@@ -469,24 +473,26 @@ export const OverviewPage: React.FC = () => {
         {/* Crops Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {filteredCrops.map((crop) => (
-            <div
+            <Link
               key={crop.canonical_name}
-              className="p-3 border border-obsidian-800 bg-obsidian-900 hover:border-signal-red hover:bg-obsidian-850 transition-all duration-150 flex flex-col justify-between group"
+              to="/yield"
+              state={{ crop: crop.canonical_name }}
+              className="p-3 border border-obsidian-800 bg-obsidian-900 hover:border-signal-red hover:bg-obsidian-850 transition-all duration-150 flex flex-col justify-between group cursor-pointer"
             >
               <div>
                 <span className="font-mono text-[9px] text-obsidian-400 uppercase tracking-widest block mb-1">
-                  {crop.category}
+                  {getCategoryName(crop.category)}
                 </span>
                 <div className="font-display font-bold text-sm text-chalk-100 group-hover:text-white uppercase tracking-tight">
-                  {crop.display_name}
+                  {getCropName(crop.display_name)}
                 </div>
               </div>
 
               <div className="mt-3 pt-2 border-t border-obsidian-800 flex items-center justify-between font-mono text-[10px] text-obsidian-400">
-                <span>{crop.default_season}</span>
+                <span>{getSeasonName(crop.default_season)}</span>
                 <CheckCircle2 className="w-3 h-3 text-signal-green shrink-0" />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
