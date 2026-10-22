@@ -1,5 +1,5 @@
-# 🌾 Karpo — Smart Crop Advisory System (ML)
-### Machine Learning-Powered Crop Recommendation, Yield Forecasting & Farm Financial Optimization
+# Karpo: Smart Crop Advisory System (ML)
+### Machine Learning-Driven Crop Recommendation, Yield Forecasting, and Farm Financial Optimization
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Packaging](https://img.shields.io/badge/Packaging-uv%20%7C%20pyproject.toml-DE5FE9?style=for-the-badge&logo=astral&logoColor=white)](https://astral.sh/uv)
@@ -7,83 +7,72 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](frontend/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](frontend/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](frontend/)
-[![Machine Learning](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![Gradient Boosting](https://img.shields.io/badge/XGBoost-1199EE?style=for-the-badge&logo=XGBoost&logoColor=white)](https://xgboost.readthedocs.io/)
-[![Framework](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-1199EE?style=for-the-badge&logo=XGBoost&logoColor=white)](https://xgboost.readthedocs.io/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![Tests](https://img.shields.io/badge/Tests-66%20Passed-2ea44f?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
-Agriculture remains the backbone of the rural economy, yet farmers frequently face compounding vulnerabilities: choosing crops ill-suited to their soil chemistry and microclimate, misjudging yields due to weather variability, and enduring financial distress from volatile mandi prices and escalating input costs.
+Agriculture remains the cornerstone of the rural economy, yet agrarian stakeholders routinely face compounding risks: planting crops unaligned with regional soil chemistry and microclimates, misjudging yields due to seasonal variability, and suffering financial losses caused by mandi price volatility and escalating cultivation costs.
 
-**Karpo** is an end-to-end agricultural decision support and intelligence platform named after the Greek goddess of fruits and harvest. It integrates:
-1. **Soil & Climatic Crop Recommendation** via multi-class ensemble classification.
-2. **Precision Yield Prediction** via gradient boosted regression trained on 198,000+ national harvest records.
-3. **Real-Time Mandi Market Intelligence** using benchmark modal and minimum support prices (Agmarknet).
-4. **Comprehensive Cultivation Cost Benchmarking** via Directorate of Economics and Statistics (DES / CACP) C2 methodologies.
-5. **Farm Financial & Sensitivity Analysis** that computes net profit, ROI %, break-even price, and break-even yield thresholds.
-6. **Asynchronous REST API Backend** built with FastAPI and Pydantic v2, providing bounded concurrent ML inference, health diagnostics, structured logging, and OpenAPI documentation.
-7. **KARPO // FIELD//SIGNAL Experimental Brutalist Interface**: Production-ready React 18, TypeScript, and Vite frontend with industrial Swiss aesthetics, interactive Recharts visualizations, and live backend telemetry.
-8. **Interactive Streamlit Dashboard** for visualization and rapid agronomic modeling.
+**Karpo** is an enterprise-grade agricultural decision support and intelligence platform named after the Greek deity of fruits and harvests. The system synthesizes predictive machine learning models, official government agricultural surveys, and financial simulation algorithms into unified advisory interfaces.
 
----
-
-## 🌟 Key Highlights
-
-- **100% Real-World Verified Datasets**: Zero synthetic fabrication. Trained and evaluated against four official agricultural databases across India.
-- **Dual Machine Learning Engines**:
-  - **Crop Recommendation**: Multi-class classification (22 crops) based on soil NPK, pH, temperature, humidity, and rainfall (**99.55% Test Accuracy**).
-  - **Yield Forecasting**: Continuous non-linear regression (21 crops, 20 states, 6 soil classifications) on 198,369 historical observations (**$R^2 = 0.8801$**, $\text{RMSE} = 516.15\text{ kg/ha}$).
-- **Rigorous Model Evaluation**: Side-by-side benchmark comparing Random Forest vs. XGBoost with automated selection of winning architectures.
-- **Enterprise Financial Model**: Converts yield from $\text{kg/ha}$ into Quintals ($\text{q}$), factors in state-specific land and operational costs, and models realistic farmer net profit with break-even diagnostics.
-- **Modern Packaging with `uv`**: Production-ready `pyproject.toml` (PEP 621), deterministic `uv.lock`, dependency groups, and automated Makefile.
-- **Decoupled Architecture**: Clean domain schemas, feature bounds validation, centralized path resolution, and independent presentation layer.
-- **Comprehensive Test Suite**: 66 automated tests across unit, integration, API, and concurrency suites (**100% pass rate**).
+The platform provides:
+1. **Soil and Climatic Crop Recommendation**: Multi-class ensemble classification identifying optimal crops based on nitrogen, phosphorus, potassium, pH, temperature, relative humidity, and rainfall.
+2. **Precision Yield Prediction**: Gradient-boosted regression trained on 198,369 historical harvest records across 20 Indian states, 21 crops, and 6 soil classifications.
+3. **Mandi Market Intelligence**: Real-world modal, minimum, maximum, and Minimum Support Prices (MSP) derived from Agmarknet wholesale surveys.
+4. **Cultivation Cost Benchmarking**: Operational and fixed cost estimation using Directorate of Economics and Statistics (DES) and Commission for Agricultural Costs and Prices (CACP) Comprehensive C2 cost standards.
+5. **Farm Financial and Sensitivity Simulation**: Automated computation of total production, gross revenue, net profit, return on investment (ROI %), break-even price, and break-even yield thresholds.
+6. **Asynchronous REST API Backend**: High-throughput FastAPI service with Pydantic v2 schemas, bounded threadpool concurrency, liveness and readiness health probes, and OpenAPI documentation.
+7. **KARPO FIELD//SIGNAL Modern Web Interface**: Production-grade React 18, TypeScript, and Vite single-page application built with an industrial data-dense aesthetic, interactive Recharts visualizations, and live backend telemetry.
+8. **Interactive Streamlit Application**: Rapid agronomic exploratory dashboard supporting quick scenario modeling.
+9. **Trilingual Localization**: First-class support for English, Hindi, and Marathi across both web and Streamlit interfaces.
 
 ---
 
-## 🏗️ System Architecture & Workflow
+## System Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Input ["🌾 Farmer & Agro-Climatic Inputs"]
-        A1["Soil Chemistry (N, P, K, pH)"]
-        A2["Climatic Metrics (Rainfall, Temp, Humidity)"]
-        A3["Location & Farm Size (State, Season, Soil, Acres)"]
+    subgraph Input ["Farmer and Agro-Climatic Inputs"]
+        A1["Soil Chemistry: N, P, K, pH"]
+        A2["Meteorological Data: Rainfall, Temperature, Humidity"]
+        A3["Farm Context: State, Season, Soil Type, Acreage"]
     end
 
-    subgraph RecEngine ["🌱 Pipeline 1: Crop Recommendation"]
-        B1["Input Scaler & Feature Validator"]
-        B2["Random Forest Classifier (99.55% Acc)"]
-        B3["Top Recommended Crop + Probabilities"]
+    subgraph RecEngine ["Pipeline 1: Crop Recommendation Engine"]
+        B1["Feature Validator and Scaler"]
+        B2["Random Forest Classifier: 99.55% Test Accuracy"]
+        B3["Ranked Crop Recommendations and Class Probabilities"]
     end
 
-    subgraph YieldEngine ["📈 Pipeline 2: Yield Forecasting"]
-        C1["ColumnTransformer (OneHot + StandardScaler)"]
-        C2["XGBoost Regressor (R² = 0.8801)"]
-        C3["Predicted Yield (kg/ha & Quintals/Acre)"]
+    subgraph YieldEngine ["Pipeline 2: Yield Forecasting Engine"]
+        C1["ColumnTransformer: One-Hot and Standard Scaler"]
+        C2["XGBoost Regressor: R2 = 0.8801, RMSE = 516.15 kg/ha"]
+        C3["Predicted Yield: kg/ha and Quintals/Acre"]
     end
 
-    subgraph MarketCost ["🏛️ Real Agricultural Databases"]
+    subgraph MarketCost ["Official Agricultural Databases"]
         D1[("Agmarknet Mandi Rates: india-crop-prices.csv")]
         D2[("CACP C2 Cost Survey: cost-of-cultivation.csv")]
     end
 
-    subgraph FinancialEngine ["💰 Economic Optimization Engine"]
-        E1["Harvest Production (Quintals)"]
-        E2["Gross Revenue Calculation"]
+    subgraph FinancialEngine ["Economic Optimization Engine"]
+        E1["Total Harvest Production in Quintals"]
+        E2["Gross Revenue Simulation"]
         E3["C2 Cultivation Cost Modeling"]
-        E4["Net Profit & ROI % Simulator"]
-        E5["Break-Even Yield & Price Analysis"]
+        E4["Net Profit and ROI Percentage Simulation"]
+        E5["Break-Even Yield and Price Diagnostics"]
     end
 
-    subgraph Presentation ["🖥️ Delivery Layer"]
-        F1["Streamlit Advisory Dashboard"]
-        F2["Diagnostic Metric Cards & Charts"]
-        F3["Exportable Farmer Report (CSV)"]
+    subgraph Presentation ["Delivery Interfaces"]
+        F1["FastAPI Asynchronous REST API"]
+        F2["KARPO FIELD//SIGNAL React 18 Web UI"]
+        F3["Interactive Streamlit Dashboard"]
     end
 
     A1 & A2 --> B1 --> B2 --> B3
@@ -96,170 +85,183 @@ flowchart TD
     Presentation --> F1 & F2 & F3
 ```
 
-For detailed architectural specifications, see [docs/architecture.md](docs/architecture.md).
+Detailed architectural specifications, data flows, and design patterns are documented in [docs/architecture.md](docs/architecture.md).
 
 ---
 
-## 📊 Model Performance Benchmarks
+## Machine Learning Pipelines and Performance
 
-Both pipelines were evaluated using 80/20 train-test splits with fixed seeds (`random_state=42`) for full reproducibility:
+All models were evaluated using an 80/20 train-test split with fixed pseudo-random seeds (`random_state=42`) for deterministic reproducibility.
 
 ### 1. Crop Recommendation (Multi-Class Classification)
-*Target: 22 distinct crops based on soil nutrients and climatic parameters.*
+- **Target**: 22 distinct crops based on soil macro-nutrients (N, P, K), pH, and micro-climatic parameters.
+- **Dataset**: 2,200 verified agro-ecological observations.
+- **Winning Architecture**: Random Forest Classifier (100 estimators).
 
-| Model | Test Accuracy | Precision (Macro) | Recall (Macro) | F1-Score (Macro) | Decision |
+| Model | Test Accuracy | Precision (Macro) | Recall (Macro) | F1-Score (Macro) | Selection Status |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Random Forest** | **99.55%** | **0.9958** | **0.9955** | **0.9954** | 🏆 **Selected Model** |
-| **XGBoost Classifier** | 99.09% | 0.9922 | 0.9909 | 0.9911 | Baseline |
+| **Random Forest Classifier** | **99.55%** | **0.9958** | **0.9955** | **0.9954** | **Production Selected** |
+| XGBoost Classifier | 99.09% | 0.9922 | 0.9909 | 0.9911 | Evaluated Baseline |
 
 ### 2. Yield Prediction (Continuous Regression)
-*Target: Crop Yield in kg/hectare across 20 States, 21 Crops, and 6 Soil Types (198,369 samples).*
+- **Target**: Crop yield in kilograms per hectare (kg/ha).
+- **Features**: State, Crop, Season, Soil Type, Area, Rainfall, Temperature, Humidity, Soil N, P, K, pH.
+- **Dataset**: 198,369 longitudinal harvest records across 20 Indian states.
+- **Winning Architecture**: XGBoost Regressor (n_estimators=300, max_depth=8, learning_rate=0.08, colsample_bytree=0.8).
 
-| Model | $R^2$ Score | RMSE (kg/ha) | MAE (kg/ha) | Decision |
+| Model | R-Squared (R2) | RMSE (kg/ha) | MAE (kg/ha) | Selection Status |
 | :--- | :---: | :---: | :---: | :---: |
-| **XGBoost Regressor** | **0.8801** | **516.15** | **284.32** | 🏆 **Selected Model** |
-| **Random Forest Regressor** | 0.8757 | 525.66 | 291.10 | Baseline |
+| **XGBoost Regressor** | **0.8801** | **516.15** | **284.32** | **Production Selected** |
+| Random Forest Regressor | 0.8757 | 525.66 | 291.10 | Evaluated Baseline |
+
+Diagnostic evaluation heatmaps and feature importance plots are preserved under `models/`:
+- `models/crop_rec_confusion_matrix.png`
+- `models/crop_rec_feature_importance.png`
+- `models/yield_actual_vs_predicted.png`
+- `models/yield_feature_importance.png`
 
 ---
 
-## 📈 Visual Diagnostic Artifacts
+## Mathematical and Financial Formulas
 
-### Crop Recommendation
-| Confusion Matrix Heatmap | Feature Importance |
-| :---: | :---: |
-| ![Confusion Matrix](models/crop_rec_confusion_matrix.png) | ![Feature Importance](models/crop_rec_feature_importance.png) |
+The financial advisory module translates agronomic output into commercial farm economics:
 
-### Yield Prediction
-| Actual vs. Predicted Yield | Top Predictor Importances |
-| :---: | :---: |
-| ![Actual vs Predicted](models/yield_actual_vs_predicted.png) | ![Yield Feature Importance](models/yield_feature_importance.png) |
-
----
-
-## 🧮 Mathematical & Financial Formulas
-
-The financial engine executes rigorous agronomic and economic calculations:
-
-1. **Unit Conversions**:
+1. **Acreage Unit Conversion**:
    $$\text{Area (Hectares)} = \frac{\text{Area (Acres)}}{2.47105}$$
-   $$1\text{ Quintal} = 100\text{ kg}$$
 
 2. **Total Harvest Production**:
-   $$\text{Production (Quintals)} = \frac{\text{Yield (kg/ha)} \times \text{Area (ha)}}{100}$$
+   $$\text{Production (Quintals)} = \frac{\text{Yield (kg/ha)} \times \text{Area (Hectares)}}{100}$$
+   *(Note: 1 Quintal = 100 kg).*
 
 3. **Gross Revenue**:
-   $$\text{Gross Revenue (₹)} = \text{Production (Quintals)} \times \text{Modal Mandi Price (₹/Quintal)}$$
+   $$\text{Gross Revenue (INR)} = \text{Production (Quintals)} \times \text{Modal Mandi Price (INR/Quintal)}$$
 
-4. **Total Cost of Cultivation (CACP C2 Standard)**:
-   $$\text{Total Cost (₹)} = \text{Area (Hectares)} \times \text{C2 Cost per Hectare (₹/ha)}$$
-   *(Note: C2 includes operational expenses, rental value of owned land, interest on owned capital, and imputed value of family labor.)*
+4. **Total Cost of Cultivation (CACP Comprehensive C2 Cost)**:
+   $$\text{Total Cost (INR)} = \text{Area (Hectares)} \times \text{C2 Cost per Hectare (INR/ha)}$$
+   *(C2 standard accounts for all operational inputs, hired labor, machine charges, rent on leased land, rental value of owned land, interest on owned capital, and imputed family labor).*
 
-5. **Net Profit & ROI**:
-   $$\text{Net Profit (₹)} = \text{Gross Revenue (₹)} - \text{Total Cost (₹)}$$
+5. **Net Profit and Return on Investment**:
+   $$\text{Net Profit (INR)} = \text{Gross Revenue (INR)} - \text{Total Cost (INR)}$$
    $$\text{ROI (\%)} = \left(\frac{\text{Net Profit}}{\text{Total Cost}}\right) \times 100$$
 
-6. **Break-Even Thresholds**:
-   $$\text{Break-Even Yield (kg/ha)} = \frac{\text{Cost per Hectare (₹)}}{\text{Price per kg (₹)}}$$
-   $$\text{Break-Even Price (₹/Quintal)} = \frac{\text{Total Cost (₹)}}{\text{Total Production (Quintals)}}$$
+6. **Break-Even Diagnostics**:
+   $$\text{Break-Even Yield (kg/ha)} = \frac{\text{Total Cost per Hectare (INR)}}{\text{Price per kg (INR)}}$$
+   $$\text{Break-Even Price (INR/Quintal)} = \frac{\text{Total Cost (INR)}}{\text{Total Production (Quintals)}}$$
 
 ---
 
-## 📂 Repository Structure
+## Verified Agricultural Datasets
+
+| Dataset File | Sample Count | Attributes | Primary Source | Scope |
+| :--- | :---: | :---: | :--- | :--- |
+| `datasets/Crop_recommendation.csv` | 2,200 | N, P, K, Temp, Humidity, pH, Rainfall, Label | ICAR / Agro-Climatic Research | Balanced benchmark for 22 crops |
+| `datasets/crop_yield_dataset.csv` | 198,369 | State, Crop, Season, Soil, Nutrients, Weather, Yield | Directorate of Economics and Statistics | Longitudinal yield observations across India |
+| `datasets/india-crop-prices.csv` | 122 crops | Modal, Min, Max Mandi Prices, MSP | Agmarknet / APMC Market Boards | Commercial agricultural trading rates |
+| `datasets/cost-of-cultivation.csv` | 3,880 | State, Crop, Comprehensive C2 Cost | CACP, Ministry of Agriculture | Field-surveyed cost standards per hectare |
+
+---
+
+## Repository Structure
 
 ```
 smart-crop-advisory-ml/
-├── pyproject.toml              # Standard PEP 621 build and dependency specification
-├── uv.lock                     # Deterministic, platform-consistent dependency lockfile
-├── README.md                   # Project documentation, quickstart, and reference
-├── .python-version             # Python version pin (3.12)
-├── .env.example                # Template environment variables
-├── .gitignore                  # Production-grade git ignore configuration
-├── Makefile                    # Developer workflow automation (install, test, run, lint)
-│
-├── src/
-│   ├── crop_advisory/          # Primary modernized package root
-│   │   ├── __init__.py         # Package entry and version metadata
-│   │   ├── config.py           # Centralized path resolution, constants, and feature bounds
-│   │   ├── exceptions.py       # Domain-specific exception hierarchy
-│   │   │
-│   │   ├── domain/             # Pure domain logic and data structures
-│   │   │   ├── __init__.py
-│   │   │   ├── schemas.py      # Typed dataclasses for inputs, outputs, and KPIs
-│   │   │   ├── calculations.py # Financial math, unit conversions (ha/acre/q/kg), INR formatting
-│   │   │   └── crop_mapping.py # Canonical 22-crop metadata, aliases, cross-dataset keys
-│   │   │
-│   │   ├── ml/                 # Machine learning models and preprocessing pipelines
-│   │   │   ├── __init__.py
-│   │   │   ├── model_loader.py # Thread-safe, cached joblib artifact loader
-│   │   │   ├── feature_validation.py # Agronomic bounds checking and strict schema validation
-│   │   │   ├── preprocessing.py# Scikit-learn ColumnTransformers, Scalers, Encoders
-│   │   │   ├── crop_recommender.py # Random Forest/XGBoost multi-class classifier
-│   │   │   └── yield_predictor.py  # XGBoost/Random Forest continuous yield regressor
-│   │   │
-│   │   ├── services/           # Data query and workflow orchestration services
-│   │   │   ├── __init__.py
-│   │   │   ├── market_service.py # APMC Mandi modal price, MSP, and price bounds
-│   │   │   ├── cultivation_cost_service.py # CACP comprehensive C2 cultivation cost queries
-│   │   │   └── financial_analysis_service.py # End-to-end advisory generation orchestrator
-│   │   │
-│   │   └── presentation/       # User interface and dashboard presentation
-│   │       ├── __init__.py
-│   │       └── streamlit_app.py # Multi-tab Streamlit dashboard
-│   │
-│   └── [Backward Compatibility Layer: src/cost_lookup.py, src/crop_mapping.py, etc.]
-│
-├── scripts/
-│   ├── __init__.py
-│   └── train_models.py         # Standalone CLI model training and evaluation pipeline
-│
-├── artifacts/                  # Designated location for serialized models and assets
-│   └── .gitkeep
-│
-├── models/                     # Preserved pretrained models and evaluation heatmaps
-│   ├── crop_recommendation_model.pkl
-│   ├── crop_recommendation_preprocessor.pkl
-│   ├── yield_prediction_model.pkl
-│   ├── yield_prediction_preprocessor.pkl
-│   ├── crop_rec_confusion_matrix.png
-│   ├── crop_rec_feature_importance.png
-│   ├── yield_actual_vs_predicted.png
-│   ├── yield_feature_importance.png
-│   └── training_metrics.json
-│
-├── datasets/                   # Verified agricultural datasets
-│   ├── Crop_recommendation.csv
-│   ├── crop_yield_dataset.csv
-│   ├── india-crop-prices.csv
-│   └── cost-of-cultivation.csv
-│
-├── notebooks/                  # Exploratory research notebooks
-│   ├── 01_crop_recommendation.ipynb
-│   └── 02_yield_prediction.ipynb
-│
-├── tests/                      # Automated test suite
-│   ├── conftest.py             # Shared pytest fixtures and configurations
-│   ├── unit/                   # Deterministic unit tests (calculations, schemas, mappings, services)
-│   ├── integration/            # Multi-component and inference integration tests
-│   └── test_pipeline.py        # Preserved 15-test regression baseline
-│
-├── docs/                       # Architectural and project documentation
-│   ├── architecture.md         # System architecture document
-│   ├── migration.md            # Structural refactoring and migration log
-│   ├── PROJECT_REPORT.md       # Comprehensive academic/technical report
-│   ├── PPT_SLIDE_DECK.md       # Presentation slide outline
-│   └── Smart_Crop_Advisory_System_Presentation.pptx
-│
-├── app.py                      # Root entrypoint delegating to presentation.streamlit_app
-└── train_models.py             # Root entrypoint delegating to scripts.train_models
+|-- pyproject.toml              # Build specification, dependencies, and tool settings (PEP 621)
+|-- uv.lock                     # Deterministic dependency lockfile
+|-- README.md                   # Primary system documentation
+|-- .python-version             # Python version pin (3.12)
+|-- .env.example                # Configuration environment variables template
+|-- .gitignore                  # Production Git ignore rules
+|-- Makefile                    # Workflow automation (install, test, run, lint, build)
+|-- Dockerfile                  # Multi-stage container deployment specification
+|-- app.py                      # Root entrypoint delegating to presentation module
+|-- train_models.py             # Root entrypoint delegating to training pipeline
+|
+|-- src/
+|   |-- crop_advisory/          # Modernized application package root
+|   |   |-- __init__.py         # Package entry and version identifier
+|   |   |-- config.py           # Centralized paths, bounds, constants, and settings
+|   |   |-- exceptions.py       # Domain-specific exception hierarchy
+|   |   |
+|   |   |-- domain/             # Business logic and domain entities
+|   |   |   |-- schemas.py      # Dataclasses and Pydantic schemas for inputs and results
+|   |   |   |-- calculations.py # Economic formulas, unit conversions, and currency formatting
+|   |   |   `-- crop_mapping.py # Canonical crop registry, aliases, and cross-dataset keys
+|   |   |
+|   |   |-- ml/                 # Machine learning models and inference
+|   |   |   |-- model_loader.py # Thread-safe cached artifact loader
+|   |   |   |-- feature_validation.py # Agronomic bounds checking and validation
+|   |   |   |-- preprocessing.py# Preprocessing transformers and encoders
+|   |   |   |-- crop_recommender.py   # Multi-class crop classification service
+|   |   |   `-- yield_predictor.py    # Continuous yield regression service
+|   |   |
+|   |   |-- services/           # Orchestration and query services
+|   |   |   |-- market_service.py     # Agmarknet mandi price and MSP lookups
+|   |   |   |-- cultivation_cost_service.py # CACP C2 cost benchmarks
+|   |   |   `-- financial_analysis_service.py # End-to-end farm economic analysis
+|   |   |
+|   |   |-- api/                # Asynchronous FastAPI REST application
+|   |   |   |-- main.py         # Application factory, lifespan, CORS, and middleware
+|   |   |   |-- dependencies.py # Service injection and request context
+|   |   |   |-- schemas.py      # Pydantic v2 request and response contracts
+|   |   |   `-- v1/             # API version 1 route handlers
+|   |   |       |-- health.py   # Liveness and readiness endpoints
+|   |   |       |-- recommendations.py # Crop recommendation route
+|   |   |       |-- yield_routes.py    # Yield prediction route
+|   |   |       |-- market.py   # Mandi price and cultivation cost routes
+|   |   |       `-- advisory.py # End-to-end composite advisory route
+|   |   |
+|   |   `-- presentation/       # User interface implementations
+|   |       |-- streamlit_app.py# Interactive Streamlit dashboard
+|   |       `-- translations.py # Trilingual localization dictionary (EN, HI, MR)
+|   |
+|   `-- [Compatibility layer: src/cost_lookup.py, src/crop_mapping.py, etc.]
+|
+|-- frontend/                   # KARPO FIELD//SIGNAL Web Application
+|   |-- package.json            # Node.js dependencies and build scripts
+|   |-- vite.config.ts          # Vite build and proxy configuration
+|   |-- tsconfig.json           # TypeScript configuration
+|   |-- tailwind.config.js      # Industrial design token system
+|   `-- src/
+|       |-- App.tsx             # Root application and route layout
+|       |-- main.tsx            # Application entrypoint
+|       |-- context/
+|       |   `-- LanguageContext.tsx # Trilingual state management (EN, HI, MR)
+|       |-- components/layout/  # Layout, Header, Navigation, Language Switcher
+|       |-- components/ui/      # Reusable MetricCard, StatusBanner, Form controls
+|       |-- pages/              # Overview, Recommendation, Yield, Finance, Market, Advisory
+|       `-- services/           # Typed API client and telemetry integration
+|
+|-- datasets/                   # Four official agricultural reference datasets
+|-- models/                     # Pretrained model artifacts (.pkl) and metric plots
+|-- scripts/
+|   |-- train_models.py         # CLI model training and evaluation script
+|   `-- generate_presentation_pdf.py # Academic PDF presentation guide generator
+|
+|-- tests/                      # Automated test suite (66 tests)
+|   |-- conftest.py             # Shared pytest fixtures
+|   |-- unit/                   # Unit tests: domain math, schemas, services
+|   |-- integration/            # Integration tests: ML pipelines and services
+|   |-- api/                    # API route contracts and concurrent inference tests
+|   `-- test_pipeline.py        # End-to-end regression baseline tests
+|
+`-- docs/                       # Project documentation
+    |-- architecture.md         # Comprehensive architectural reference
+    |-- api.md                  # REST API reference and endpoint specifications
+    |-- operations.md           # Production deployment and operations guide
+    |-- migration.md            # Modernization refactoring changelog
+    |-- PROJECT_REPORT.md       # Full academic and engineering report
+    |-- PPT_SLIDE_DECK.md       # Presentation slide structure
+    `-- Karpo_ML_Presentation_and_Viva_Defense_Guide.pdf # Publication-grade defense guide
 ```
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### Prerequisites
 - **Python 3.10, 3.11, or 3.12** (pinned to Python 3.12 in `.python-version`)
-- **Node.js 18+** (for React frontend)
+- **Node.js 18 or higher** (for the React web interface)
+- **uv** (recommended Python package manager)
 
 ### 1. Clone the Repository
 ```bash
@@ -267,163 +269,176 @@ git clone https://github.com/Pranav-Pardeshii/Karpo.git
 cd Karpo
 ```
 
-### 2. Install `uv`
-`uv` is an ultra-fast Python package and project manager. Install it via:
+### 2. Environment Setup with uv
+Install `uv` if not already installed:
 ```bash
-# Windows (PowerShell)
+# Windows PowerShell
 irm https://astral.sh/uv/install.ps1 | iex
 
 # Linux / macOS
 curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Or via pip
-pip install uv
 ```
 
-
-### 3. Set Up Virtual Environment & Dependencies
-Synchronize dependencies and create the `.venv` virtual environment in seconds:
+Synchronize the virtual environment with all runtime, API, and development dependencies:
 ```bash
-# Sync all direct runtime, API, and development dependencies
 uv sync --all-groups
 ```
 
-Alternatively, use the `Makefile`:
+Alternatively, use the included Makefile:
 ```bash
 make install
 ```
 
-### 4. Launch the FastAPI Asynchronous REST API
-Start the high-performance ASGI server with auto-reload:
-
+### 3. Launch the FastAPI Asynchronous REST API
+Start the backend service on port 8000:
 ```bash
-# Start development server
+# Development server with automatic reload
 uv run uvicorn crop_advisory.api.main:app --reload --host 127.0.0.1 --port 8000
 
-# Or run production ASGI server
+# Production configuration
 uv run uvicorn crop_advisory.api.main:app --host 0.0.0.0 --port 8000 --workers 2
 ```
 
-- **Interactive Swagger Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+- **Interactive OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Alternative ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 - **Liveness Probe**: [http://localhost:8000/api/v1/health/live](http://localhost:8000/api/v1/health/live)
 - **Readiness Probe**: [http://localhost:8000/api/v1/health/ready](http://localhost:8000/api/v1/health/ready)
-- Full API documentation: [docs/api.md](docs/api.md)
-- Operational and deployment guide: [docs/operations.md](docs/operations.md)
 
-### 5. Launch the KARPO // FIELD//SIGNAL Brutalist Web Interface
-The experimental industrial brutalist React application connects directly to the FastAPI backend:
-
+### 4. Launch the React Web Frontend
+In a separate terminal, start the Vite development server:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Open [http://localhost:5173](http://localhost:5173) in your browser.*
-For comprehensive frontend architecture, design tokens, and components, see [frontend/README.md](frontend/README.md).
+Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 6. Launch the Streamlit Web Application
-The Streamlit dashboard remains fully operational and shares the same domain and ML models:
-
+### 5. Launch the Streamlit Dashboard
+The Streamlit dashboard remains available for standalone execution:
 ```bash
-# Primary package entry point
 uv run streamlit run src/crop_advisory/presentation/streamlit_app.py
-
-# Or via the root wrapper
-uv run streamlit run app.py
-
-# Or via Makefile
-make run
 ```
-*Open [http://localhost:8501](http://localhost:8501) in your browser.*
+Navigate to [http://localhost:8501](http://localhost:8501) in your browser.
 
-### 7. Run the Automated Test Suite
-Execute the 66 automated unit, integration, API, and concurrency tests:
+### 6. Run the Test Suite
+Execute the complete test suite with 66 passing test cases:
 ```bash
-# Run full test suite
+# Execute all tests
 uv run pytest
 
-# Run API and concurrency tests only
+# Execute API and concurrency tests only
 uv run pytest tests/api
 
-# Run unit tests only
+# Execute unit tests only
 uv run pytest tests/unit
 
-# Run integration tests only
+# Execute integration tests only
 uv run pytest tests/integration
 ```
 
-### 8. Linting, Formatting & Type Checking
-Enforce code quality standards with Ruff and MyPy:
+### 7. Code Quality and Type Checking
 ```bash
-# Lint checks
+# Run Ruff linter
 uv run ruff check .
 
-# Format checks
+# Check code formatting
 uv run ruff format --check .
 
-# Static type checking on API package
+# Run static type checking on API package
 uv run mypy src/crop_advisory/api
 ```
 
-### 9. Container Deployment (Docker)
-Build and run the production-grade multi-stage container:
+### 8. Containerized Deployment (Docker)
+Build and run using the multi-stage Dockerfile:
 ```bash
-# Build image
-docker build -t smart-crop-advisory-api:latest .
+# Build the container image
+docker build -t karpo-crop-advisory:latest .
 
-# Run container
-docker run -d -p 8000:8000 --name crop-api smart-crop-advisory-api:latest
+# Run the container
+docker run -d -p 8000:8000 --name karpo-api karpo-crop-advisory:latest
 ```
 
 ---
 
-## ⚙️ Environment Configuration
+## REST API Reference
 
-Copy `.env.example` to `.env` to configure custom overrides:
-```bash
-cp .env.example .env
-```
+The FastAPI service exposes versioned REST endpoints structured under `/api/v1`:
 
-| Variable | Default | Purpose |
+| HTTP Method | Route | Description |
 | :--- | :--- | :--- |
-| `CROP_ADVISORY_ENV` | `development` | Runtime environment identifier |
-| `CROP_ADVISORY_DATASETS_DIR` | `datasets/` | Custom path to CSV dataset directory |
-| `CROP_ADVISORY_ARTIFACTS_DIR` | `models/` or `artifacts/` | Custom path to model serialization directory |
-| `STREAMLIT_SERVER_PORT` | `8501` | Web server listening port |
+| `GET` | `/` | Service root and metadata |
+| `GET` | `/api/v1/health/live` | Liveness health check |
+| `GET` | `/api/v1/health/ready` | Readiness check (validates loaded ML models and dataset caches) |
+| `POST` | `/api/v1/recommendations/predict` | Predict top recommended crops and probabilities from soil/climate parameters |
+| `GET` | `/api/v1/recommendations/crops` | Retrieve list of all supported canonical crop labels |
+| `GET` | `/api/v1/recommendations/crops/{crop_name}` | Retrieve detailed agronomic profile and aliases for a crop |
+| `POST` | `/api/v1/yield/predict` | Predict yield in kg/ha and Quintals/acre given farm context |
+| `GET` | `/api/v1/yield/benchmarks` | Retrieve historical yield distribution benchmarks |
+| `GET` | `/api/v1/market/prices` | Query mandi prices and MSP with optional state/crop filters |
+| `GET` | `/api/v1/market/prices/{crop_name}` | Retrieve mandi price bounds for a specific crop |
+| `POST` | `/api/v1/market/cultivation-cost` | Calculate CACP C2 cultivation cost per hectare and acre |
+| `GET` | `/api/v1/market/states` | List states with available CACP cost survey records |
+| `POST` | `/api/v1/advisory/analyze` | Execute complete composite advisory pipeline with financial simulation |
+
+Complete request and response payload schemas are detailed in [docs/api.md](docs/api.md).
 
 ---
 
-## 📦 Datasets Reference
+## Multi-Language Localization
 
-| Dataset | Records | Features | Source Authority | Description |
-| :--- | :---: | :---: | :---: | :--- |
-| **`Crop_recommendation.csv`** | 2,200 | N, P, K, Temp, Humidity, pH, Rainfall, Label | ICAR / Kaggle Agriculture | Balanced benchmark for multi-class crop suitability. |
-| **`crop_yield_dataset.csv`** | 198,369 | State, Crop, Season, Soil, Nutrients, Weather, Yield | Directorate of Economics & Statistics | Longitudinal harvest yields across Indian agro-climatic zones. |
-| **`india-crop-prices.csv`** | 122 crops | Modal, Min, Max Mandi Prices, MSP | Agmarknet / APMC Market Boards | Real wholesale commodity rates across major markets. |
-| **`cost-of-cultivation.csv`** | 3,880 | State, Crop, C2 Comprehensive Cultivation Cost | CACP / Ministry of Agriculture & Farmers Welfare | Field-surveyed cost standards per hectare. |
+To support accessibility across diverse farming communities in India, Karpo provides complete localization across three languages:
 
----
+- **English (EN)**: Default international technical interface.
+- **Hindi (HI)**: Standard national language support for Northern and Central farming regions.
+- **Marathi (MR)**: Regional language support for Maharashtra agrarian belts.
 
-## ⚠️ Known Limitations
-
-1. **Horticultural Crop Yield Modeling**: While major field crops (Rice, Wheat, Maize, Cotton, Pulses) utilize the 198,369-row XGBoost ML regressor, certain commercial fruits (e.g., Apple, Banana, Grapes, Pomegranate) are not present in national field crop surveys and are estimated using ICAR/NHB agronomic response calibrations.
-2. **Fixed Mandi Price Snapshot**: Mandi modal prices are based on official APMC market reference surveys (`india-crop-prices.csv`). Live daily API integration with Agmarknet will be introduced in the upcoming backend service phase.
-3. **C2 Cultivation Cost Survey Aggregation**: Where state-specific CACP C2 records are absent for a specific niche crop, the national median benchmark is applied as a conservative fallback.
+Localization is implemented across all frontend components and pages via `LanguageContext`, as well as within the Streamlit application via `src/crop_advisory/presentation/translations.py`.
 
 ---
 
-## 📄 License
+## Environment Configuration
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+Configuration variables can be customized via `.env` or system environment variables:
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `CROP_ADVISORY_ENV` | `development` | Runtime environment (development, staging, production) |
+| `CROP_ADVISORY_DATASETS_DIR` | `datasets/` | Directory path containing official agricultural CSVs |
+| `CROP_ADVISORY_ARTIFACTS_DIR` | `models/` | Directory path containing serialized model artifacts |
+| `STREAMLIT_SERVER_PORT` | `8501` | Listening port for the Streamlit server |
 
 ---
 
-## 👨‍💻 Author & Acknowledgements
+## Agronomic Scope and Limitations
 
-Developed & Maintained by **[Pranav Pardeshi](https://github.com/Pranav-Pardeshii)**.
+1. **Horticultural and Plantation Crops**: Major field crops (Rice, Wheat, Maize, Cotton, Pulses) utilize the 198,369-row XGBoost regressor. Selected commercial fruits (e.g., Apple, Banana, Grapes, Pomegranate) are not covered by national longitudinal field crop surveys and use ICAR and National Horticulture Board (NHB) agronomic yield response calibrations.
+2. **Mandi Price Survey Frequency**: Mandi modal prices are based on official APMC market reference surveys (`india-crop-prices.csv`). Live daily API integration with Agmarknet endpoints is scheduled for future deployment.
+3. **C2 Cost Survey Aggregation**: Where state-specific CACP C2 records are absent for a specific crop-state pair, national median cost standards serve as a conservative fallback.
 
-Special thanks to:
-- **Directorate of Economics and Statistics (DES)** and **CACP**, Government of India, for public agricultural data.
-- **ICAR** and **Agmarknet** for research benchmarks and transparent Mandi market pricing information.
-- The open-source scientific Python and web community for Scikit-Learn, XGBoost, FastAPI, Streamlit, React, and Astral `uv`.
+---
+
+## Academic and Presentation Resources
+
+- **Presentation and Viva Voce Defense Guide**: [docs/Karpo_ML_Presentation_and_Viva_Defense_Guide.pdf](docs/Karpo_ML_Presentation_and_Viva_Defense_Guide.pdf)
+- **Detailed Academic Project Report**: [docs/PROJECT_REPORT.md](docs/PROJECT_REPORT.md)
+- **Presentation Slide Outline**: [docs/PPT_SLIDE_DECK.md](docs/PPT_SLIDE_DECK.md)
+- **Architectural Specifications**: [docs/architecture.md](docs/architecture.md)
+- **API Reference**: [docs/api.md](docs/api.md)
+- **Production Operations Guide**: [docs/operations.md](docs/operations.md)
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for complete terms.
+
+---
+
+## Author and Acknowledgements
+
+Developed and maintained by **[Pranav Pardeshi](https://github.com/Pranav-Pardeshii)**.
+
+Data sources and references:
+- **Directorate of Economics and Statistics (DES)** and **Commission for Agricultural Costs and Prices (CACP)**, Ministry of Agriculture and Farmers Welfare, Government of India.
+- **Indian Council of Agricultural Research (ICAR)** and **Agmarknet** (Directorate of Marketing and Inspection).
+- Open-source scientific Python, FastAPI, and React ecosystems.
