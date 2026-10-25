@@ -382,3 +382,50 @@ export interface LensInspectionResponse {
   data_category: string;
   data_provenance: string;
 }
+
+export interface RotationSeasonItem {
+  crop: string;
+  display_name: string;
+  season: string;
+  agronomic_role: string;
+}
+
+export interface RotationYearPlan {
+  year_number: number;
+  kharif: RotationSeasonItem;
+  rabi: RotationSeasonItem;
+  zaid: RotationSeasonItem;
+}
+
+export interface IntercropOptionItem {
+  intercrop_crop: string;
+  display_name: string;
+  row_ratio: string;
+  agronomic_benefit: string;
+  water_competition: string;
+  literature_ler_range: string;
+  source: string;
+}
+
+export interface RotationPlanRequest {
+  current_crop: string;
+  soil_type?: string;
+  irrigation_available?: boolean;
+  state?: string;
+  years?: number;
+}
+
+export interface CropRotationResponse {
+  current_crop: string;
+  soil_type: string;
+  state: string;
+  irrigation_available: boolean;
+  plan_years: number;
+  yearly_plans: RotationYearPlan[];
+  intercropping_options: IntercropOptionItem[];
+  agronomic_principles: string[];
+  data_category: string;
+  data_provenance: string;
+  caveat: string;
+}
+

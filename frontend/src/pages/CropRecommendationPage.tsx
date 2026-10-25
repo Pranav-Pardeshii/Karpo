@@ -8,6 +8,7 @@ import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { StatusBanner } from "../components/ui/StatusBanner";
 import { GeoSensingBanner } from "../components/GeoSensingBanner";
+import { CropRotationOptimizer } from "../components/CropRotationOptimizer";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -501,6 +502,11 @@ export const CropRecommendationPage: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Feature 5: Multi-Season Crop Rotation & Intercropping Optimizer */}
+      <div className="mt-8">
+        <CropRotationOptimizer initialCrop={result?.primary_crop || "cotton"} />
       </div>
     </div>
   );

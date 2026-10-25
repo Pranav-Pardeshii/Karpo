@@ -2,6 +2,7 @@ import {
   ApiErrorResponse,
   CropRecommendationRequest,
   CropRecommendationResponse,
+  CropRotationResponse,
   CultivationCostRequest,
   CultivationCostResponse,
   FinancialAnalysisRequest,
@@ -11,9 +12,11 @@ import {
   GeoSensingResponse,
   HealthLiveResponse,
   HealthReadyResponse,
+  IntercropOptionItem,
   LensInspectionResponse,
   MarketPriceListResponse,
   PriceInfo,
+  RotationPlanRequest,
   ScenarioComparisonResponse,
   StatesListResponse,
   StressSimulationRequest,
@@ -206,4 +209,14 @@ export const api = {
       method: "POST",
       body: formData,
     }),
+
+  // Crop Rotation & Intercropping Optimizer
+  getRotationPlan: (payload: RotationPlanRequest) =>
+    request<CropRotationResponse>("/rotation/plan", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getIntercroppingOptions: (crop: string) =>
+    request<IntercropOptionItem[]>(`/rotation/intercropping/${encodeURIComponent(crop)}`),
 };

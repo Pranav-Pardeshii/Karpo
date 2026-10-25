@@ -64,10 +64,21 @@
   - Implemented frontend component `KisanVoiceAssistant.tsx` using W3C Web Speech API for voice recognition (`mr-IN`, `hi-IN`, `en-IN`), browser speech synthesis for audio playback, and accessible text-input fallback.
   - Mounted `<KisanVoiceAssistant />` in global `Layout.tsx` for platform-wide availability.
   - Added 9 unit and API tests; total test suite now at 90 passed / 0 failed; frontend build clean.
-- **Checkpoint 5 (Feature 2: Karpo Lens Crop Disease Assistance)**:
+- **Checkpoint 5 (Feature 2: Karpo Lens Crop Disease Assistance - Commit `5cb139b`)**:
   - Built `KarpoLensService` (`src/crop_advisory/services/lens_service.py`) with strict image decoding (Pillow), size boundary enforcement (10MB limit), and resolution inspection.
   - Strictly adhered to Real Agriculture Data Contract: Detected absence of CV disease model weights on disk and returned honest `model_unavailable` state without fabricating fake confidence scores or simulated pathogens.
   - Compiled authoritative ICAR diagnostic symptom compendiums (NRRI, CICR, IISR, IIWBR) for Rice, Cotton, Soybean, Wheat, and Maize.
   - Exposed endpoint `POST /api/v1/lens/inspect` and mounted frontend component `KarpoLens.tsx` in `OverviewPage.tsx`.
   - Added 7 unit and API tests; full test suite now at 97 passed / 0 failed; frontend build verified clean in 4.57s.
-- **Next Action**: Implement Feature 5: Crop Rotation and Intercropping Optimizer (multi-season Kharif-Rabi-Zaid nitrogen replenishment and pulse intercropping rules).
+- **Checkpoint 6 (Feature 5: Crop Rotation and Intercropping Optimizer)**:
+  - Created `CropRotationService` (`src/crop_advisory/services/rotation_service.py`) modeling multi-season (Kharif, Rabi, Zaid) cropping sequences based on ICAR agronomic principles:
+    - Cereal to legume alternation for Rhizobium nitrogen fixation.
+    - Deep taproot to shallow fibrous root alternation for balancing soil horizon nutrient extraction.
+    - Pathogen and weed lifecycle disruption across botanical families.
+    - Moisture-adaptive summer strategy: short-duration catch crop (mungbean) under assured irrigation vs. solarization/tillage summer fallow in rainfed conditions.
+  - Integrated research-backed AICRP intercropping systems for Cotton, Soybean, Maize, Rice, and Groundnut with row ratios (e.g. Cotton + Pigeonpea 6:1, Soybean + Pigeonpea 4:2) and literature Land Equivalent Ratios (LER 1.12 to 1.40).
+  - Exposed endpoints `POST /api/v1/rotation/plan` and `GET /api/v1/rotation/intercropping/{crop}` with complete Pydantic schemas in `schemas.py`.
+  - Built frontend component `CropRotationOptimizer.tsx` with dynamic timeline cards, LER badges, and scientific caveats; integrated into `CropRecommendationPage.tsx`.
+  - Added 9 unit and API tests (`tests/unit/test_rotation_service.py`, `tests/api/test_rotation_endpoints.py`); total test suite now at **106 passed / 0 failed**; frontend build verified clean in 3.93s.
+- **Next Action**: Implement Feature 7: Interactive Farm Digital Twin Visualizer (soil layer profiles, root depth, moisture horizon visualization) with explicit simulation labeling.
+

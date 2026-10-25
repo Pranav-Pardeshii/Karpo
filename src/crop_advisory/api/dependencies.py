@@ -16,6 +16,7 @@ from crop_advisory.services.financial_analysis_service import (
 from crop_advisory.services.geo_sensing_service import GeoSensingService
 from crop_advisory.services.lens_service import KarpoLensService
 from crop_advisory.services.market_service import MarketPriceService
+from crop_advisory.services.rotation_service import CropRotationService
 from crop_advisory.services.stress_simulation_service import StressSimulationService
 from crop_advisory.services.voice_copilot_service import VoiceCopilotService
 
@@ -28,6 +29,7 @@ _geo_sensing_service_singleton: GeoSensingService = None
 _stress_simulation_service_singleton: StressSimulationService = None
 _voice_copilot_service_singleton: VoiceCopilotService = None
 _lens_service_singleton: KarpoLensService = None
+_rotation_service_singleton: CropRotationService = None
 
 
 def get_crop_recommender() -> CropRecommender:
@@ -120,4 +122,13 @@ def get_lens_service() -> KarpoLensService:
     if _lens_service_singleton is None:
         _lens_service_singleton = KarpoLensService()
     return _lens_service_singleton
+
+
+def get_rotation_service() -> CropRotationService:
+    """Dependency provider for CropRotationService singleton."""
+    global _rotation_service_singleton
+    if _rotation_service_singleton is None:
+        _rotation_service_singleton = CropRotationService()
+    return _rotation_service_singleton
+
 

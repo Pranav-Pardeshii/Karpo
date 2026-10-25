@@ -691,3 +691,67 @@ class LensInspectionResponse(BaseModel):
     data_provenance: str = Field(..., description="Traceable source citation")
 
 
+# =========================================================================
+# 11. CROP ROTATION AND INTERCROPPING SCHEMAS
+# =========================================================================
+
+
+class RotationSeasonItem(BaseModel):
+    """Agronomic role and species in a single cropping season."""
+
+    crop: str = Field(..., description="Crop identifier")
+    display_name: str = Field(..., description="Localized display name")
+    season: str = Field(..., description="Season label (Kharif, Rabi, Zaid)")
+    agronomic_role: str = Field(..., description="Agronomic mechanism (e.g. nitrogen fixation)")
+
+
+class RotationYearPlan(BaseModel):
+    """Annual 3-season crop sequence."""
+
+    year_number: int = Field(..., ge=1, le=3, description="Sequence year index")
+    kharif: RotationSeasonItem
+    rabi: RotationSeasonItem
+    zaid: RotationSeasonItem
+
+
+class IntercropOptionItem(BaseModel):
+    """Verified intercropping configuration from ICAR research."""
+
+    intercrop_crop: str
+    display_name: str
+    row_ratio: str
+    agronomic_benefit: str
+    water_competition: str
+    literature_ler_range: str
+    source: str
+
+
+class RotationPlanRequest(BaseModel):
+    """Farmer request for multi-season rotation and intercropping planning."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    current_crop: str = Field(..., description="Primary or current crop", examples=["cotton"])
+    soil_type: str = Field("Vertisols", description="Soil classification", examples=["Vertisols"])
+    irrigation_available: bool = Field(True, description="Availability of assured irrigation")
+    state: str = Field("Maharashtra", description="Geographic state", examples=["Maharashtra"])
+    years: int = Field(2, ge=1, le=3, description="Planning duration in years (1 to 3)", examples=[2])
+
+
+class CropRotationResponse(BaseModel):
+    """Multi-season rotation strategy and companion cropping advisory."""
+
+    current_crop: str
+    soil_type: str
+    state: str
+    irrigation_available: bool
+    plan_years: int
+    yearly_plans: List[RotationYearPlan]
+    intercropping_options: List[IntercropOptionItem]
+    agronomic_principles: List[str]
+    data_category: str = Field("Estimated", description="Explicit category per contract")
+    data_provenance: str = Field(..., description="Authoritative scientific source citation")
+    caveat: str = Field(..., description="Agro-climatic and market caveat")
+
+
+
