@@ -63,4 +63,4 @@ desktop.ini
 # Temporary & Cache files
 *.tmp
 .cache/
-
+graphify-out/
