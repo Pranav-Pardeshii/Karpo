@@ -70,7 +70,7 @@
   - Compiled authoritative ICAR diagnostic symptom compendiums (NRRI, CICR, IISR, IIWBR) for Rice, Cotton, Soybean, Wheat, and Maize.
   - Exposed endpoint `POST /api/v1/lens/inspect` and mounted frontend component `KarpoLens.tsx` in `OverviewPage.tsx`.
   - Added 7 unit and API tests; full test suite now at 97 passed / 0 failed; frontend build verified clean in 4.57s.
-- **Checkpoint 6 (Feature 5: Crop Rotation and Intercropping Optimizer)**:
+- **Checkpoint 6 (Feature 5: Crop Rotation and Intercropping Optimizer - Commit `9f4c0db`)**:
   - Created `CropRotationService` (`src/crop_advisory/services/rotation_service.py`) modeling multi-season (Kharif, Rabi, Zaid) cropping sequences based on ICAR agronomic principles:
     - Cereal to legume alternation for Rhizobium nitrogen fixation.
     - Deep taproot to shallow fibrous root alternation for balancing soil horizon nutrient extraction.
@@ -80,5 +80,13 @@
   - Exposed endpoints `POST /api/v1/rotation/plan` and `GET /api/v1/rotation/intercropping/{crop}` with complete Pydantic schemas in `schemas.py`.
   - Built frontend component `CropRotationOptimizer.tsx` with dynamic timeline cards, LER badges, and scientific caveats; integrated into `CropRecommendationPage.tsx`.
   - Added 9 unit and API tests (`tests/unit/test_rotation_service.py`, `tests/api/test_rotation_endpoints.py`); total test suite now at **106 passed / 0 failed**; frontend build verified clean in 3.93s.
-- **Next Action**: Implement Feature 7: Interactive Farm Digital Twin Visualizer (soil layer profiles, root depth, moisture horizon visualization) with explicit simulation labeling.
+- **Checkpoint 7 (Feature 7: Interactive Farm Digital Twin Visualizer)**:
+  - Created lightweight, zero-dependency HTML5 Canvas 2.5D visualizer `FarmDigitalTwin.tsx` (`frontend/src/components/FarmDigitalTwin.tsx`).
+  - Cross-sectional profile rendering three soil horizons: Horizon A (Topsoil 0-15 cm), Horizon B (Subsoil 15-45 cm), Horizon C (Deep Substratum 45-90 cm).
+  - Agronomic root architecture differentiation: Deep Taproot (~60-80 cm) for pulses and cotton vs. Shallow Fibrous Root (~25-35 cm) for cereals.
+  - Interactive moisture percolation infiltration slider with real-time saturation front rendering.
+  - Strictly labeled as `SIMULATION MODEL` with explicit scientific disclaimer preventing any illusion of biological scans.
+  - Integrated into `YieldPredictionPage.tsx`; verified clean Vite build in 3.98s and 106 backend tests passing.
+- **Next Action**: Execute Final Quality Audit across Data, UI, and Engineering contracts; assemble comprehensive Final Engineering Report.
+
 

@@ -9,6 +9,7 @@ import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
 import { GeoSensingBanner } from "../components/GeoSensingBanner";
+import { FarmDigitalTwin } from "../components/FarmDigitalTwin";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -571,6 +572,16 @@ export const YieldPredictionPage: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Feature 7: Interactive Farm Digital Twin Visualizer */}
+      <div className="mt-8">
+        <FarmDigitalTwin
+          crop={result?.crop || formData.crop}
+          soilType={formData.soil_type}
+          rainfallMm={formData.rainfall}
+          temperatureC={formData.temperature}
+        />
       </div>
     </div>
   );
