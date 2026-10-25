@@ -510,3 +510,102 @@ class GeoSensingResponse(BaseModel):
     soil: SoilEstimateDataResponse
     timestamp: str = Field(..., description="Response generation timestamp in UTC")
     overall_status: str = Field(..., description="success, partial, or failed")
+
+
+# =========================================================================
+# 10. CLIMATE & MARKET STRESS SIMULATION SCHEMAS
+# =========================================================================
+
+
+class StressSimulationRequest(BaseModel):
+    """Input payload for climate and market scenario analysis."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    crop: str = Field(..., description="Canonical crop slug (e.g. 'rice', 'wheat')", examples=["rice"])
+    season: str = Field("Kharif", description="Cropping season ('Kharif', 'Rabi', 'Whole Year')", examples=["Kharif"])
+    soil_type: str = Field("Vertisols", description="Soil classification", examples=["Vertisols"])
+    state: str = Field("Maharashtra", description="Indian State name", examples=["Maharashtra"])
+    farm_area: float = Field(2.5, gt=0.0, description="Farm operational area", examples=[2.5])
+    area_unit: str = Field("acre", description="Area unit ('acre', 'hectare', 'bigha')", examples=["acre"])
+
+    base_rainfall_mm: float = Field(800.0, ge=0.0, le=4000.0, description="Baseline seasonal rainfall (mm)", examples=[800.0])
+    base_temperature_c: float = Field(26.0, ge=-10.0, le=60.0, description="Baseline ambient temperature (°C)", examples=[26.0])
+    base_humidity_pct: float = Field(65.0, ge=0.0, le=100.0, description="Baseline relative humidity (%)", examples=[65.0])
+    base_ph: float = Field(6.8, ge=1.0, le=14.0, description="Baseline soil pH", examples=[6.8])
+    base_nitrogen: float = Field(60.0, ge=0.0, le=300.0, description="Baseline Nitrogen ratio (kg/ha)", examples=[60.0])
+    base_phosphorus: float = Field(35.0, ge=0.0, le=300.0, description="Baseline Phosphorus ratio (kg/ha)", examples=[35.0])
+    base_potassium: float = Field(40.0, ge=0.0, le=300.0, description="Baseline Potassium ratio (kg/ha)", examples=[40.0])
+    base_fertilizer: float = Field(75.0, ge=0.0, le=1000.0, description="Baseline fertilizer application (kg/ha)", examples=[75.0])
+    base_pesticide: float = Field(0.35, ge=0.0, le=50.0, description="Baseline pesticide application (kg/ha)", examples=[0.35])
+
+    base_price_per_quintal: float = Field(3000.0, gt=0.0, description="Baseline Mandi wholesale price (₹/quintal)", examples=[3000.0])
+    base_cost_per_ha: float = Field(35000.0, gt=0.0, description="Baseline CACP cultivation cost (₹/ha)", examples=[35000.0])
+
+    rainfall_shock_percent: float = Field(
+        0.0, ge=-60.0, le=60.0, description="Simulated rainfall deficit or surplus percentage (-60% to +60%)", examples=[-30.0]
+    )
+    price_shock_percent: float = Field(
+        0.0, ge=-60.0, le=60.0, description="Simulated market wholesale price shock percentage (-60% to +60%)", examples=[-20.0]
+    )
+    cost_shock_percent: float = Field(
+        0.0, ge=-30.0, le=60.0, description="Simulated input cost inflation percentage (-30% to +60%)", examples=[10.0]
+    )
+    pmfby_indemnity_level: float = Field(
+        0.80, description="PMFBY insurance indemnity level (0.70, 0.80, or 0.90)", examples=[0.80]
+    )
+
+
+class PMFBYSimulationResponse(BaseModel):
+    """Pradhan Mantri Fasal Bima Yojana (PMFBY) insurance payout model."""
+
+    indemnity_level: float = Field(..., description="Insurance indemnity level (0.70, 0.80, 0.90)")
+    threshold_yield_kg_ha: float = Field(..., description="Government threshold yield benchmark (kg/ha)")
+    actual_simulated_yield_kg_ha: float = Field(..., description="Yield predicted under climate shock (kg/ha)")
+    is_claim_triggered: bool = Field(..., description="Whether simulated yield fell below threshold")
+    shortfall_ratio: float = Field(..., description="Indemnity shortfall proportion [0.0 - 1.0]")
+    sum_insured_inr: float = Field(..., description="Scale of Finance total sum insured (₹)")
+    farmer_premium_rate_percent: float = Field(..., description="Statutory farmer premium rate (%)")
+    farmer_premium_inr: float = Field(..., description="Farmer premium payable (₹)")
+    estimated_claim_inr: float = Field(..., description="Projected insurance claim payout (₹)")
+    net_position_with_insurance_inr: float = Field(..., description="Simulated net profit after premium & claim (₹)")
+    formatted_claim_inr: str = Field(..., description="Formatted claim amount in ₹")
+    formatted_premium_inr: str = Field(..., description="Formatted premium amount in ₹")
+    formatted_net_position_inr: str = Field(..., description="Formatted net position in ₹")
+    guideline_reference: str = Field(..., description="Official government scheme citation")
+    caveat: str = Field(..., description="Limitation note on CCE area-yield determination")
+
+
+class ScenarioComparisonResponse(BaseModel):
+    """Comparative scenario analysis response."""
+
+    base_rainfall_mm: float
+    simulated_rainfall_mm: float
+    rainfall_shock_percent: float
+
+    base_price_per_quintal: float
+    simulated_price_per_quintal: float
+    price_shock_percent: float
+
+    base_yield_kg_ha: float
+    simulated_yield_kg_ha: float
+    yield_delta_kg_ha: float
+    yield_delta_percent: float
+
+    base_total_revenue: float
+    simulated_total_revenue: float
+    revenue_delta: float
+
+    base_total_cost: float
+    simulated_total_cost: float
+
+    base_net_profit: float
+    simulated_net_profit: float
+    profit_delta: float
+    profit_delta_percent: float
+
+    base_roi_percent: float
+    simulated_roi_percent: float
+
+    pmfby_insurance: PMFBYSimulationResponse
+    data_category: str = Field("Simulated", description="Explicit classification per data integrity contract")

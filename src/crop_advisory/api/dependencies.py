@@ -15,6 +15,7 @@ from crop_advisory.services.financial_analysis_service import (
 )
 from crop_advisory.services.geo_sensing_service import GeoSensingService
 from crop_advisory.services.market_service import MarketPriceService
+from crop_advisory.services.stress_simulation_service import StressSimulationService
 
 # Service singletons
 _recommender_singleton: CropRecommender = None
@@ -22,6 +23,7 @@ _yield_predictor_singleton: YieldPredictor = None
 _price_service_singleton: MarketPriceService = None
 _cost_service_singleton: CultivationCostService = None
 _geo_sensing_service_singleton: GeoSensingService = None
+_stress_simulation_service_singleton: StressSimulationService = None
 
 
 def get_crop_recommender() -> CropRecommender:
@@ -67,6 +69,14 @@ def get_geo_sensing_service() -> GeoSensingService:
     if _geo_sensing_service_singleton is None:
         _geo_sensing_service_singleton = GeoSensingService()
     return _geo_sensing_service_singleton
+
+
+def get_stress_simulation_service() -> StressSimulationService:
+    """Dependency provider for StressSimulationService singleton."""
+    global _stress_simulation_service_singleton
+    if _stress_simulation_service_singleton is None:
+        _stress_simulation_service_singleton = StressSimulationService()
+    return _stress_simulation_service_singleton
 
 
 def get_inference_limiter(request: Request) -> anyio.CapacityLimiter:

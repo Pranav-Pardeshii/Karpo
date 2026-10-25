@@ -266,3 +266,78 @@ export interface GeoSensingResponse {
   timestamp: string;
   overall_status: string;
 }
+
+export interface StressSimulationRequest {
+  crop: string;
+  season?: string;
+  soil_type?: string;
+  state?: string;
+  farm_area: number;
+  area_unit?: "acre" | "hectare" | "bigha";
+  base_rainfall_mm: number;
+  base_temperature_c?: number;
+  base_humidity_pct?: number;
+  base_ph?: number;
+  base_nitrogen?: number;
+  base_phosphorus?: number;
+  base_potassium?: number;
+  base_fertilizer?: number;
+  base_pesticide?: number;
+  base_price_per_quintal: number;
+  base_cost_per_ha: number;
+  rainfall_shock_percent: number;
+  price_shock_percent: number;
+  cost_shock_percent?: number;
+  pmfby_indemnity_level?: number;
+}
+
+export interface PMFBYSimulationResponse {
+  indemnity_level: number;
+  threshold_yield_kg_ha: number;
+  actual_simulated_yield_kg_ha: number;
+  is_claim_triggered: boolean;
+  shortfall_ratio: number;
+  sum_insured_inr: number;
+  farmer_premium_rate_percent: number;
+  farmer_premium_inr: number;
+  estimated_claim_inr: number;
+  net_position_with_insurance_inr: number;
+  formatted_claim_inr: string;
+  formatted_premium_inr: string;
+  formatted_net_position_inr: string;
+  guideline_reference: string;
+  caveat: string;
+}
+
+export interface ScenarioComparisonResponse {
+  base_rainfall_mm: number;
+  simulated_rainfall_mm: number;
+  rainfall_shock_percent: number;
+
+  base_price_per_quintal: number;
+  simulated_price_per_quintal: number;
+  price_shock_percent: number;
+
+  base_yield_kg_ha: number;
+  simulated_yield_kg_ha: number;
+  yield_delta_kg_ha: number;
+  yield_delta_percent: number;
+
+  base_total_revenue: number;
+  simulated_total_revenue: number;
+  revenue_delta: number;
+
+  base_total_cost: number;
+  simulated_total_cost: number;
+
+  base_net_profit: number;
+  simulated_net_profit: number;
+  profit_delta: number;
+  profit_delta_percent: number;
+
+  base_roi_percent: number;
+  simulated_roi_percent: number;
+
+  pmfby_insurance: PMFBYSimulationResponse;
+  data_category: string;
+}

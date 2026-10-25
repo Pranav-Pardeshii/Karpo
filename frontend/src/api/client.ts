@@ -13,7 +13,9 @@ import {
   HealthReadyResponse,
   MarketPriceListResponse,
   PriceInfo,
+  ScenarioComparisonResponse,
   StatesListResponse,
+  StressSimulationRequest,
   SupportedCrop,
   YieldBenchmark,
   YieldPredictionRequest,
@@ -177,4 +179,11 @@ export const api = {
         longitude
       )}`
     ),
+
+  // Climate & Market Stress Simulator
+  simulateStress: (payload: StressSimulationRequest) =>
+    request<ScenarioComparisonResponse>("/stress/simulate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

@@ -11,6 +11,7 @@ import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
+import { StressSimulator } from "../components/StressSimulator";
 import {
   BarChart,
   Bar,
@@ -533,6 +534,17 @@ export const FinancialAnalysisPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Stress & Risk Sensitivity Analysis */}
+      <StressSimulator
+        crop={lookupCrop}
+        state={lookupState}
+        farm_area={formData.farm_area}
+        area_unit={formData.area_unit}
+        base_rainfall_mm={800}
+        base_price_per_quintal={formData.price_per_quintal ?? 2250}
+        base_cost_per_ha={formData.cost_per_ha ?? 38000}
+      />
     </div>
   );
 };

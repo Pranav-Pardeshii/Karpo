@@ -26,6 +26,11 @@ from crop_advisory.services.market_service import (
     get_crop_price,
     load_prices_dataset,
 )
+from crop_advisory.services.stress_simulation_service import (
+    PMFBYSimulationResult,
+    ScenarioComparisonResult,
+    StressSimulationService,
+)
 
 __all__ = [
     "MarketPriceService",
@@ -43,4 +48,7 @@ __all__ = [
     "WeatherData",
     "SoilEstimateData",
     "LocationMetadata",
+    "StressSimulationService",
+    "ScenarioComparisonResult",
+    "PMFBYSimulationResult",
 ]
