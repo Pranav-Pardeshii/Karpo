@@ -29,19 +29,32 @@
 | Priority | Feature Area | Status | Planned Verification |
 | :--- | :--- | :--- | :--- |
 | **P1** | **One-Click Geo-Sensing (Feature 3)**: Live Open-Meteo Weather/Climate & Soil API integration with graceful manual fallback | Completed & Verified | 10 unit/API tests passed, frontend build clean, zero fake fallbacks |
-| **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | In Progress | Arithmetic unit tests, sensitivity matrix tests, UI stress simulator |
-| **P3** | **Shareable Kisan Advisory Card (Feature 6)**: Clean printable/downloadable high-density card matching underlying API values with zero fake metrics | Planned | Export tests, multi-language rendering, missing field tests |
-| **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Planned | Audio input validation tests, API contract tests, UI microphone control |
+| **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | Completed & Verified | ML model sensitivity on perturbed rainfall, PMFBY Area-Yield shortfall math, 5 unit/API tests passed, UI mounted |
+| **P3** | **Shareable Kisan Advisory Card (Feature 6)**: Clean printable/downloadable high-density card matching underlying API values with zero fake metrics | Completed & Verified | Component creation, print stylesheet, PDF export, multi-device share, zero fake metrics |
+| **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Next In Progress | Audio input validation tests, API contract tests, UI microphone control |
 | **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Planned | Image decoding & size validation tests, diagnosis API endpoint |
 | **P6** | **Crop Rotation & Intercropping Optimizer (Feature 5)**: Multi-season agronomic rotation (Kharif-Rabi-Zaid) based on soil nitrogen balance & intercropping synergy rules | Planned | Agronomic rule tests, multi-year plan generation tests |
 | **P7** | **Interactive 3D Farm Digital Twin (Feature 7)**: Lightweight Canvas/WebGL farm soil & moisture visualizer with simulation labels | Optional/Planned | Fallback validation, performance smoke test |
 
 ## 5. Recent Checkpoints & Actions
 - **Checkpoint 0**: Baseline established on branch `autonomous-farmer-intel`. Created `real-agriculture-data` and `farmer-first-ui` skills. Added `graphify-out/` to `.gitignore`.
-- **Checkpoint 1 (Feature 3: One-Click Geo-Sensing)**:
+- **Checkpoint 1 (Feature 3: One-Click Geo-Sensing - Commit `8da8774`)**:
   - Created `GeoSensingService` (`src/crop_advisory/services/geo_sensing_service.py`) integrating real Open-Meteo weather and ISRIC SoilGrids.
   - Implemented `GET /api/v1/geo/climate-soil` with full Pydantic schema validation.
   - Added 10 tests (`tests/unit/test_geo_sensing_service.py`, `tests/api/test_geo_endpoints.py`), all 76 tests in suite passing.
   - Implemented `GeoSensingBanner` component in frontend and integrated into `CropRecommendationPage`, `YieldPredictionPage`, and `CompositeAdvisoryPage`.
   - Frontend production build verified (`tsc && vite build` built clean in 8.51s).
-- **Next Action**: Implement Feature 4: Climate & Market Stress Simulator (interactive scenario analysis with rainfall shock, price shock, and defensible PMFBY threshold calculations).
+- **Checkpoint 2 (Feature 4: Climate & Market Stress Simulator - Commit `3e01c8c`)**:
+  - Implemented `StressSimulationService` (`src/crop_advisory/services/stress_simulation_service.py`) using real `YieldPredictor` inference over shocked rainfall and real `calculate_farm_financials()` over shocked mandi price and cultivation costs.
+  - Formulated PMFBY (Pradhan Mantri Fasal Bima Yojana) Area-Yield Index shortfall formula with statutory farmer premium caps (2.0% Kharif, 1.5% Rabi) and threshold yield indemnity levels (70%, 80%, 90%).
+  - Registered `POST /api/v1/stress/simulate` endpoint with complete schemas in `src/crop_advisory/api/v1/schemas.py`.
+  - Built interactive frontend component `StressSimulator.tsx` and mounted it into `FinancialAnalysisPage.tsx`.
+  - Added 5 new backend unit and API tests; all 81 backend tests passed; frontend build succeeded cleanly.
+- **Checkpoint 3 (Feature 6: Shareable Kisan Advisory Card)**:
+  - Created high-density, printable, downloadable `KisanAdvisoryCard` (`frontend/src/components/KisanAdvisoryCard.tsx`).
+  - Integrated zero-fabrication farmer personalization (optional Farmer Name & Survey/Field ID input fields).
+  - Consolidated 4 agronomic and economic pillars: Crop Recommendation (RandomForest), Projected Harvest Yield (XGBoost), Mandi Wholesale Rate (AGMARKNET APMC), and CACP C2 Cultivation Costs.
+  - Added actionable NPK soil chemistry diagnostics & pH reaction guidelines.
+  - Incorporated `@media print` clean black-and-white ink-saving stylesheet, PDF generation via native print dialog, and Web Share API fallback.
+  - Integrated into `CompositeAdvisoryPage.tsx`; verified with clean Vite production build.
+- **Next Action**: Implement Feature 1: Kisan Voice Copilot (farmer-friendly multilingual speech recognition and synthesis interface).
