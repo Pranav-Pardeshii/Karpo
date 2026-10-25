@@ -11,6 +11,7 @@ import {
   GeoSensingResponse,
   HealthLiveResponse,
   HealthReadyResponse,
+  LensInspectionResponse,
   MarketPriceListResponse,
   PriceInfo,
   ScenarioComparisonResponse,
@@ -51,11 +52,14 @@ export class ApiError extends Error {
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_PREFIX}${endpoint}`;
-  const headers = {
-    "Content-Type": "application/json",
+  const headers: Record<string, string> = {
     Accept: "application/json",
-    ...options?.headers,
+    ...((options?.headers as Record<string, string>) || {}),
   };
+
+  if (!(options?.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
@@ -194,5 +198,12 @@ export const api = {
     request<VoiceQueryResponse>("/voice/query", {
       method: "POST",
       body: JSON.stringify(payload),
+    }),
+
+  // Karpo Lens: Crop Disease Assistance
+  inspectCropImage: (formData: FormData) =>
+    request<LensInspectionResponse>("/lens/inspect", {
+      method: "POST",
+      body: formData,
     }),
 };

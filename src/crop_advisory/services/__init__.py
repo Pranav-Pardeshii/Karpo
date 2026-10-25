@@ -31,6 +31,7 @@ from crop_advisory.services.stress_simulation_service import (
     ScenarioComparisonResult,
     StressSimulationService,
 )
+from crop_advisory.services.lens_service import KarpoLensService
 from crop_advisory.services.voice_copilot_service import VoiceCopilotService
 
 __all__ = [
@@ -53,4 +54,5 @@ __all__ = [
     "ScenarioComparisonResult",
     "PMFBYSimulationResult",
     "VoiceCopilotService",
+    "KarpoLensService",
 ]

@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { api } from "../api/client";
 import { MetricCard } from "../components/ui/MetricCard";
 import { AgroSystemVisual } from "../components/visual/AgroSystemVisual";
+import { KarpoLens } from "../components/KarpoLens";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -440,7 +441,10 @@ export const OverviewPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Supported Agronomic Taxonomy */}
+      {/* 4. Karpo Lens: Field Crop Disease Assistance */}
+      <KarpoLens />
+
+      {/* 5. Supported Agronomic Taxonomy */}
       <section className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-obsidian-800 pb-4 mb-6">
           <div>

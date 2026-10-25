@@ -32,8 +32,8 @@
 | **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | Completed & Verified | ML model sensitivity on perturbed rainfall, PMFBY Area-Yield shortfall math, 5 unit/API tests passed, UI mounted |
 | **P3** | **Shareable Kisan Advisory Card (Feature 6)**: Clean printable/downloadable high-density card matching underlying API values with zero fake metrics | Completed & Verified | Component creation, print stylesheet, PDF export, multi-device share, zero fake metrics |
 | **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Completed & Verified | Web Speech STT/TTS in mr/hi/en, 9 unit/API tests passed, zero fake responses, honest missing crop handler |
-| **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Next In Progress | Image decoding & size validation tests, diagnosis API endpoint |
-| **P6** | **Crop Rotation & Intercropping Optimizer (Feature 5)**: Multi-season agronomic rotation (Kharif-Rabi-Zaid) based on soil nitrogen balance & intercropping synergy rules | Planned | Agronomic rule tests, multi-year plan generation tests |
+| **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Completed & Verified | Pillow image validation, zero fake diagnoses, honest model_unavailable state, ICAR symptom guide, 7 unit/API tests passed |
+| **P6** | **Crop Rotation & Intercropping Optimizer (Feature 5)**: Multi-season agronomic rotation (Kharif-Rabi-Zaid) based on soil nitrogen balance & intercropping synergy rules | Next In Progress | Agronomic rule tests, multi-year plan generation tests |
 | **P7** | **Interactive 3D Farm Digital Twin (Feature 7)**: Lightweight Canvas/WebGL farm soil & moisture visualizer with simulation labels | Optional/Planned | Fallback validation, performance smoke test |
 
 ## 5. Recent Checkpoints & Actions
@@ -57,11 +57,17 @@
   - Added actionable NPK soil chemistry diagnostics & pH reaction guidelines.
   - Incorporated `@media print` clean black-and-white ink-saving stylesheet, PDF generation via native print dialog, and Web Share API fallback.
   - Integrated into `CompositeAdvisoryPage.tsx`; verified with clean Vite production build.
-- **Checkpoint 4 (Feature 1: Kisan Voice Copilot)**:
+- **Checkpoint 4 (Feature 1: Kisan Voice Copilot - Commit `1474eac`)**:
   - Implemented `VoiceCopilotService` (`src/crop_advisory/services/voice_copilot_service.py`) with vernacular entity extraction for Marathi (मराठी), Hindi (हिंदी), and English.
   - Connected queries to verified AGMARKNET wholesale rates (`MarketPriceService`), CACP C2 cost benchmarks (`CultivationCostService`), and ICAR agronomic guidelines.
   - Added endpoint `POST /api/v1/voice/query` with complete Pydantic request/response schemas.
   - Implemented frontend component `KisanVoiceAssistant.tsx` using W3C Web Speech API for voice recognition (`mr-IN`, `hi-IN`, `en-IN`), browser speech synthesis for audio playback, and accessible text-input fallback.
   - Mounted `<KisanVoiceAssistant />` in global `Layout.tsx` for platform-wide availability.
   - Added 9 unit and API tests; total test suite now at 90 passed / 0 failed; frontend build clean.
-- **Next Action**: Implement Feature 2: Karpo Lens (Crop Disease Assistance). Inspect local model directory, build validated image upload pipeline, and provide honest diagnostics/unavailability state with authoritative ICAR treatment protocols.
+- **Checkpoint 5 (Feature 2: Karpo Lens Crop Disease Assistance)**:
+  - Built `KarpoLensService` (`src/crop_advisory/services/lens_service.py`) with strict image decoding (Pillow), size boundary enforcement (10MB limit), and resolution inspection.
+  - Strictly adhered to Real Agriculture Data Contract: Detected absence of CV disease model weights on disk and returned honest `model_unavailable` state without fabricating fake confidence scores or simulated pathogens.
+  - Compiled authoritative ICAR diagnostic symptom compendiums (NRRI, CICR, IISR, IIWBR) for Rice, Cotton, Soybean, Wheat, and Maize.
+  - Exposed endpoint `POST /api/v1/lens/inspect` and mounted frontend component `KarpoLens.tsx` in `OverviewPage.tsx`.
+  - Added 7 unit and API tests; full test suite now at 97 passed / 0 failed; frontend build verified clean in 4.57s.
+- **Next Action**: Implement Feature 5: Crop Rotation and Intercropping Optimizer (multi-season Kharif-Rabi-Zaid nitrogen replenishment and pulse intercropping rules).

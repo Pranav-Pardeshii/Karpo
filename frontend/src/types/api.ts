@@ -359,3 +359,26 @@ export interface VoiceQueryResponse {
   data_category: string;
   data_provenance: string;
 }
+
+export interface ICARSymptomItem {
+  disease_name: string;
+  key_symptoms: string;
+  cultural_management: string;
+  source: string;
+}
+
+export interface LensInspectionResponse {
+  filename: string;
+  format: string;
+  width: number;
+  height: number;
+  size_bytes: number;
+  status: "model_unavailable" | "verified" | "uncertain";
+  diagnosis: string | null;
+  confidence: number | null;
+  crop_evaluated: string | null;
+  message: string;
+  icar_symptom_guide: ICARSymptomItem[];
+  data_category: string;
+  data_provenance: string;
+}

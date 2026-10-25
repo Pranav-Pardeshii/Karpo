@@ -658,3 +658,36 @@ class VoiceQueryResponse(BaseModel):
     )
     data_provenance: str = Field(..., description="Explicit source traceability citation")
 
+
+# =========================================================================
+# 10. KARPO LENS CROP DISEASE ASSISTANCE SCHEMAS
+# =========================================================================
+
+
+class ICARSymptomItem(BaseModel):
+    """Authoritative disease diagnostic symptom description."""
+
+    disease_name: str
+    key_symptoms: str
+    cultural_management: str
+    source: str
+
+
+class LensInspectionResponse(BaseModel):
+    """Report on uploaded crop image validation, diagnosis state, and ICAR guidelines."""
+
+    filename: str = Field(..., description="Uploaded file name")
+    format: str = Field(..., description="Image format (JPEG, PNG, WEBP)")
+    width: int = Field(..., description="Image pixel width")
+    height: int = Field(..., description="Image pixel height")
+    size_bytes: int = Field(..., description="Raw file size in bytes")
+    status: str = Field(..., description="'model_unavailable' | 'verified' | 'uncertain'")
+    diagnosis: Optional[str] = Field(None, description="Confirmed or predicted disease diagnosis if model loaded")
+    confidence: Optional[float] = Field(None, description="Authentic model confidence score (never fabricated)")
+    crop_evaluated: Optional[str] = Field(None, description="Evaluated crop species")
+    message: str = Field(..., description="Transparent explanatory note for farmer")
+    icar_symptom_guide: List[ICARSymptomItem] = Field(default_factory=list, description="Verified ICAR diagnostic protocols")
+    data_category: str = Field(..., description="Data category ('Unavailable' when model offline, 'Predicted' when model available)")
+    data_provenance: str = Field(..., description="Traceable source citation")
+
+
