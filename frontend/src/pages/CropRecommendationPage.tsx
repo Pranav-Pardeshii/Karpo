@@ -7,6 +7,7 @@ import { CropRecommendationRequest, CropRecommendationResponse } from "../types/
 import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { StatusBanner } from "../components/ui/StatusBanner";
+import { GeoSensingBanner } from "../components/GeoSensingBanner";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -50,6 +51,21 @@ export const CropRecommendationPage: React.FC = () => {
 
   const handlePreset = (preset: Partial<CropRecommendationRequest>) => {
     setFormData((prev) => ({ ...prev, ...preset }));
+  };
+
+  const handleGeoAutoFill = (detected: {
+    temperature?: number;
+    humidity?: number;
+    rainfall?: number;
+    ph?: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...(detected.temperature !== undefined && { temperature: detected.temperature }),
+      ...(detected.humidity !== undefined && { humidity: detected.humidity }),
+      ...(detected.rainfall !== undefined && { rainfall: detected.rainfall }),
+      ...(detected.ph !== undefined && { ph: detected.ph }),
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -151,6 +167,8 @@ export const CropRecommendationPage: React.FC = () => {
               {t("soil_env_inputs")}
             </span>
           </div>
+
+          <GeoSensingBanner onAutoFill={handleGeoAutoFill} />
 
           {/* Macronutrients (NPK) */}
           <div className="space-y-3">

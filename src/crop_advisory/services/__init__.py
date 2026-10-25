@@ -14,6 +14,13 @@ from crop_advisory.services.financial_analysis_service import (
     FinancialAnalysisService,
     generate_crop_advisory,
 )
+from crop_advisory.services.geo_sensing_service import (
+    GeoSensingResult,
+    GeoSensingService,
+    LocationMetadata,
+    SoilEstimateData,
+    WeatherData,
+)
 from crop_advisory.services.market_service import (
     MarketPriceService,
     get_crop_price,
@@ -31,4 +38,9 @@ __all__ = [
     "FinancialAnalysisService",
     "CropAdvisoryReport",
     "generate_crop_advisory",
+    "GeoSensingService",
+    "GeoSensingResult",
+    "WeatherData",
+    "SoilEstimateData",
+    "LocationMetadata",
 ]

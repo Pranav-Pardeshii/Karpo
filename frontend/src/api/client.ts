@@ -8,6 +8,7 @@ import {
   FinancialAnalysisResponse,
   FullAdvisoryRequest,
   FullAdvisoryResponse,
+  GeoSensingResponse,
   HealthLiveResponse,
   HealthReadyResponse,
   MarketPriceListResponse,
@@ -168,4 +169,12 @@ export const api = {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+
+  // Geo-Sensing Weather & Soil
+  getGeoSensing: (latitude: number, longitude: number) =>
+    request<GeoSensingResponse>(
+      `/geo/climate-soil?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(
+        longitude
+      )}`
+    ),
 };

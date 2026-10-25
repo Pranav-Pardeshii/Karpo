@@ -10,6 +10,7 @@ from crop_advisory.api.v1.endpoints import (
     crops,
     cultivation_costs,
     financial_analysis,
+    geo,
     health,
     market,
     yield_prediction,
@@ -25,3 +26,4 @@ api_v1_router.include_router(market.router)
 api_v1_router.include_router(cultivation_costs.router)
 api_v1_router.include_router(financial_analysis.router)
 api_v1_router.include_router(advisory.router)
+api_v1_router.include_router(geo.router)

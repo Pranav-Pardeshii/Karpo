@@ -224,3 +224,45 @@ export interface ApiErrorResponse {
   details?: Array<{ field: string; message: string; type: string }> | string | null;
   timestamp?: string;
 }
+
+export interface LocationMetadataResponse {
+  latitude: number;
+  longitude: number;
+  locality?: string | null;
+  district?: string | null;
+  state?: string | null;
+  canonical_state?: string | null;
+  country?: string | null;
+  source: string;
+  data_category: string;
+}
+
+export interface WeatherDataResponse {
+  temperature_c?: number | null;
+  humidity_pct?: number | null;
+  precipitation_mm?: number | null;
+  two_week_rainfall_mm?: number | null;
+  observation_time: string;
+  source: string;
+  data_category: string;
+  status: string;
+  error_message?: string | null;
+}
+
+export interface SoilEstimateDataResponse {
+  ph?: number | null;
+  soil_type_hint?: string | null;
+  source: string;
+  data_category: string;
+  status: string;
+  caveat: string;
+  error_message?: string | null;
+}
+
+export interface GeoSensingResponse {
+  location: LocationMetadataResponse;
+  weather: WeatherDataResponse;
+  soil: SoilEstimateDataResponse;
+  timestamp: string;
+  overall_status: string;
+}

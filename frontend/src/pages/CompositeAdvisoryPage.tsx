@@ -17,6 +17,7 @@ import { Button } from "../components/ui/Button";
 import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
+import { GeoSensingBanner } from "../components/GeoSensingBanner";
 import { useLanguage } from "../context/LanguageContext";
 
 const SEASONS = ["Kharif", "Rabi", "Whole Year", "Summer", "Autumn", "Winter"];
@@ -110,6 +111,23 @@ export const CompositeAdvisoryPage: React.FC = () => {
     }));
   };
 
+  const handleGeoAutoFill = (detected: {
+    temperature?: number;
+    humidity?: number;
+    rainfall?: number;
+    ph?: number;
+    state?: string;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...(detected.temperature !== undefined && { temperature: detected.temperature }),
+      ...(detected.humidity !== undefined && { humidity: detected.humidity }),
+      ...(detected.rainfall !== undefined && { rainfall: detected.rainfall }),
+      ...(detected.ph !== undefined && { ph: detected.ph }),
+      ...(detected.state && { state: detected.state }),
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate(formData);
@@ -160,6 +178,8 @@ export const CompositeAdvisoryPage: React.FC = () => {
               {t("comprehensive_inputs")}
             </span>
           </div>
+
+          <GeoSensingBanner onAutoFill={handleGeoAutoFill} />
 
           {/* Retention Notification */}
           {locationState?.fromFinancials && (

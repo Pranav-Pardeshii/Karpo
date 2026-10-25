@@ -28,8 +28,8 @@
 
 | Priority | Feature Area | Status | Planned Verification |
 | :--- | :--- | :--- | :--- |
-| **P1** | **One-Click Geo-Sensing (Feature 3)**: Live Open-Meteo Weather/Climate & Soil API integration with graceful manual fallback | Planned | Pytest live/mock API tests, UI geolocation hook, TypeScript build |
-| **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | Planned | Arithmetic unit tests, sensitivity matrix tests, UI stress simulator |
+| **P1** | **One-Click Geo-Sensing (Feature 3)**: Live Open-Meteo Weather/Climate & Soil API integration with graceful manual fallback | Completed & Verified | 10 unit/API tests passed, frontend build clean, zero fake fallbacks |
+| **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | In Progress | Arithmetic unit tests, sensitivity matrix tests, UI stress simulator |
 | **P3** | **Shareable Kisan Advisory Card (Feature 6)**: Clean printable/downloadable high-density card matching underlying API values with zero fake metrics | Planned | Export tests, multi-language rendering, missing field tests |
 | **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Planned | Audio input validation tests, API contract tests, UI microphone control |
 | **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Planned | Image decoding & size validation tests, diagnosis API endpoint |
@@ -38,4 +38,10 @@
 
 ## 5. Recent Checkpoints & Actions
 - **Checkpoint 0**: Baseline established on branch `autonomous-farmer-intel`. Created `real-agriculture-data` and `farmer-first-ui` skills. Added `graphify-out/` to `.gitignore`.
-- **Next Action**: Implement Feature 3: One-Click Geo-Sensing (backend weather/climate integration service with Open-Meteo & soil estimation, plus frontend location hook and UI autofill).
+- **Checkpoint 1 (Feature 3: One-Click Geo-Sensing)**:
+  - Created `GeoSensingService` (`src/crop_advisory/services/geo_sensing_service.py`) integrating real Open-Meteo weather and ISRIC SoilGrids.
+  - Implemented `GET /api/v1/geo/climate-soil` with full Pydantic schema validation.
+  - Added 10 tests (`tests/unit/test_geo_sensing_service.py`, `tests/api/test_geo_endpoints.py`), all 76 tests in suite passing.
+  - Implemented `GeoSensingBanner` component in frontend and integrated into `CropRecommendationPage`, `YieldPredictionPage`, and `CompositeAdvisoryPage`.
+  - Frontend production build verified (`tsc && vite build` built clean in 8.51s).
+- **Next Action**: Implement Feature 4: Climate & Market Stress Simulator (interactive scenario analysis with rainfall shock, price shock, and defensible PMFBY threshold calculations).

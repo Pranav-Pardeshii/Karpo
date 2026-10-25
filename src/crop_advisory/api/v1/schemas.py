@@ -455,3 +455,58 @@ class ErrorResponse(BaseModel):
     timestamp: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), description="Timestamp in ISO 8601 UTC"
     )
+
+
+# =========================================================================
+# 9. GEO-SENSING SCHEMAS
+# =========================================================================
+
+
+class LocationMetadataResponse(BaseModel):
+    """Geographic and administrative hierarchy."""
+
+    latitude: float = Field(..., ge=-90.0, le=90.0, description="Latitude coordinate")
+    longitude: float = Field(..., ge=-180.0, le=180.0, description="Longitude coordinate")
+    locality: Optional[str] = Field(None, description="Local village or city name")
+    district: Optional[str] = Field(None, description="District administrative entity")
+    state: Optional[str] = Field(None, description="State administrative division")
+    canonical_state: Optional[str] = Field(None, description="Mapped canonical Karpo state")
+    country: Optional[str] = Field(None, description="Country name")
+    source: str = Field(..., description="Geocoding provider identity")
+    data_category: str = Field(..., description="Observed or Unavailable")
+
+
+class WeatherDataResponse(BaseModel):
+    """Meteorological observations and forecasts."""
+
+    temperature_c: Optional[float] = Field(None, description="Current ambient temperature (°C)")
+    humidity_pct: Optional[float] = Field(None, description="Current relative humidity percentage (%)")
+    precipitation_mm: Optional[float] = Field(None, description="Current precipitation rate (mm)")
+    two_week_rainfall_mm: Optional[float] = Field(None, description="14-day cumulative rainfall (mm)")
+    observation_time: str = Field(..., description="Observation timestamp in ISO 8601")
+    source: str = Field(..., description="Meteorological provider name")
+    data_category: str = Field(..., description="Observed, Forecast, or Unavailable")
+    status: str = Field(..., description="success or failed")
+    error_message: Optional[str] = Field(None, description="Safe error explanation if failed")
+
+
+class SoilEstimateDataResponse(BaseModel):
+    """Digital soil mapping estimates."""
+
+    ph: Optional[float] = Field(None, description="Estimated topsoil pH in H2O")
+    soil_type_hint: Optional[str] = Field(None, description="Indicative soil order if resolved")
+    source: str = Field(..., description="Digital soil mapping provider name")
+    data_category: str = Field(..., description="Estimated or Unavailable")
+    status: str = Field(..., description="success, unavailable, or failed")
+    caveat: str = Field(..., description="Scientific limitations and laboratory recommendation")
+    error_message: Optional[str] = Field(None, description="Safe error explanation if unavailable")
+
+
+class GeoSensingResponse(BaseModel):
+    """Integrated geo-sensing package for automated form enrichment."""
+
+    location: LocationMetadataResponse
+    weather: WeatherDataResponse
+    soil: SoilEstimateDataResponse
+    timestamp: str = Field(..., description="Response generation timestamp in UTC")
+    overall_status: str = Field(..., description="success, partial, or failed")
