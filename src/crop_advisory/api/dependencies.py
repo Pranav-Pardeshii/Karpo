@@ -16,6 +16,7 @@ from crop_advisory.services.financial_analysis_service import (
 from crop_advisory.services.geo_sensing_service import GeoSensingService
 from crop_advisory.services.market_service import MarketPriceService
 from crop_advisory.services.stress_simulation_service import StressSimulationService
+from crop_advisory.services.voice_copilot_service import VoiceCopilotService
 
 # Service singletons
 _recommender_singleton: CropRecommender = None
@@ -24,6 +25,7 @@ _price_service_singleton: MarketPriceService = None
 _cost_service_singleton: CultivationCostService = None
 _geo_sensing_service_singleton: GeoSensingService = None
 _stress_simulation_service_singleton: StressSimulationService = None
+_voice_copilot_service_singleton: VoiceCopilotService = None
 
 
 def get_crop_recommender() -> CropRecommender:
@@ -97,3 +99,15 @@ def require_readiness(request: Request) -> None:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Application models or datasets are not fully initialized.",
         )
+
+
+def get_voice_copilot_service() -> VoiceCopilotService:
+    """Dependency provider for Kisan Voice Copilot service."""
+    global _voice_copilot_service_singleton
+    if _voice_copilot_service_singleton is None:
+        _voice_copilot_service_singleton = VoiceCopilotService(
+            market_price_service=get_price_service(),
+            cost_service=get_cost_service(),
+        )
+    return _voice_copilot_service_singleton
+

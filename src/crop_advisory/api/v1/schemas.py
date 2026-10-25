@@ -609,3 +609,52 @@ class ScenarioComparisonResponse(BaseModel):
 
     pmfby_insurance: PMFBYSimulationResponse
     data_category: str = Field("Simulated", description="Explicit classification per data integrity contract")
+
+
+# =========================================================================
+# 9. KISAN VOICE COPILOT SCHEMAS
+# =========================================================================
+
+
+class VoiceQueryRequest(BaseModel):
+    """Spoken or typed farmer natural language inquiry."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    query_text: str = Field(
+        ...,
+        min_length=1,
+        max_length=500,
+        description="Farmer spoken transcript or typed text",
+        examples=["सोयाबीनचा भाव काय आहे?", "What is the mandi price of wheat?"],
+    )
+    language: str = Field(
+        "en",
+        description="ISO language code ('en', 'mr', 'hi')",
+        examples=["mr"],
+    )
+    state: Optional[str] = Field(
+        "Maharashtra",
+        description="Optional regional state context",
+        examples=["Maharashtra"],
+    )
+
+
+class VoiceQueryResponse(BaseModel):
+    """Actionable natural language response for farmer audio playback & card rendering."""
+
+    query_text: str = Field(..., description="Original input query")
+    language: str = Field(..., description="Resolved response language code")
+    intent: str = Field(
+        ...,
+        description="Detected agronomic intent (market_price, cultivation_cost, crop_advisory, general_help, unrecognized)",
+    )
+    matched_crop: Optional[str] = Field(None, description="Identified canonical crop name if present")
+    spoken_text: str = Field(..., description="Concise text optimized for text-to-speech pronunciation")
+    display_text: str = Field(..., description="Rich text for display card")
+    structured_data: Optional[Dict[str, Any]] = Field(None, description="Raw underlying verified data records")
+    data_category: str = Field(
+        ..., description="Data category per real agriculture contract (Observed, Historical, Estimated, Unavailable)"
+    )
+    data_provenance: str = Field(..., description="Explicit source traceability citation")
+

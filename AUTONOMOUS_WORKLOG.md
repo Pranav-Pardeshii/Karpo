@@ -31,8 +31,8 @@
 | **P1** | **One-Click Geo-Sensing (Feature 3)**: Live Open-Meteo Weather/Climate & Soil API integration with graceful manual fallback | Completed & Verified | 10 unit/API tests passed, frontend build clean, zero fake fallbacks |
 | **P2** | **Climate & Market Stress Simulator (Feature 4)**: Real-time sensitivity sliders (Rainfall deficit, Mandi crash, Water stress, PMFBY insurance bounds) | Completed & Verified | ML model sensitivity on perturbed rainfall, PMFBY Area-Yield shortfall math, 5 unit/API tests passed, UI mounted |
 | **P3** | **Shareable Kisan Advisory Card (Feature 6)**: Clean printable/downloadable high-density card matching underlying API values with zero fake metrics | Completed & Verified | Component creation, print stylesheet, PDF export, multi-device share, zero fake metrics |
-| **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Next In Progress | Audio input validation tests, API contract tests, UI microphone control |
-| **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Planned | Image decoding & size validation tests, diagnosis API endpoint |
+| **P4** | **Kisan Voice Copilot (Feature 1)**: Web Speech API voice capture + backend speech synthesis contract in Marathi/Hindi/English calling recommendation & financials | Completed & Verified | Web Speech STT/TTS in mr/hi/en, 9 unit/API tests passed, zero fake responses, honest missing crop handler |
+| **P5** | **Karpo Lens: Crop Disease Assistance (Feature 2)**: Image upload validation, real model inspection/integration or verified honest unavailability state with ICAR advisory | Next In Progress | Image decoding & size validation tests, diagnosis API endpoint |
 | **P6** | **Crop Rotation & Intercropping Optimizer (Feature 5)**: Multi-season agronomic rotation (Kharif-Rabi-Zaid) based on soil nitrogen balance & intercropping synergy rules | Planned | Agronomic rule tests, multi-year plan generation tests |
 | **P7** | **Interactive 3D Farm Digital Twin (Feature 7)**: Lightweight Canvas/WebGL farm soil & moisture visualizer with simulation labels | Optional/Planned | Fallback validation, performance smoke test |
 
@@ -50,11 +50,18 @@
   - Registered `POST /api/v1/stress/simulate` endpoint with complete schemas in `src/crop_advisory/api/v1/schemas.py`.
   - Built interactive frontend component `StressSimulator.tsx` and mounted it into `FinancialAnalysisPage.tsx`.
   - Added 5 new backend unit and API tests; all 81 backend tests passed; frontend build succeeded cleanly.
-- **Checkpoint 3 (Feature 6: Shareable Kisan Advisory Card)**:
+- **Checkpoint 3 (Feature 6: Shareable Kisan Advisory Card - Commit `0965a87`)**:
   - Created high-density, printable, downloadable `KisanAdvisoryCard` (`frontend/src/components/KisanAdvisoryCard.tsx`).
   - Integrated zero-fabrication farmer personalization (optional Farmer Name & Survey/Field ID input fields).
   - Consolidated 4 agronomic and economic pillars: Crop Recommendation (RandomForest), Projected Harvest Yield (XGBoost), Mandi Wholesale Rate (AGMARKNET APMC), and CACP C2 Cultivation Costs.
   - Added actionable NPK soil chemistry diagnostics & pH reaction guidelines.
   - Incorporated `@media print` clean black-and-white ink-saving stylesheet, PDF generation via native print dialog, and Web Share API fallback.
   - Integrated into `CompositeAdvisoryPage.tsx`; verified with clean Vite production build.
-- **Next Action**: Implement Feature 1: Kisan Voice Copilot (farmer-friendly multilingual speech recognition and synthesis interface).
+- **Checkpoint 4 (Feature 1: Kisan Voice Copilot)**:
+  - Implemented `VoiceCopilotService` (`src/crop_advisory/services/voice_copilot_service.py`) with vernacular entity extraction for Marathi (मराठी), Hindi (हिंदी), and English.
+  - Connected queries to verified AGMARKNET wholesale rates (`MarketPriceService`), CACP C2 cost benchmarks (`CultivationCostService`), and ICAR agronomic guidelines.
+  - Added endpoint `POST /api/v1/voice/query` with complete Pydantic request/response schemas.
+  - Implemented frontend component `KisanVoiceAssistant.tsx` using W3C Web Speech API for voice recognition (`mr-IN`, `hi-IN`, `en-IN`), browser speech synthesis for audio playback, and accessible text-input fallback.
+  - Mounted `<KisanVoiceAssistant />` in global `Layout.tsx` for platform-wide availability.
+  - Added 9 unit and API tests; total test suite now at 90 passed / 0 failed; frontend build clean.
+- **Next Action**: Implement Feature 2: Karpo Lens (Crop Disease Assistance). Inspect local model directory, build validated image upload pipeline, and provide honest diagnostics/unavailability state with authoritative ICAR treatment protocols.

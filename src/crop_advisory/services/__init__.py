@@ -31,6 +31,7 @@ from crop_advisory.services.stress_simulation_service import (
     ScenarioComparisonResult,
     StressSimulationService,
 )
+from crop_advisory.services.voice_copilot_service import VoiceCopilotService
 
 __all__ = [
     "MarketPriceService",
@@ -51,4 +52,5 @@ __all__ = [
     "StressSimulationService",
     "ScenarioComparisonResult",
     "PMFBYSimulationResult",
+    "VoiceCopilotService",
 ]

@@ -14,6 +14,7 @@ from crop_advisory.api.v1.endpoints import (
     health,
     market,
     stress,
+    voice,
     yield_prediction,
 )
 
@@ -29,3 +30,5 @@ api_v1_router.include_router(financial_analysis.router)
 api_v1_router.include_router(advisory.router)
 api_v1_router.include_router(geo.router)
 api_v1_router.include_router(stress.router)
+api_v1_router.include_router(voice.router)
+

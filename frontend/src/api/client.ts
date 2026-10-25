@@ -17,6 +17,8 @@ import {
   StatesListResponse,
   StressSimulationRequest,
   SupportedCrop,
+  VoiceQueryRequest,
+  VoiceQueryResponse,
   YieldBenchmark,
   YieldPredictionRequest,
   YieldPredictionResponse,
@@ -183,6 +185,13 @@ export const api = {
   // Climate & Market Stress Simulator
   simulateStress: (payload: StressSimulationRequest) =>
     request<ScenarioComparisonResponse>("/stress/simulate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  // Kisan Voice Copilot
+  queryVoiceCopilot: (payload: VoiceQueryRequest) =>
+    request<VoiceQueryResponse>("/voice/query", {
       method: "POST",
       body: JSON.stringify(payload),
     }),

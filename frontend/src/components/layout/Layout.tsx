@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { ContourGrid } from "../visual/ContourGrid";
+import { KisanVoiceAssistant } from "../KisanVoiceAssistant";
 import { useLanguage } from "../../context/LanguageContext";
 
 export const Layout: React.FC = () => {
@@ -18,6 +19,9 @@ export const Layout: React.FC = () => {
           <Outlet />
         </div>
       </main>
+
+      {/* Multilingual Voice Copilot */}
+      <KisanVoiceAssistant />
 
       {/* Clean Brutalist Footer */}
       <footer className="border-t border-obsidian-750 bg-obsidian-950 mt-auto">

@@ -341,3 +341,21 @@ export interface ScenarioComparisonResponse {
   pmfby_insurance: PMFBYSimulationResponse;
   data_category: string;
 }
+
+export interface VoiceQueryRequest {
+  query_text: string;
+  language?: string;
+  state?: string;
+}
+
+export interface VoiceQueryResponse {
+  query_text: string;
+  language: string;
+  intent: string;
+  matched_crop: string | null;
+  spoken_text: string;
+  display_text: string;
+  structured_data: Record<string, any> | null;
+  data_category: string;
+  data_provenance: string;
+}
