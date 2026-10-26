@@ -9,7 +9,7 @@ export const Layout: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen flex flex-col bg-obsidian-900 text-chalk-100 relative selection:bg-signal-red selection:text-white">
+    <div className="min-h-screen flex flex-col bg-obsidian-950 text-chalk-100 relative selection:bg-signal-red selection:text-white">
       {/* Compact Predictable Brand Header & Navigation with Language Selector */}
       <Header />
 
@@ -24,7 +24,7 @@ export const Layout: React.FC = () => {
       <KisanVoiceAssistant />
 
       {/* Clean Brutalist Footer */}
-      <footer className="border-t border-obsidian-750 bg-obsidian-950 mt-auto">
+      <footer className="border-t border-obsidian-800 bg-white mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 font-mono text-xs text-obsidian-400">
           <div>
             <div className="font-bold text-chalk-100 tracking-technical uppercase mb-1">

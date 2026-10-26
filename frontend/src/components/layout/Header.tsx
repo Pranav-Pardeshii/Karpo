@@ -35,14 +35,14 @@ export const Header: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <header className="border-b border-obsidian-750 bg-obsidian-950/95 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-obsidian-800 bg-white sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Brand Wordmark & Restrained Descriptor */}
           <div className="flex items-baseline gap-3 shrink-0">
             <Link
               to="/"
-              className="font-display font-black text-2xl sm:text-3xl tracking-tighter text-chalk-50 uppercase hover:text-white transition-colors"
+              className="font-display font-black text-2xl sm:text-3xl tracking-tighter text-chalk-50 uppercase hover:text-signal-red transition-colors"
             >
               KARPO
             </Link>
@@ -52,7 +52,7 @@ export const Header: React.FC = () => {
             {/* Discreet operational status indicator */}
             <span
               className={`w-1.5 h-1.5 rounded-full inline-block ${
-                isReady ? "bg-signal-green" : isError ? "bg-signal-red" : "bg-signal-amber animate-pulse"
+                isReady ? "bg-signal-green" : isError ? "bg-signal-error" : "bg-signal-amber animate-pulse"
               }`}
               title={isReady ? t("status_operational") : isError ? t("status_offline") : t("status_connecting")}
               aria-label={isReady ? t("status_operational") : t("status_connecting")}
@@ -72,8 +72,8 @@ export const Header: React.FC = () => {
                   className={({ isActive }) =>
                     `px-3 py-1.5 transition-colors uppercase tracking-technical ${
                       isActive
-                        ? "text-chalk-50 bg-obsidian-850 border border-obsidian-700 shadow-brutal-subtle font-bold"
-                        : "text-obsidian-300 hover:text-chalk-100 hover:bg-obsidian-900 border border-transparent"
+                        ? "text-signal-red bg-obsidian-850 border border-obsidian-800 shadow-sm font-bold"
+                        : "text-obsidian-400 hover:text-chalk-100 hover:bg-obsidian-850 border border-transparent"
                     }`
                   }
                 >
@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="p-2 text-chalk-100 hover:text-white bg-obsidian-900 border border-obsidian-750 focus:outline-none focus:ring-1 focus:ring-signal-red"
+              className="p-2 text-chalk-100 hover:text-signal-red bg-white border border-obsidian-800 focus:outline-none focus:ring-1 focus:ring-signal-red"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -104,7 +104,7 @@ export const Header: React.FC = () => {
 
       {/* Accessible Mobile Drawer / Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-obsidian-800 bg-obsidian-950 px-4 py-3 space-y-2 font-mono text-xs">
+        <div className="lg:hidden border-t border-obsidian-800 bg-white px-4 py-3 space-y-2 font-mono text-xs">
           <div className="space-y-1">
             {navItems.map((item) => (
               <NavLink
@@ -113,8 +113,8 @@ export const Header: React.FC = () => {
                 className={({ isActive }) =>
                   `block px-3 py-2.5 uppercase tracking-technical transition-colors ${
                     isActive
-                      ? "bg-obsidian-850 text-chalk-50 border-l-2 border-signal-red font-bold"
-                      : "text-obsidian-300 hover:text-white hover:bg-obsidian-900"
+                      ? "bg-obsidian-850 text-signal-red border-l-2 border-signal-red font-bold"
+                      : "text-obsidian-400 hover:text-chalk-100 hover:bg-obsidian-850"
                   }`
                 }
               >

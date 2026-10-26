@@ -5,51 +5,54 @@ export default {
     extend: {
       colors: {
         obsidian: {
-          950: "#060709",
-          900: "#0A0C10",
-          850: "#101319",
-          800: "#161A22",
-          750: "#1D222E",
-          700: "#262C3A",
-          650: "#31384A",
-          600: "#414A60",
-          500: "#606D8A",
-          400: "#8694B0",
-          300: "#AEBAD1",
+          950: "#F7F5EF", // Page background: warm ivory
+          900: "#FFFFFF", // Cards and panels: white
+          850: "#EAF0E6", // Soft green backgrounds / elevated cards
+          800: "#E3E6DF", // Borders and dividers
+          750: "#E3E6DF", // Distinct borders
+          700: "#D6DAD1", // Interactive borders / subtle outline
+          650: "#CBD2C5", // Accent borders
+          600: "#789477", // Muted sage / secondary green
+          500: "#789477", // Secondary green / icons
+          400: "#647568", // Secondary text / muted labels
+          300: "#647568", // Secondary text
         },
         ink: {
-          950: "#060709",
-          900: "#0A0C10",
-          850: "#101319",
-          800: "#161A22",
-          700: "#262C3A",
-          600: "#414A60",
-          500: "#606D8A",
-          400: "#8694B0",
+          950: "#202820",
+          900: "#202820",
+          850: "#202820",
+          800: "#202820",
+          700: "#202820",
+          600: "#354238",
+          500: "#647568",
+          400: "#647568",
         },
         chalk: {
-          50: "#FFFFFF",
-          100: "#F5F4EF",
-          200: "#EAE8E1",
-          300: "#DCD9CE",
-          400: "#B8B4A5",
-          500: "#8C887A",
+          50: "#202820", // Main text
+          100: "#202820", // Main text
+          200: "#202820", // Main text
+          300: "#354238", // Slightly softer text
+          400: "#647568", // Secondary text
+          500: "#647568", // Secondary text
         },
         paper: {
-          100: "#F5F3EC",
-          200: "#EAE7DD",
-          300: "#DDD9CC",
-          ink: "#08090C",
+          100: "#FFFFFF",
+          200: "#EAF0E6",
+          300: "#E3E6DF",
+          ink: "#202820",
         },
         signal: {
-          red: "#FF2A2A",
-          darkred: "#D41919",
-          amber: "#F59E0B",
-          green: "#22C55E",
-          blue: "#3B82F6",
+          red: "#244B35", // Primary green (forest green)
+          darkred: "#193A28", // Primary hover
+          lime: "#789477", // Secondary green (muted sage)
+          mint: "#EAF0E6", // Soft green background
+          amber: "#A66B18", // Warning
+          green: "#357A4A", // Success
+          blue: "#244B35",
+          error: "#B54747", // Error
         },
-        borderMuted: "#1F2432",
-        borderLight: "#2E3648",
+        borderMuted: "#E3E6DF",
+        borderLight: "#E3E6DF",
       },
       fontFamily: {
         display: ['"Space Grotesk"', "Inter", "-apple-system", "sans-serif"],
@@ -67,10 +70,13 @@ export default {
         none: "0px",
       },
       boxShadow: {
-        brutal: "3px 3px 0px 0px #000000",
-        "brutal-red": "3px 3px 0px 0px #FF2A2A",
-        "brutal-chalk": "3px 3px 0px 0px #EAE8E1",
-        "brutal-subtle": "2px 2px 0px 0px rgba(0, 0, 0, 0.7)",
+        brutal: "2px 2px 0px 0px rgba(32, 40, 32, 0.08)",
+        "brutal-red": "2px 2px 0px 0px #244B35",
+        "brutal-neon": "2px 2px 0px 0px #789477",
+        "brutal-chalk": "2px 2px 0px 0px #E3E6DF",
+        "brutal-subtle": "1px 1px 0px 0px rgba(32, 40, 32, 0.06)",
+        neon: "0 0 10px rgba(36, 75, 53, 0.12)",
+        "neon-sm": "0 0 5px rgba(36, 75, 53, 0.08)",
       },
     },
   },

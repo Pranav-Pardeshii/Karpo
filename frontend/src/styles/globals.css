@@ -4,14 +4,15 @@
 
 @layer base {
   :root {
-    --bg-canvas: #0A0C10;
-    --bg-surface: #101319;
-    --bg-panel: #161A22;
-    --text-chalk: #F5F4EF;
-    --text-dim: #8694B0;
-    --signal-red: #FF2A2A;
-    --border-grid: #262C3A;
-    --border-light: #31384A;
+    --bg-canvas: #F7F5EF;
+    --bg-surface: #FFFFFF;
+    --bg-panel: #FFFFFF;
+    --text-chalk: #202820;
+    --text-dim: #647568;
+    --signal-red: #244B35;
+    --signal-lime: #789477;
+    --border-grid: #E3E6DF;
+    --border-light: #E3E6DF;
   }
 
   * {
@@ -20,8 +21,8 @@
   }
 
   body {
-    background-color: #0A0C10;
-    color: #F5F4EF;
+    background-color: #F7F5EF;
+    color: #202820;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
     letter-spacing: -0.015em;
@@ -29,56 +30,57 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Universal input, select & textarea brutalist dark overrides */
+  /* Universal input, select & textarea brutalist overrides */
   input, select, textarea {
-    background-color: #0E1117 !important;
-    color: #F5F4EF !important;
-    border-color: #262C3A !important;
+    background-color: #FFFFFF !important;
+    color: #202820 !important;
+    border-color: #E3E6DF !important;
     border-radius: 0 !important;
     font-family: "JetBrains Mono", monospace !important;
   }
 
   input:focus, select:focus, textarea:focus {
-    border-color: #FF2A2A !important;
-    background-color: #141822 !important;
+    border-color: #244B35 !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 0 0 1px #244B35 !important;
     outline: none !important;
   }
 
   input::placeholder, textarea::placeholder {
-    color: #55607C !important;
+    color: #647568 !important;
   }
 
-  /* Chrome autofill dark reset */
+  /* Chrome autofill reset */
   input:-webkit-autofill,
   input:-webkit-autofill:hover, 
   input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #F5F4EF !important;
-    -webkit-box-shadow: 0 0 0px 1000px #0E1117 inset !important;
+    -webkit-text-fill-color: #202820 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
     transition: background-color 5000s ease-in-out 0s;
   }
 
   /* Sharp Industrial Scrollbar */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0A0C10;
-    border-left: 1px solid #1D222E;
+    background: #F7F5EF;
+    border-left: 1px solid #E3E6DF;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #262C3A;
+    background: #D6DAD1;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #FF2A2A;
+    background: #789477;
   }
 
   /* Accessibility focus ring */
   *:focus-visible {
-    outline: 2px solid #FF2A2A;
+    outline: 2px solid #244B35;
     outline-offset: 1px;
   }
 }
@@ -99,7 +101,7 @@
     font-family: "JetBrains Mono", monospace;
     font-size: 11px;
     line-height: 1;
-    color: #414A60;
+    color: #789477;
     pointer-events: none;
     user-select: none;
   }
@@ -116,15 +118,15 @@
   .grid-pattern-dark {
     background-size: 32px 32px;
     background-image: 
-      linear-gradient(to right, rgba(49, 56, 74, 0.25) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(49, 56, 74, 0.25) 1px, transparent 1px);
+      linear-gradient(to right, rgba(120, 148, 119, 0.15) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(120, 148, 119, 0.15) 1px, transparent 1px);
   }
 
   .grid-pattern-subtle {
     background-size: 16px 16px;
     background-image: 
-      linear-gradient(to right, rgba(38, 44, 58, 0.35) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(38, 44, 58, 0.35) 1px, transparent 1px);
+      linear-gradient(to right, rgba(120, 148, 119, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(120, 148, 119, 0.12) 1px, transparent 1px);
   }
 }
 

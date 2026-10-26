@@ -20,8 +20,8 @@ export const LanguageSwitcher: React.FC<{ isMobile?: boolean }> = ({ isMobile })
               onClick={() => setLanguage(opt.code)}
               className={`py-2 px-2 text-center font-mono text-xs uppercase tracking-technical border transition-colors ${
                 language === opt.code
-                  ? "bg-obsidian-800 text-chalk-50 border-signal-green font-bold shadow-brutal-subtle"
-                  : "bg-obsidian-900 text-obsidian-400 hover:text-white border-obsidian-750"
+                  ? "bg-obsidian-850 text-signal-red border-signal-red font-bold shadow-sm"
+                  : "bg-white text-obsidian-400 hover:text-chalk-100 hover:bg-obsidian-850 border-obsidian-800"
               }`}
             >
               <div className="font-sans font-medium text-xs">{opt.nativeLabel}</div>
@@ -34,7 +34,7 @@ export const LanguageSwitcher: React.FC<{ isMobile?: boolean }> = ({ isMobile })
   }
 
   return (
-    <div className="inline-flex items-center gap-1 border border-obsidian-750 bg-obsidian-900/90 p-0.5 rounded shadow-brutal-subtle">
+    <div className="inline-flex items-center gap-1 border border-obsidian-800 bg-white p-0.5 shadow-sm">
       <div className="pl-1.5 pr-0.5 text-obsidian-400 select-none" title="Select Language">
         <Globe className="w-3.5 h-3.5" />
       </div>
@@ -47,7 +47,7 @@ export const LanguageSwitcher: React.FC<{ isMobile?: boolean }> = ({ isMobile })
             title={`Switch to ${opt.label} (${opt.nativeLabel})`}
             className={`px-2 py-0.5 text-xs font-mono tracking-technical transition-colors rounded-sm ${
               language === opt.code
-                ? "bg-obsidian-750 text-chalk-50 font-bold border-b border-signal-green"
+                ? "bg-obsidian-850 text-signal-red font-bold border-b-2 border-signal-red"
                 : "text-obsidian-400 hover:text-chalk-100 hover:bg-obsidian-850"
             }`}
           >

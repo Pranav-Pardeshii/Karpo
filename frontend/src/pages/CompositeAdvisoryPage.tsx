@@ -162,7 +162,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
         {/* Farm & Environmental Parameters (Left Column, 4 cols) */}
         <form
           onSubmit={handleSubmit}
-          className="lg:col-span-4 border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-5 print:hidden"
+          className="lg:col-span-4 border border-obsidian-800 bg-white p-6 shadow-brutal space-y-5 print:hidden"
         >
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
@@ -180,7 +180,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
                 <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
                 <span>
                   {t("retained_from_fin")}:{" "}
-                  <strong className="text-white">{formData.farm_area} {getUnitName(formData.area_unit || "acre")}</strong> ({getStateName(formData.state || "Maharashtra")})
+                  <strong className="text-chalk-50">{formData.farm_area} {getUnitName(formData.area_unit || "acre")}</strong> ({getStateName(formData.state || "Maharashtra")})
                 </span>
               </div>
             </div>
@@ -425,7 +425,7 @@ export const CompositeAdvisoryPage: React.FC = () => {
               }}
             />
           ) : (
-            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
+            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-white">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
                 {t("awaiting_adv_title")}
               </h2>

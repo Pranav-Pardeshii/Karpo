@@ -20,15 +20,15 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary:
-      "bg-signal-red text-white border-signal-red hover:bg-signal-darkred hover:border-signal-darkred shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+      "bg-signal-red text-white font-bold border-signal-red hover:bg-signal-darkred hover:border-signal-darkred shadow-sm active:translate-x-0.5 active:translate-y-0.5 transition-all",
     secondary:
-      "bg-obsidian-800 text-chalk-100 border-obsidian-650 hover:bg-obsidian-750 hover:border-obsidian-500 hover:text-white shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+      "bg-obsidian-850 text-chalk-100 border-obsidian-800 hover:bg-[#DCE6D7] hover:border-signal-lime hover:text-chalk-100 shadow-sm active:translate-x-0.5 active:translate-y-0.5",
     contrast:
-      "bg-paper-100 text-obsidian-950 border-paper-100 hover:bg-white hover:border-white shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-black",
+      "bg-white text-chalk-100 border-obsidian-800 hover:bg-obsidian-850 shadow-sm active:translate-x-0.5 active:translate-y-0.5 font-bold",
     danger:
-      "bg-signal-darkred text-white border-signal-red hover:bg-signal-red shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
+      "bg-signal-error text-white border-signal-error hover:bg-[#9B3838] shadow-sm active:translate-x-0.5 active:translate-y-0.5",
     ghost:
-      "bg-transparent text-chalk-200 border-obsidian-700 hover:border-obsidian-500 hover:bg-obsidian-850 hover:text-white",
+      "bg-transparent text-chalk-100 border-obsidian-800 hover:border-signal-lime hover:bg-obsidian-850",
   };
 
   const sizes = {

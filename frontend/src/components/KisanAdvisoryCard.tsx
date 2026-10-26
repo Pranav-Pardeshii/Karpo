@@ -98,14 +98,14 @@ Generated on Karpo Precision Agriculture Platform`;
             placeholder="Farmer Name (Optional)"
             value={farmerName}
             onChange={(e) => setFarmerName(e.target.value)}
-            className="bg-obsidian-950 border border-obsidian-700 text-chalk-100 px-3 py-1.5 text-xs font-mono focus:border-signal-red focus:outline-none placeholder:text-obsidian-500 w-44"
+            className="bg-white border border-obsidian-700 text-chalk-100 px-3 py-1.5 text-xs font-mono focus:border-signal-red focus:outline-none placeholder:text-obsidian-500 w-44"
           />
           <input
             type="text"
             placeholder="Survey/Gat No. (Optional)"
             value={fieldId}
             onChange={(e) => setFieldId(e.target.value)}
-            className="bg-obsidian-950 border border-obsidian-700 text-chalk-100 px-3 py-1.5 text-xs font-mono focus:border-signal-red focus:outline-none placeholder:text-obsidian-500 w-44"
+            className="bg-white border border-obsidian-700 text-chalk-100 px-3 py-1.5 text-xs font-mono focus:border-signal-red focus:outline-none placeholder:text-obsidian-500 w-44"
           />
         </div>
 
@@ -113,16 +113,16 @@ Generated on Karpo Precision Agriculture Platform`;
           <button
             type="button"
             onClick={handleShare}
-            className="px-3 py-1.5 bg-obsidian-850 hover:bg-obsidian-800 text-chalk-200 border border-obsidian-700 text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 bg-obsidian-850 hover:bg-signal-red hover:text-white text-chalk-200 border border-obsidian-700 text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-signal-green" /> : <Share2 className="w-3.5 h-3.5" />}
             <span>{copied ? "Copied!" : "Share"}</span>
           </button>
 
           <button
             type="button"
             onClick={handlePrint}
-            className="px-4 py-1.5 bg-signal-red hover:bg-red-600 text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-brutal-sm"
+            className="px-4 py-1.5 bg-signal-red hover:bg-signal-darkred text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print / Save PDF</span>
@@ -133,10 +133,10 @@ Generated on Karpo Precision Agriculture Platform`;
       {/* Printable Advisory Card */}
       <div
         id="kisan-advisory-print-card"
-        className="bg-obsidian-950 border-2 border-obsidian-700 p-6 md:p-8 space-y-6 text-chalk-100 shadow-brutal print:bg-white print:text-black print:border-black print:p-4 print:shadow-none print:m-0"
+        className="bg-white border-2 border-obsidian-800 p-6 md:p-8 space-y-6 text-chalk-100 shadow-sm print:bg-white print:text-black print:border-black print:p-4 print:shadow-none print:m-0"
       >
         {/* Card Header */}
-        <div className="border-b-2 border-obsidian-750 print:border-black pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
+        <div className="border-b-2 border-obsidian-800 print:border-black pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-signal-red print:bg-black inline-block" />
@@ -163,7 +163,7 @@ Generated on Karpo Precision Agriculture Platform`;
           </div>
 
           {(farmerName || fieldId) && (
-            <div className="p-2.5 bg-obsidian-900 border border-obsidian-800 print:bg-gray-100 print:border-gray-400 text-right font-mono text-xs">
+            <div className="p-2.5 bg-obsidian-850 border border-obsidian-800 print:bg-gray-100 print:border-gray-400 text-right font-mono text-xs">
               {farmerName && (
                 <div className="flex items-center justify-end gap-1.5 font-bold text-chalk-100 print:text-black">
                   <User className="w-3.5 h-3.5" />
@@ -180,10 +180,10 @@ Generated on Karpo Precision Agriculture Platform`;
         </div>
 
         {/* Primary Recommendation Banner */}
-        <div className="p-4 bg-obsidian-900 border border-obsidian-800 print:bg-gray-50 print:border-black flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-4 bg-[#F7F5EF] border border-obsidian-800 print:bg-gray-50 print:border-black flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Sprout className="w-4 h-4 text-emerald-400 print:text-black" />
+              <Sprout className="w-4 h-4 text-signal-red print:text-black" />
               <span className="font-mono text-[11px] uppercase tracking-wider text-obsidian-400 print:text-gray-700">
                 Recommended Primary Cultivation ({getCategoryName(report.recommendation.category)})
               </span>
@@ -196,9 +196,9 @@ Generated on Karpo Precision Agriculture Platform`;
             </p>
           </div>
 
-          <div className="text-right font-mono shrink-0 p-3 bg-obsidian-950 border border-obsidian-800 print:bg-white print:border-black">
+          <div className="text-right font-mono shrink-0 p-3 bg-white border border-obsidian-800 print:bg-white print:border-black">
             <span className="text-[10px] text-obsidian-400 print:text-gray-600 uppercase block">Model Confidence</span>
-            <span className="text-2xl font-black text-emerald-400 print:text-black">
+            <span className="text-2xl font-black text-signal-red print:text-black">
               {report.recommendation.confidence_percent.toFixed(1)}%
             </span>
             <span className="text-[10px] text-obsidian-500 print:text-gray-600 block">RandomForest ML</span>
@@ -261,10 +261,10 @@ Generated on Karpo Precision Agriculture Platform`;
           {/* Pillar 4: Projected Net Farm Profit */}
           <div className="p-3.5 bg-obsidian-900 border border-obsidian-800 print:bg-white print:border-gray-400 space-y-1.5">
             <div className="flex items-center gap-1 text-[11px] text-obsidian-400 print:text-gray-600 uppercase font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 print:text-black" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#357A4A] print:text-black" />
               <span>Net Farm Profit</span>
             </div>
-            <div className={`text-xl font-black ${report.financials.net_profit >= 0 ? "text-emerald-400 print:text-black" : "text-signal-red print:text-black"}`}>
+            <div className={`text-xl font-black ${report.financials.net_profit >= 0 ? "text-[#357A4A] print:text-black" : "text-[#B54747] print:text-black"}`}>
               {report.financials.formatted_profit}
             </div>
             <div className="text-[11px] text-obsidian-300 print:text-gray-700 pt-1 border-t border-obsidian-800 print:border-gray-300">
@@ -277,7 +277,7 @@ Generated on Karpo Precision Agriculture Platform`;
         </div>
 
         {/* Agronomic Nutrient & Soil Management Guidance */}
-        <div className="p-4 bg-obsidian-900 border border-obsidian-800 print:bg-gray-50 print:border-gray-400 space-y-3 font-mono text-xs">
+        <div className="p-4 bg-white border border-obsidian-800 print:bg-gray-50 print:border-gray-400 space-y-3 font-mono text-xs">
           <div className="flex items-center gap-2 border-b border-obsidian-800 print:border-gray-300 pb-2">
             <FileText className="w-4 h-4 text-signal-red print:text-black" />
             <span className="font-bold uppercase tracking-wider text-chalk-200 print:text-black">
@@ -286,19 +286,19 @@ Generated on Karpo Precision Agriculture Platform`;
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="p-2.5 bg-obsidian-950 border border-obsidian-800 print:bg-white print:border-gray-300">
+            <div className="p-2.5 bg-[#F7F5EF] border border-obsidian-800 print:bg-white print:border-gray-300">
               <span className="text-[10px] text-obsidian-400 print:text-gray-600 uppercase block">Soil Nitrogen (N)</span>
               <span className="font-bold text-chalk-100 print:text-black text-sm">{soilData.n} kg/ha ({nStatus.label})</span>
               <p className="text-[11px] text-obsidian-400 print:text-gray-700 mt-0.5">{nStatus.note}</p>
             </div>
 
-            <div className="p-2.5 bg-obsidian-950 border border-obsidian-800 print:bg-white print:border-gray-300">
+            <div className="p-2.5 bg-[#F7F5EF] border border-obsidian-800 print:bg-white print:border-gray-300">
               <span className="text-[10px] text-obsidian-400 print:text-gray-600 uppercase block">Soil Reaction (pH)</span>
               <span className="font-bold text-chalk-100 print:text-black text-sm">pH {soilData.ph.toFixed(1)} ({phStatus.label})</span>
               <p className="text-[11px] text-obsidian-400 print:text-gray-700 mt-0.5">{phStatus.note}</p>
             </div>
 
-            <div className="p-2.5 bg-obsidian-950 border border-obsidian-800 print:bg-white print:border-gray-300">
+            <div className="p-2.5 bg-[#F7F5EF] border border-obsidian-800 print:bg-white print:border-gray-300">
               <span className="text-[10px] text-obsidian-400 print:text-gray-600 uppercase block">Soil Class & Moisture</span>
               <span className="font-bold text-chalk-100 print:text-black text-sm">{getSoilName(soilType) || soilType}</span>
               <p className="text-[11px] text-obsidian-400 print:text-gray-700 mt-0.5">Rainfall: {soilData.rainfall} mm &bull; Hum: {soilData.humidity}%</p>
@@ -307,7 +307,7 @@ Generated on Karpo Precision Agriculture Platform`;
         </div>
 
         {/* Cost Breakdown Details */}
-        <div className="p-3 bg-obsidian-900 border border-obsidian-800 print:bg-gray-50 print:border-gray-400 font-mono text-xs">
+        <div className="p-3 bg-white border border-obsidian-800 print:bg-gray-50 print:border-gray-400 font-mono text-xs">
           <div className="text-[10px] text-obsidian-400 print:text-gray-600 uppercase tracking-widest mb-2 font-bold">
             Operational C2 Cost Component Breakdown (₹/ha)
           </div>

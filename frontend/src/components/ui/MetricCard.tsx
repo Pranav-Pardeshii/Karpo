@@ -23,14 +23,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   const effectiveVariant = variant === "default" ? "dark" : variant;
 
   const variantStyles = {
-    dark: "bg-obsidian-950 border-obsidian-700 text-chalk-100 shadow-brutal",
-    contrast: "bg-paper-100 border-paper-200 text-obsidian-950 shadow-brutal",
-    signal: "bg-signal-red border-signal-red text-white shadow-brutal",
+    dark: "bg-white border-obsidian-800 text-chalk-100 shadow-sm",
+    contrast: "bg-obsidian-850 border-obsidian-800 text-chalk-100 shadow-sm",
+    signal: "bg-signal-red border-signal-red text-white shadow-sm",
   };
 
   const tagColor = {
-    dark: "text-obsidian-400 border-obsidian-750 bg-obsidian-900",
-    contrast: "text-obsidian-700 border-obsidian-400/40 bg-paper-200",
+    dark: "text-obsidian-400 border-obsidian-800 bg-obsidian-850",
+    contrast: "text-chalk-100 border-obsidian-800 bg-white",
     signal: "text-white/90 border-white/40 bg-black/20",
   };
 
@@ -50,7 +50,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       <div className="flex items-center justify-between gap-2 mb-3">
         <span
           className={`font-mono text-[10px] tracking-technical uppercase font-semibold ${
-            effectiveVariant === "contrast" ? "text-obsidian-800" : "text-obsidian-400"
+            effectiveVariant === "contrast" ? "text-chalk-100" : "text-obsidian-400"
           }`}
         >
           {label}

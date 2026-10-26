@@ -189,6 +189,9 @@ export const api = {
       )}`
     ),
 
+  autoDetectGeoSensing: () =>
+    request<GeoSensingResponse>("/geo/auto-detect"),
+
   // Climate & Market Stress Simulator
   simulateStress: (payload: StressSimulationRequest) =>
     request<ScenarioComparisonResponse>("/stress/simulate", {
@@ -202,6 +205,29 @@ export const api = {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+
+  transcribeAudio: (formData: FormData, language: string = "mr") =>
+    request<{ text: string; language: string; success: boolean }>(
+      `/voice/transcribe?language=${encodeURIComponent(language)}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    ),
+
+  synthesizeSpeech: async (text: string, language: string = "mr"): Promise<Blob> => {
+    const response = await fetch(`${API_PREFIX}/voice/speak`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text, language }),
+    });
+    if (!response.ok) {
+      throw new Error(`Speech synthesis failed with status ${response.status}`);
+    }
+    return await response.blob();
+  },
 
   // Karpo Lens: Crop Disease Assistance
   inspectCropImage: (formData: FormData) =>

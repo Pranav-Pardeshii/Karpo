@@ -42,6 +42,8 @@ export const CropRecommendationPage: React.FC = () => {
     mutationFn: api.recommendCrops,
   });
 
+  const [detectedState, setDetectedState] = useState<string | undefined>(undefined);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -59,7 +61,11 @@ export const CropRecommendationPage: React.FC = () => {
     humidity?: number;
     rainfall?: number;
     ph?: number;
+    state?: string;
   }) => {
+    if (detected.state) {
+      setDetectedState(detected.state);
+    }
     setFormData((prev) => ({
       ...prev,
       ...(detected.temperature !== undefined && { temperature: detected.temperature }),
@@ -114,7 +120,7 @@ export const CropRecommendationPage: React.FC = () => {
                 rainfall: 202.93,
               })
             }
-            className="px-2.5 py-1 bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-obsidian-300 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
+            className="px-2.5 py-1 bg-white hover:bg-signal-red border border-obsidian-700 text-chalk-200 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
           >
             {t("preset_alluvial")}
           </button>
@@ -131,7 +137,7 @@ export const CropRecommendationPage: React.FC = () => {
                 rainfall: 80.0,
               })
             }
-            className="px-2.5 py-1 bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-obsidian-300 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
+            className="px-2.5 py-1 bg-white hover:bg-signal-red border border-obsidian-700 text-chalk-200 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
           >
             {t("preset_black_cotton")}
           </button>
@@ -148,7 +154,7 @@ export const CropRecommendationPage: React.FC = () => {
                 rainfall: 75.0,
               })
             }
-            className="px-2.5 py-1 bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-obsidian-300 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
+            className="px-2.5 py-1 bg-white hover:bg-signal-red border border-obsidian-700 text-chalk-200 hover:text-white text-[11px] uppercase tracking-technical transition-colors"
           >
             {t("preset_winter_chickpea")}
           </button>
@@ -160,7 +166,7 @@ export const CropRecommendationPage: React.FC = () => {
         {/* Input Parameters Form (Left Column, 5 cols) */}
         <form
           onSubmit={handleSubmit}
-          className="lg:col-span-5 border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-6"
+          className="lg:col-span-5 border border-obsidian-800 bg-white p-6 shadow-brutal space-y-6"
         >
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
@@ -342,7 +348,7 @@ export const CropRecommendationPage: React.FC = () => {
           {result ? (
             <div className="space-y-6">
               {/* Primary Recommended Crop Card */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 sm:p-8 shadow-brutal relative overflow-hidden">
+              <div className="border border-obsidian-800 bg-white p-6 sm:p-8 shadow-brutal relative overflow-hidden">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3 mb-6">
                   <span className="font-mono text-xs tracking-technical uppercase text-signal-red font-bold">
                     {t("primary_crop_badge")}
@@ -396,6 +402,7 @@ export const CropRecommendationPage: React.FC = () => {
                       nitrogen: formData.n,
                       phosphorus: formData.p,
                       potassium: formData.k,
+                      state: detectedState,
                       fromRecommendation: true,
                     }}
                     className="text-signal-red font-bold hover:underline flex items-center gap-1"
@@ -406,7 +413,7 @@ export const CropRecommendationPage: React.FC = () => {
               </div>
 
               {/* Ranked Candidates Probability Distribution Chart */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-4 mb-6">
                   <div>
                     <h3 className="font-display font-bold text-base sm:text-lg text-chalk-100 uppercase tracking-tight">
@@ -425,26 +432,26 @@ export const CropRecommendationPage: React.FC = () => {
                       layout="vertical"
                       margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
                     >
-                      <CartesianGrid strokeDasharray="2 2" stroke="#1D222E" horizontal={false} />
+                      <CartesianGrid strokeDasharray="2 2" stroke="#E3E6DF" horizontal={false} />
                       <XAxis
                         type="number"
                         domain={[0, 100]}
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#8694B0" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#647568" }}
                         unit="%"
                       />
                       <YAxis
                         type="category"
                         dataKey="crop"
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#AEBAD1" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#647568" }}
                         width={110}
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#060709",
-                          color: "#F5F4EF",
-                          border: "1px solid #31384A",
+                          backgroundColor: "#FFFFFF",
+                          color: "#202820",
+                          border: "1px solid #E3E6DF",
                           borderRadius: 0,
                           fontFamily: "JetBrains Mono",
                           fontSize: 12,
@@ -454,7 +461,8 @@ export const CropRecommendationPage: React.FC = () => {
                         {candidateChartData.map((_, index) => (
                           <Cell
                             key={`cell-${index}`}
-                            fill={index === 0 ? "#FF2A2A" : "#2E3648"}
+                            fill={index === 0 ? "#244B35" : "#789477"}
+                            stroke={index === 0 ? "#193A28" : "#E3E6DF"}
                           />
                         ))}
                       </Bar>
@@ -479,6 +487,7 @@ export const CropRecommendationPage: React.FC = () => {
                           nitrogen: formData.n,
                           phosphorus: formData.p,
                           potassium: formData.k,
+                          state: detectedState,
                           fromRecommendation: true,
                         }}
                         className="px-2 py-0.5 bg-obsidian-900 hover:bg-signal-red hover:text-white border border-obsidian-750 text-chalk-200 text-[11px] uppercase tracking-technical transition-colors flex items-center gap-1"
@@ -492,7 +501,7 @@ export const CropRecommendationPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
+            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-white">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
                 {t("awaiting_soil_title")}
               </h2>

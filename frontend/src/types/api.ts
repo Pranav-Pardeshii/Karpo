@@ -373,11 +373,14 @@ export interface LensInspectionResponse {
   width: number;
   height: number;
   size_bytes: number;
-  status: "model_unavailable" | "verified" | "uncertain";
+  status: "model_unavailable" | "verified" | "uncertain" | "quota_exceeded";
   diagnosis: string | null;
   confidence: number | null;
   crop_evaluated: string | null;
   message: string;
+  visual_symptoms?: string | null;
+  treatment_recommendation?: string | null;
+  urgency?: "High" | "Moderate" | "Low" | "None" | string | null;
   icar_symptom_guide: ICARSymptomItem[];
   data_category: string;
   data_provenance: string;

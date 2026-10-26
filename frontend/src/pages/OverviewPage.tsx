@@ -5,7 +5,6 @@ import { ArrowRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { api } from "../api/client";
 import { MetricCard } from "../components/ui/MetricCard";
 import { AgroSystemVisual } from "../components/visual/AgroSystemVisual";
-import { KarpoLens } from "../components/KarpoLens";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -141,7 +140,7 @@ export const OverviewPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 to="/recommend"
-                className="px-6 py-3.5 bg-signal-red text-white hover:bg-signal-darkred border border-signal-red shadow-brutal flex items-center justify-center gap-3 font-mono text-xs font-bold tracking-technical uppercase transition-all duration-150 group"
+                className="px-6 py-3.5 bg-signal-red text-obsidian-950 hover:bg-signal-lime border border-signal-red shadow-[0_0_12px_rgba(16,185,129,0.25)] hover:shadow-[0_0_18px_rgba(52,211,153,0.35)] flex items-center justify-center gap-3 font-mono text-xs font-black tracking-technical uppercase transition-all duration-150 group"
               >
                 <span>{t("explore_crop_rec")}</span>
                 <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
@@ -149,7 +148,7 @@ export const OverviewPage: React.FC = () => {
 
               <Link
                 to="/advisory"
-                className="px-6 py-3.5 bg-obsidian-850 text-chalk-100 hover:bg-obsidian-800 hover:text-white border border-obsidian-700 shadow-brutal flex items-center justify-center gap-3 font-mono text-xs font-bold tracking-technical uppercase transition-all duration-150"
+                className="px-6 py-3.5 bg-obsidian-850 text-chalk-100 hover:bg-signal-red hover:text-white border border-obsidian-700 shadow-brutal flex items-center justify-center gap-3 font-mono text-xs font-bold tracking-technical uppercase transition-all duration-150"
               >
                 <span>{t("view_full_advisory")}</span>
               </Link>
@@ -209,7 +208,7 @@ export const OverviewPage: React.FC = () => {
       {/* 3. Scientific Yield Reference & Core Capabilities */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column (7 cols): Historical Yield Reference Chart */}
-        <div className="lg:col-span-7 border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal flex flex-col justify-between">
+        <div className="lg:col-span-7 border border-obsidian-800 bg-white p-6 shadow-brutal flex flex-col justify-between">
           <div>
             <div className="flex flex-col gap-3 border-b border-obsidian-800 pb-4 mb-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -278,11 +277,11 @@ export const OverviewPage: React.FC = () => {
                     data={benchmarkChartData}
                     margin={{ top: 15, right: 15, left: 10, bottom: 40 }}
                   >
-                    <CartesianGrid strokeDasharray="2 2" stroke="#1D222E" vertical={false} />
+                    <CartesianGrid strokeDasharray="2 2" stroke="#E3E6DF" vertical={false} />
                     <XAxis
                       dataKey="name"
-                      stroke="#414A60"
-                      tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#AEBAD1" }}
+                      stroke="#E3E6DF"
+                      tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#647568" }}
                       interval={0}
                       angle={-20}
                       textAnchor="end"
@@ -290,9 +289,9 @@ export const OverviewPage: React.FC = () => {
                       tickFormatter={(val) => getCropName(val)}
                     />
                     <YAxis
-                      stroke="#414A60"
+                      stroke="#E3E6DF"
                       width={65}
-                      tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#8694B0" }}
+                      tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#647568" }}
                       tickFormatter={(v) => {
                         if (selectedYieldUnit === "Q/ha") {
                           return `${v} Q`;
@@ -301,12 +300,12 @@ export const OverviewPage: React.FC = () => {
                       }}
                     />
                     <Tooltip
-                      cursor={{ fill: "rgba(255, 42, 42, 0.05)" }}
+                      cursor={{ fill: "rgba(36, 75, 53, 0.05)" }}
                       content={({ active, payload }) => {
                         if (!active || !payload || !payload.length) return null;
                         const item = payload[0].payload;
                         return (
-                          <div className="bg-obsidian-950 border border-obsidian-700 p-3 shadow-brutal font-mono text-xs space-y-1.5 min-w-[210px]">
+                          <div className="bg-white border border-obsidian-800 p-3 shadow-md font-mono text-xs space-y-1.5 min-w-[210px]">
                             <div className="font-bold text-chalk-100 flex items-center justify-between border-b border-obsidian-800 pb-1">
                               <span>{item.localizedName ?? item.name}</span>
                               <span className="text-[10px] text-signal-red uppercase font-semibold">
@@ -338,8 +337,8 @@ export const OverviewPage: React.FC = () => {
                       {benchmarkChartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={entry.median === maxBenchmark ? "#FF2A2A" : "#262C3A"}
-                          stroke={entry.median === maxBenchmark ? "#FF2A2A" : "#414A60"}
+                          fill={entry.median === maxBenchmark ? "#244B35" : "#789477"}
+                          stroke={entry.median === maxBenchmark ? "#193A28" : "#E3E6DF"}
                           className="transition-colors duration-150 hover:opacity-85"
                         />
                       ))}
@@ -441,11 +440,10 @@ export const OverviewPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. Karpo Lens: Field Crop Disease Assistance */}
-      <KarpoLens />
+      {/* 4. Karpo Lens: Temporarily disabled per user request */}
 
       {/* 5. Supported Agronomic Taxonomy */}
-      <section className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal">
+      <section className="border border-obsidian-800 bg-white p-6 shadow-brutal">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-obsidian-800 pb-4 mb-6">
           <div>
             <h2 className="font-display font-bold text-xl text-chalk-100 uppercase tracking-tight">
@@ -487,7 +485,7 @@ export const OverviewPage: React.FC = () => {
                 <span className="font-mono text-[9px] text-obsidian-400 uppercase tracking-widest block mb-1">
                   {getCategoryName(crop.category)}
                 </span>
-                <div className="font-display font-bold text-sm text-chalk-100 group-hover:text-white uppercase tracking-tight">
+                <div className="font-display font-bold text-sm text-chalk-100 group-hover:text-signal-red uppercase tracking-tight">
                   {getCropName(crop.display_name)}
                 </div>
               </div>

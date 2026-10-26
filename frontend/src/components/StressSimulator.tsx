@@ -71,7 +71,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
   }, [crop, season, soil_type, state, farm_area, area_unit, base_rainfall_mm, base_price_per_quintal, base_cost_per_ha, rainfallShock, priceShock, costShock, indemnityLevel]);
 
   return (
-    <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-6">
+    <div className="border border-obsidian-800 bg-white p-6 shadow-sm space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-obsidian-800 gap-3">
         <div>
@@ -93,7 +93,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
             setIndemnityLevel(0.8);
           }}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-obsidian-400 hover:text-chalk-100 border border-obsidian-800 hover:border-obsidian-700 bg-obsidian-900 transition-colors shrink-0 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-obsidian-400 hover:text-chalk-100 border border-obsidian-800 hover:bg-obsidian-850 bg-white transition-colors shrink-0 disabled:opacity-50"
         >
           <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin text-signal-red" : ""}`} />
           <span>{loading ? "Simulating..." : "Reset Shocks"}</span>
@@ -106,7 +106,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between items-center text-xs font-mono">
             <span className="text-obsidian-300">Rainfall Shock</span>
-            <span className={`font-bold ${rainfallShock < 0 ? "text-amber-400" : "text-emerald-400"}`}>
+            <span className={`font-bold ${rainfallShock < 0 ? "text-signal-amber" : "text-signal-green"}`}>
               {rainfallShock > 0 ? `+${rainfallShock}%` : `${rainfallShock}%`}
             </span>
           </div>
@@ -117,7 +117,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
             step="5"
             value={rainfallShock}
             onChange={(e) => setRainfallShock(parseInt(e.target.value, 10))}
-            className="w-full accent-emerald-500 bg-obsidian-850 h-2 rounded cursor-pointer"
+            className="w-full accent-[#244B35] bg-[#EAF0E6] h-2 rounded cursor-pointer"
           />
           <div className="flex justify-between text-[10px] text-obsidian-500 font-mono">
             <span>-50% Drought</span>
@@ -130,7 +130,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between items-center text-xs font-mono">
             <span className="text-obsidian-300">Mandi Price Shock</span>
-            <span className={`font-bold ${priceShock < 0 ? "text-signal-red" : "text-emerald-400"}`}>
+            <span className={`font-bold ${priceShock < 0 ? "text-signal-error" : "text-signal-green"}`}>
               {priceShock > 0 ? `+${priceShock}%` : `${priceShock}%`}
             </span>
           </div>
@@ -141,7 +141,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
             step="5"
             value={priceShock}
             onChange={(e) => setPriceShock(parseInt(e.target.value, 10))}
-            className="w-full accent-signal-red bg-obsidian-850 h-2 rounded cursor-pointer"
+            className="w-full accent-[#244B35] bg-[#EAF0E6] h-2 rounded cursor-pointer"
           />
           <div className="flex justify-between text-[10px] text-obsidian-500 font-mono">
             <span>-50% Crash</span>
@@ -164,8 +164,8 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
                 onClick={() => setIndemnityLevel(lvl)}
                 className={`py-1.5 text-xs font-mono text-center border transition-all ${
                   indemnityLevel === lvl
-                    ? "border-emerald-500 bg-emerald-950/40 text-emerald-300 font-bold"
-                    : "border-obsidian-800 bg-obsidian-900 text-obsidian-400 hover:text-chalk-200"
+                    ? "border-signal-red bg-obsidian-850 text-signal-red font-bold"
+                    : "border-obsidian-800 bg-white text-obsidian-400 hover:text-chalk-100"
                 }`}
               >
                 {Math.round(lvl * 100)}%
@@ -180,7 +180,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
 
       {/* Error state */}
       {error && (
-        <div className="p-3 bg-signal-red/10 border border-signal-red/30 text-xs text-signal-red flex items-center gap-2 font-mono">
+        <div className="p-3 bg-[#FDF2F2] border border-signal-error/30 text-xs text-signal-error flex items-center gap-2 font-mono">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -191,12 +191,12 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
         <div className="space-y-4 pt-2 border-t border-obsidian-800">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
             {/* Yield Impact Card */}
-            <div className="p-4 bg-obsidian-900/80 border border-obsidian-800 space-y-2">
+            <div className="p-4 bg-white border border-obsidian-800 space-y-2 shadow-sm">
               <span className="text-[11px] text-obsidian-400 uppercase tracking-technical block">
                 Simulated Harvest Yield
               </span>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-chalk-50">
+                <span className="text-2xl font-black text-chalk-100">
                   {Math.round(result.simulated_yield_kg_ha)}
                 </span>
                 <span className="text-xs text-obsidian-400">kg/ha</span>
@@ -204,15 +204,15 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
               <div className="flex items-center gap-1.5 text-xs">
                 {result.yield_delta_kg_ha < 0 ? (
                   <>
-                    <TrendingDown className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-amber-400">
+                    <TrendingDown className="w-3.5 h-3.5 text-signal-amber" />
+                    <span className="text-signal-amber">
                       {result.yield_delta_kg_ha} kg/ha ({result.yield_delta_percent}%)
                     </span>
                   </>
                 ) : (
                   <>
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">
+                    <TrendingUp className="w-3.5 h-3.5 text-signal-green" />
+                    <span className="text-signal-green">
                       +{result.yield_delta_kg_ha} kg/ha (+{result.yield_delta_percent}%)
                     </span>
                   </>
@@ -222,27 +222,27 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
             </div>
 
             {/* Net Profit Impact Card */}
-            <div className="p-4 bg-obsidian-900/80 border border-obsidian-800 space-y-2">
+            <div className="p-4 bg-white border border-obsidian-800 space-y-2 shadow-sm">
               <span className="text-[11px] text-obsidian-400 uppercase tracking-technical block">
                 Simulated Net Farm Profit
               </span>
               <div className="flex items-baseline gap-2">
-                <span className={`text-2xl font-black ${result.simulated_net_profit < 0 ? "text-signal-red" : "text-chalk-50"}`}>
+                <span className={`text-2xl font-black ${result.simulated_net_profit < 0 ? "text-signal-error" : "text-chalk-100"}`}>
                   ₹{Math.round(result.simulated_net_profit).toLocaleString("en-IN")}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-xs">
                 {result.profit_delta < 0 ? (
                   <>
-                    <TrendingDown className="w-3.5 h-3.5 text-signal-red" />
-                    <span className="text-signal-red">
+                    <TrendingDown className="w-3.5 h-3.5 text-signal-error" />
+                    <span className="text-signal-error">
                       -₹{Math.abs(Math.round(result.profit_delta)).toLocaleString("en-IN")} ({result.profit_delta_percent}%)
                     </span>
                   </>
                 ) : (
                   <>
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">
+                    <TrendingUp className="w-3.5 h-3.5 text-signal-green" />
+                    <span className="text-signal-green">
                       +₹{Math.round(result.profit_delta).toLocaleString("en-IN")} (+{result.profit_delta_percent}%)
                     </span>
                   </>
@@ -254,29 +254,29 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
             </div>
 
             {/* PMFBY Protection Card */}
-            <div className={`p-4 border space-y-2 ${
+            <div className={`p-4 border space-y-2 shadow-sm ${
               result.pmfby_insurance.is_claim_triggered
-                ? "bg-emerald-950/20 border-emerald-500/30"
-                : "bg-obsidian-900/80 border-obsidian-800"
+                ? "bg-[#EAF0E6] border-[#357A4A]/40"
+                : "bg-white border-obsidian-800"
             }`}>
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-obsidian-400 uppercase tracking-technical">
                   PMFBY Crop Insurance
                 </span>
                 {result.pmfby_insurance.is_claim_triggered ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#357A4A] bg-[#357A4A]/10 px-1.5 py-0.5 rounded">
                     <ShieldCheck className="w-3 h-3" />
                     Shortfall Claim Active
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] text-obsidian-400 bg-obsidian-800 px-1.5 py-0.5 rounded">
+                  <span className="inline-flex items-center gap-1 text-[10px] text-obsidian-400 bg-obsidian-850 px-1.5 py-0.5 rounded">
                     Above Threshold
                   </span>
                 )}
               </div>
 
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-chalk-50">
+                <span className="text-2xl font-black text-chalk-100">
                   {result.pmfby_insurance.is_claim_triggered
                     ? result.pmfby_insurance.formatted_claim_inr
                     : "₹0"}
@@ -296,7 +296,7 @@ export const StressSimulator: React.FC<StressSimulatorProps> = ({
                   <span>{result.pmfby_insurance.formatted_premium_inr} ({result.pmfby_insurance.farmer_premium_rate_percent}%)</span>
                 </div>
                 {result.pmfby_insurance.is_claim_triggered && (
-                  <div className="flex justify-between font-bold text-emerald-300 pt-0.5">
+                  <div className="flex justify-between font-bold text-[#357A4A] pt-0.5">
                     <span>Net with Insurance:</span>
                     <span>{result.pmfby_insurance.formatted_net_position_inr}</span>
                   </div>

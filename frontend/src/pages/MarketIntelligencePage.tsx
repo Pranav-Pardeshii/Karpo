@@ -60,7 +60,7 @@ export const MarketIntelligencePage: React.FC = () => {
 
       {/* Search, Filter & Counter Bar */}
       <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 border border-obsidian-750 bg-obsidian-950 shadow-brutal">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 border border-obsidian-800 bg-white shadow-brutal">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3 top-3 text-obsidian-400" />
             <input
@@ -68,7 +68,7 @@ export const MarketIntelligencePage: React.FC = () => {
               placeholder={t("mandi_search_placeholder")}
               value={searchQuery}
               onChange={handleSearchChange}
-              className="w-full bg-obsidian-900 border border-obsidian-700 text-chalk-100 pl-10 pr-4 py-2 font-mono text-xs uppercase placeholder:text-obsidian-500 focus:outline-none focus:border-signal-red"
+              className="w-full bg-white border border-obsidian-700 text-chalk-100 pl-10 pr-4 py-2 font-mono text-xs uppercase placeholder:text-obsidian-500 focus:outline-none focus:border-signal-red"
             />
           </div>
 
@@ -89,7 +89,7 @@ export const MarketIntelligencePage: React.FC = () => {
               className={`px-2.5 py-1 border text-[11px] uppercase tracking-technical transition-colors ${
                 (crop === "ALL" && !searchQuery) || searchQuery.toUpperCase() === crop
                   ? "bg-signal-red text-white border-signal-red font-bold"
-                  : "bg-obsidian-900 text-obsidian-400 border-obsidian-750 hover:bg-obsidian-850 hover:text-chalk-100"
+                  : "bg-white text-obsidian-300 border-obsidian-800 hover:bg-obsidian-850 hover:text-chalk-50"
               }`}
             >
               {crop === "ALL" ? "ALL" : getCropName(crop)}
@@ -99,10 +99,10 @@ export const MarketIntelligencePage: React.FC = () => {
       </div>
 
       {/* Dense High-Contrast Technical Price Table */}
-      <div className="border border-obsidian-750 bg-obsidian-950 shadow-brutal overflow-x-auto">
+      <div className="border border-obsidian-800 bg-white shadow-brutal overflow-x-auto">
         <table className="w-full text-left border-collapse font-mono text-xs">
           <thead>
-            <tr className="border-b border-obsidian-750 bg-obsidian-900 text-obsidian-300 uppercase text-[11px] tracking-technical">
+            <tr className="border-b border-obsidian-800 bg-[#F7F5EF] text-obsidian-300 uppercase text-[11px] tracking-technical">
               <th className="p-3.5 border-r border-obsidian-800 font-bold">{t("col_commodity")}</th>
               <th className="p-3.5 border-r border-obsidian-800 font-bold text-right">
                 {t("col_modal_price")}
@@ -128,7 +128,7 @@ export const MarketIntelligencePage: React.FC = () => {
               </tr>
             ) : isError ? (
               <tr>
-                <td colSpan={6} className="p-12 text-center text-signal-red">
+                <td colSpan={6} className="p-12 text-center text-signal-error">
                   Unable to retrieve mandi price records. Please check backend connection.
                 </td>
               </tr>
@@ -136,10 +136,10 @@ export const MarketIntelligencePage: React.FC = () => {
               data.prices.map((item, idx) => (
                 <tr
                   key={`${item.canonical_name}-${idx}`}
-                  className="hover:bg-obsidian-900/80 transition-colors duration-100"
+                  className="hover:bg-[#EAF0E6]/50 transition-colors duration-100"
                 >
                   <td className="p-3.5 border-r border-obsidian-800 font-bold text-chalk-100 uppercase flex items-center gap-2">
-                    <span className="text-white">{getCropName(item.matched_crop_name)}</span>
+                    <span className="text-chalk-50">{getCropName(item.matched_crop_name)}</span>
                     <span className="text-[10px] text-obsidian-400 font-normal">
                       [{item.canonical_name}]
                     </span>
@@ -152,7 +152,7 @@ export const MarketIntelligencePage: React.FC = () => {
                   </td>
                   <td className="p-3.5 border-r border-obsidian-800 text-right">
                     {item.msp_rs_per_quintal ? (
-                      <span className="inline-flex items-center gap-1 text-emerald-400 font-semibold tabular-nums">
+                      <span className="inline-flex items-center gap-1 text-signal-green font-semibold tabular-nums">
                         <ShieldCheck className="w-3.5 h-3.5" />
                         ₹{item.msp_rs_per_quintal.toLocaleString()}
                       </span>
@@ -180,7 +180,7 @@ export const MarketIntelligencePage: React.FC = () => {
 
         {/* Pagination Bar */}
         {data && data.total_records > pageSize && (
-          <div className="p-3.5 border-t border-obsidian-750 bg-obsidian-900 flex items-center justify-between font-mono text-xs">
+          <div className="p-3.5 border-t border-obsidian-800 bg-[#F7F5EF] flex items-center justify-between font-mono text-xs">
             <span className="text-obsidian-400 text-[11px]">
               Page {currentPage + 1} of {totalPages}
             </span>
@@ -188,14 +188,14 @@ export const MarketIntelligencePage: React.FC = () => {
               <button
                 disabled={currentPage === 0}
                 onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
-                className="px-2.5 py-1 bg-obsidian-850 text-chalk-200 border border-obsidian-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-signal-red hover:text-white flex items-center gap-1 uppercase tracking-technical transition-colors"
+                className="px-2.5 py-1 bg-white text-chalk-200 border border-obsidian-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-signal-red hover:text-white flex items-center gap-1 uppercase tracking-technical transition-colors"
               >
                 <ChevronLeft className="w-3.5 h-3.5" /> Prev
               </button>
               <button
                 disabled={currentPage >= totalPages - 1}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-2.5 py-1 bg-obsidian-850 text-chalk-200 border border-obsidian-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-signal-red hover:text-white flex items-center gap-1 uppercase tracking-technical transition-colors"
+                className="px-2.5 py-1 bg-white text-chalk-200 border border-obsidian-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-signal-red hover:text-white flex items-center gap-1 uppercase tracking-technical transition-colors"
               >
                 Next <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -205,7 +205,7 @@ export const MarketIntelligencePage: React.FC = () => {
       </div>
 
       {/* Regulatory Context Notice */}
-      <div className="border border-obsidian-750 bg-obsidian-950 p-4 font-mono text-xs text-obsidian-300 flex items-start gap-3">
+      <div className="border border-obsidian-800 bg-white p-4 font-mono text-xs text-obsidian-300 flex items-start gap-3">
         <TrendingUp className="w-4 h-4 text-signal-red shrink-0 mt-0.5" />
         <p className="font-sans leading-relaxed text-xs">
           <strong className="text-chalk-100 uppercase font-mono">Market Notice:</strong> Rates

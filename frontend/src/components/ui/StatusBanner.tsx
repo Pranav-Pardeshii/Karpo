@@ -20,34 +20,34 @@ export const StatusBanner: React.FC<StatusBannerProps> = ({
 }) => {
   const configs = {
     error: {
-      bg: "bg-red-950/40 border-signal-red text-signal-red",
+      bg: "bg-[#FDF2F2] border-signal-error text-signal-error",
       icon: AlertCircle,
       badge: "FAULT // 500",
-      textColor: "text-red-200",
+      textColor: "text-signal-error",
     },
     warning: {
-      bg: "bg-amber-950/40 border-amber-500 text-amber-400",
+      bg: "bg-[#FDF8F0] border-signal-amber text-signal-amber",
       icon: AlertCircle,
       badge: "WARN // 422",
-      textColor: "text-amber-200",
+      textColor: "text-signal-amber",
     },
     success: {
-      bg: "bg-emerald-950/40 border-emerald-500 text-emerald-400",
+      bg: "bg-[#EAF0E6] border-signal-green text-signal-green",
       icon: CheckCircle,
       badge: "VERIFIED // 200",
-      textColor: "text-emerald-200",
+      textColor: "text-signal-green",
     },
     info: {
-      bg: "bg-obsidian-850 border-obsidian-700 text-chalk-100",
+      bg: "bg-white border-obsidian-800 text-chalk-100",
       icon: Info,
       badge: "NOTICE // INFO",
-      textColor: "text-obsidian-300",
+      textColor: "text-obsidian-400",
     },
     loading: {
-      bg: "bg-obsidian-850 border-obsidian-700 text-chalk-100",
+      bg: "bg-obsidian-850 border-obsidian-800 text-chalk-100",
       icon: RefreshCw,
       badge: "PROCESSING",
-      textColor: "text-obsidian-300",
+      textColor: "text-obsidian-400",
     },
   };
 
@@ -78,7 +78,7 @@ export const StatusBanner: React.FC<StatusBannerProps> = ({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-3 py-1 bg-obsidian-750 text-white hover:bg-signal-red text-[11px] font-mono tracking-technical uppercase shrink-0 transition-colors border border-obsidian-600 hover:border-signal-red"
+          className="px-3 py-1 bg-signal-red text-white hover:bg-signal-darkred text-[11px] font-mono tracking-technical uppercase shrink-0 transition-colors border border-signal-red shadow-sm"
         >
           RETRY SIGNAL
         </button>

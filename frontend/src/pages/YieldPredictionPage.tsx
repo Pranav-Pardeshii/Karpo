@@ -9,7 +9,6 @@ import { SignalBadge } from "../components/visual/SignalBadge";
 import { MetricCard } from "../components/ui/MetricCard";
 import { StatusBanner } from "../components/ui/StatusBanner";
 import { GeoSensingBanner } from "../components/GeoSensingBanner";
-import { FarmDigitalTwin } from "../components/FarmDigitalTwin";
 import { useLanguage } from "../context/LanguageContext";
 import {
   BarChart,
@@ -165,22 +164,22 @@ export const YieldPredictionPage: React.FC = () => {
         {
           metric: "Historical Min",
           value: Math.round(result.historical_min_kg_ha),
-          fill: "#262C3A",
+          fill: "#CBD2C5",
         },
         {
           metric: "Historical Median",
           value: Math.round(result.historical_median_kg_ha),
-          fill: "#414A60",
+          fill: "#789477",
         },
         {
           metric: "Predicted Yield",
           value: Math.round(result.predicted_yield_kg_ha),
-          fill: "#FF2A2A",
+          fill: "#244B35",
         },
         {
           metric: "Historical Max",
           value: Math.round(result.historical_max_kg_ha),
-          fill: "#262C3A",
+          fill: "#647568",
         },
       ]
     : [];
@@ -204,7 +203,7 @@ export const YieldPredictionPage: React.FC = () => {
         {/* Parameters Form (Left Column, 5 cols) */}
         <form
           onSubmit={handleSubmit}
-          className="lg:col-span-5 border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-6"
+          className="lg:col-span-5 border border-obsidian-800 bg-white p-6 shadow-brutal space-y-6"
         >
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
@@ -222,7 +221,7 @@ export const YieldPredictionPage: React.FC = () => {
                 <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
                 <span>
                   {t("retained_from_rec")}:{" "}
-                  <strong className="text-white uppercase">{getCropName(formData.crop)}</strong>
+                  <strong className="text-chalk-50 uppercase">{getCropName(formData.crop)}</strong>
                 </span>
               </div>
               <span className="text-[10px] text-obsidian-400">
@@ -415,7 +414,7 @@ export const YieldPredictionPage: React.FC = () => {
           {result ? (
             <div className="space-y-6">
               {/* Primary Massive Forecast Display */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3 mb-6">
                   <div>
                     <span className="font-mono text-xs text-obsidian-400 uppercase tracking-widest block mb-0.5">
@@ -464,7 +463,7 @@ export const YieldPredictionPage: React.FC = () => {
               </div>
 
               {/* Scientific Benchmark Comparison Plot */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-4">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal space-y-4">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-technical text-chalk-100">
                     <BarChart2 className="w-4 h-4 text-signal-red" />
@@ -478,22 +477,22 @@ export const YieldPredictionPage: React.FC = () => {
                       data={comparisonData}
                       margin={{ top: 10, right: 20, left: -10, bottom: 20 }}
                     >
-                      <CartesianGrid strokeDasharray="2 2" stroke="#1D222E" vertical={false} />
+                      <CartesianGrid strokeDasharray="2 2" stroke="#E3E6DF" vertical={false} />
                       <XAxis
                         dataKey="metric"
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#AEBAD1" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#647568" }}
                       />
                       <YAxis
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#8694B0" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#647568" }}
                         unit=" kg"
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#060709",
-                          color: "#F5F4EF",
-                          border: "1px solid #31384A",
+                          backgroundColor: "#FFFFFF",
+                          color: "#202820",
+                          border: "1px solid #E3E6DF",
                           borderRadius: 0,
                           fontFamily: "JetBrains Mono",
                           fontSize: 12,
@@ -504,7 +503,7 @@ export const YieldPredictionPage: React.FC = () => {
                           <Cell
                             key={`cell-${index}`}
                             fill={entry.fill}
-                            stroke={entry.fill === "#FF2A2A" ? "#FF2A2A" : "#31384A"}
+                            stroke={entry.fill === "#244B35" ? "#193A28" : "#E3E6DF"}
                           />
                         ))}
                       </Bar>
@@ -562,7 +561,7 @@ export const YieldPredictionPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
+            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-white">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
                 {t("awaiting_yield_title")}
               </h2>
@@ -572,16 +571,6 @@ export const YieldPredictionPage: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Feature 7: Interactive Farm Digital Twin Visualizer */}
-      <div className="mt-8">
-        <FarmDigitalTwin
-          crop={result?.crop || formData.crop}
-          soilType={formData.soil_type}
-          rainfallMm={formData.rainfall}
-          temperatureC={formData.temperature}
-        />
       </div>
     </div>
   );

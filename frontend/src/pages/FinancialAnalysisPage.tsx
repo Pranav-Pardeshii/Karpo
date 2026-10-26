@@ -82,6 +82,20 @@ export const FinancialAnalysisPage: React.FC = () => {
   });
 
   useEffect(() => {
+    if (!locationState?.state) {
+      try {
+        const raw = sessionStorage.getItem("karpo_geo_sensing_cache");
+        if (raw) {
+          const cached = JSON.parse(raw);
+          if (cached?.data?.location?.canonical_state) {
+            setLookupState(cached.data.location.canonical_state);
+          }
+        }
+      } catch {
+        // Ignore cache parse error
+      }
+    }
+
     if (!locationState) return;
 
     if (locationState.crop) {
@@ -138,12 +152,12 @@ export const FinancialAnalysisPage: React.FC = () => {
   // Chart data for revenue vs expenditure vs profit
   const financialChartData = result
     ? [
-        { name: t("fin_gross_revenue"), amount: result.total_revenue, fill: "#EDEDED" },
-        { name: t("fin_total_cost"), amount: result.total_cost, fill: "#414A60" },
+        { name: t("fin_gross_revenue"), amount: result.total_revenue, fill: "#244B35" },
+        { name: t("fin_total_cost"), amount: result.total_cost, fill: "#A66B18" },
         {
           name: t("fin_net_profit"),
           amount: Math.max(0, result.net_profit),
-          fill: result.net_profit >= 0 ? "#22C55E" : "#FF2A2A",
+          fill: result.net_profit >= 0 ? "#357A4A" : "#B54747",
         },
       ]
     : [];
@@ -162,7 +176,7 @@ export const FinancialAnalysisPage: React.FC = () => {
         </div>
 
         {/* Quick Benchmark Sync Widget */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 border border-obsidian-750 bg-obsidian-950 shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 border border-obsidian-800 bg-white shrink-0">
           <div className="flex items-center gap-1.5 font-mono text-xs">
             <select
               value={lookupCrop}
@@ -206,7 +220,7 @@ export const FinancialAnalysisPage: React.FC = () => {
         {/* Parameters Form (Left Column, 5 cols) */}
         <form
           onSubmit={handleSubmit}
-          className="lg:col-span-5 border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-6"
+          className="lg:col-span-5 border border-obsidian-800 bg-white p-6 shadow-brutal space-y-6"
         >
           <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
@@ -222,7 +236,7 @@ export const FinancialAnalysisPage: React.FC = () => {
                 <span className="w-2 h-2 rounded-full bg-signal-red shrink-0 animate-pulse" />
                 <span>
                   {t("retained_from_yield")}:{" "}
-                  <strong className="text-white uppercase">{getCropName(lookupCrop)}</strong> ({Math.round(formData.yield_kg_per_ha).toLocaleString()} kg/ha &bull; {getStateName(lookupState)})
+                  <strong className="text-chalk-50 uppercase">{getCropName(lookupCrop)}</strong> ({Math.round(formData.yield_kg_per_ha).toLocaleString()} kg/ha &bull; {getStateName(lookupState)})
                 </span>
               </div>
             </div>
@@ -342,7 +356,7 @@ export const FinancialAnalysisPage: React.FC = () => {
           {result ? (
             <div className="space-y-6">
               {/* Primary Profitability Hero Card */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3 mb-6">
                   <div>
                     <span className="font-mono text-xs text-obsidian-400 uppercase tracking-widest block mb-0.5">
@@ -391,7 +405,7 @@ export const FinancialAnalysisPage: React.FC = () => {
                     </span>
                     <div
                       className={`font-display font-black text-2xl tabular-nums ${
-                        result.net_profit >= 0 ? "text-emerald-400" : "text-signal-red"
+                        result.net_profit >= 0 ? "text-signal-green" : "text-signal-error"
                       }`}
                     >
                       {result.formatted_profit}
@@ -420,7 +434,7 @@ export const FinancialAnalysisPage: React.FC = () => {
               </div>
 
               {/* Revenue vs Cost Comparison Chart */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-4">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal space-y-4">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <h3 className="font-display font-bold text-base sm:text-lg text-chalk-100 uppercase tracking-tight">
                     {t("rev_vs_exp_breakdown")}
@@ -434,26 +448,26 @@ export const FinancialAnalysisPage: React.FC = () => {
                       layout="vertical"
                       margin={{ top: 5, right: 30, left: 50, bottom: 5 }}
                     >
-                      <CartesianGrid strokeDasharray="2 2" stroke="#1D222E" horizontal={false} />
+                      <CartesianGrid strokeDasharray="2 2" stroke="#E3E6DF" horizontal={false} />
                       <XAxis
                         type="number"
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#8694B0" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 10, fill: "#647568" }}
                         tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
                       />
                       <YAxis
                         type="category"
                         dataKey="name"
-                        stroke="#414A60"
-                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#AEBAD1" }}
+                        stroke="#E3E6DF"
+                        tick={{ fontFamily: "JetBrains Mono", fontSize: 11, fill: "#647568" }}
                         width={130}
                       />
                       <Tooltip
                         formatter={(val: number) => [`₹${val.toLocaleString()}`, t("amount_label")]}
                         contentStyle={{
-                          backgroundColor: "#060709",
-                          color: "#F5F4EF",
-                          border: "1px solid #31384A",
+                          backgroundColor: "#FFFFFF",
+                          color: "#202820",
+                          border: "1px solid #E3E6DF",
                           borderRadius: 0,
                           fontFamily: "JetBrains Mono",
                           fontSize: 12,
@@ -470,7 +484,7 @@ export const FinancialAnalysisPage: React.FC = () => {
               </div>
 
               {/* Break-Even Critical Risk Boundaries */}
-              <div className="border border-obsidian-750 bg-obsidian-950 p-6 shadow-brutal space-y-4">
+              <div className="border border-obsidian-800 bg-white p-6 shadow-brutal space-y-4">
                 <div className="flex items-center justify-between border-b border-obsidian-800 pb-3">
                   <div className="font-mono text-xs font-bold uppercase tracking-technical text-chalk-100 flex items-center gap-2">
                     <Sliders className="w-4 h-4 text-signal-red" />
@@ -523,7 +537,7 @@ export const FinancialAnalysisPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-obsidian-950">
+            <div className="border border-dashed border-obsidian-750 p-12 text-center space-y-3 bg-white">
               <h2 className="font-display font-bold text-lg sm:text-xl text-chalk-100 uppercase">
                 {t("awaiting_fin_title")}
               </h2>

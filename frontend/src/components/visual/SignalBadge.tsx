@@ -17,11 +17,11 @@ export const SignalBadge: React.FC<SignalBadgeProps> = ({
 }) => {
   const variantStyles = {
     signal: "bg-signal-red text-white border-signal-red font-bold",
-    dark: "bg-obsidian-950 text-chalk-100 border-obsidian-700",
-    neutral: "bg-obsidian-850 text-chalk-200 border-obsidian-750",
-    contrast: "bg-paper-100 text-obsidian-950 border-paper-200 font-bold",
-    success: "bg-emerald-950 text-emerald-300 border-emerald-700",
-    warning: "bg-amber-950 text-amber-300 border-amber-700",
+    dark: "bg-white text-chalk-100 border-obsidian-800",
+    neutral: "bg-obsidian-850 text-chalk-100 border-obsidian-800",
+    contrast: "bg-white text-chalk-100 border-obsidian-800 font-bold",
+    success: "bg-[#EAF0E6] text-[#357A4A] border-[#357A4A]/30 font-semibold",
+    warning: "bg-[#FDF8F0] text-[#A66B18] border-[#A66B18]/30 font-semibold",
   };
 
   const sizeStyles = {
