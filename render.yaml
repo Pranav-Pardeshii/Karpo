@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: karpo-backend
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/v1/health/live
+    envVars:
+      - key: CROP_ADVISORY_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ZAI_API_KEY
+        sync: false
+      - key: DATAGOV_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
