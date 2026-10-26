@@ -659,6 +659,21 @@ class VoiceQueryResponse(BaseModel):
     data_provenance: str = Field(..., description="Explicit source traceability citation")
 
 
+class VoiceTranscriptionResponse(BaseModel):
+    """Result of vernacular speech-to-text audio transcription."""
+
+    text: str = Field(..., description="Transcribed query text")
+    language: str = Field(..., description="Target or detected language code")
+    success: bool = Field(True, description="Whether speech-to-text transcription succeeded")
+
+
+class TextToSpeechRequest(BaseModel):
+    """Farmer speech synthesis request for ElevenLabs."""
+
+    text: str = Field(..., min_length=1, max_length=1000, description="Text to synthesize into spoken audio")
+    language: str = Field("mr", description="Language code ('mr', 'hi', 'en')")
+
+
 # =========================================================================
 # 10. KARPO LENS CROP DISEASE ASSISTANCE SCHEMAS
 # =========================================================================
@@ -681,11 +696,14 @@ class LensInspectionResponse(BaseModel):
     width: int = Field(..., description="Image pixel width")
     height: int = Field(..., description="Image pixel height")
     size_bytes: int = Field(..., description="Raw file size in bytes")
-    status: str = Field(..., description="'model_unavailable' | 'verified' | 'uncertain'")
+    status: str = Field(..., description="'model_unavailable' | 'verified' | 'uncertain' | 'quota_exceeded'")
     diagnosis: Optional[str] = Field(None, description="Confirmed or predicted disease diagnosis if model loaded")
     confidence: Optional[float] = Field(None, description="Authentic model confidence score (never fabricated)")
     crop_evaluated: Optional[str] = Field(None, description="Evaluated crop species")
     message: str = Field(..., description="Transparent explanatory note for farmer")
+    visual_symptoms: Optional[str] = Field(None, description="Observed visual symptoms on leaf")
+    treatment_recommendation: Optional[str] = Field(None, description="Recommended agronomic or cultural intervention")
+    urgency: Optional[str] = Field(None, description="Severity rating: None, Low, Moderate, High")
     icar_symptom_guide: List[ICARSymptomItem] = Field(default_factory=list, description="Verified ICAR diagnostic protocols")
     data_category: str = Field(..., description="Data category ('Unavailable' when model offline, 'Predicted' when model available)")
     data_provenance: str = Field(..., description="Traceable source citation")

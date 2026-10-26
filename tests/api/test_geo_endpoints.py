@@ -81,3 +81,14 @@ async def test_geo_climate_soil_invalid_latitude(async_client: AsyncClient):
 async def test_geo_climate_soil_missing_params(async_client: AsyncClient):
     response = await async_client.get("/api/v1/geo/climate-soil")
     assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_geo_auto_detect_endpoint(async_client: AsyncClient):
+    response = await async_client.get("/api/v1/geo/auto-detect")
+    assert response.status_code == 200
+    data = response.json()
+    assert "location" in data
+    assert "weather" in data
+    assert "soil" in data
+

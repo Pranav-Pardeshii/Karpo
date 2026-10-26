@@ -340,18 +340,22 @@ CROP_ALIASES: Dict[str, str] = {
     "bengal gram": "chickpea",
     "kidneybeans": "kidneybeans",
     "kidney bean": "kidneybeans",
+    "kidney beans": "kidneybeans",
     "rajma": "kidneybeans",
     "pigeonpeas": "pigeonpeas",
     "pigeonpea": "pigeonpeas",
     "pigeon pea": "pigeonpeas",
+    "pigeon peas": "pigeonpeas",
     "arhar": "pigeonpeas",
     "tur": "pigeonpeas",
     "toor": "pigeonpeas",
     "mothbeans": "mothbeans",
     "moth bean": "mothbeans",
+    "moth beans": "mothbeans",
     "moth dal": "mothbeans",
     "mungbean": "mungbean",
     "mung bean": "mungbean",
+    "mung beans": "mungbean",
     "moong": "mungbean",
     "green gram": "mungbean",
     "blackgram": "blackgram",
@@ -433,9 +437,10 @@ def normalize_crop_name(name: str) -> str:
     if clean in CROP_ALIASES:
         return CROP_ALIASES[clean]
 
-    # Partial substring match
+    # Whole-word match (avoids substring false positives like "rice" inside "price")
     for alias, canon in CROP_ALIASES.items():
-        if alias in clean or clean in alias:
+        pattern = r"\b" + re.escape(alias) + r"\b"
+        if re.search(pattern, clean):
             return canon
 
     return clean

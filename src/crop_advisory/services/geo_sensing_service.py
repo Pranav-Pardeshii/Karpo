@@ -245,7 +245,7 @@ class GeoSensingService:
         )
 
         try:
-            with httpx.Client(timeout=self.http_timeout) as client:
+            with httpx.Client(timeout=min(self.http_timeout, 2.0)) as client:
                 resp = client.get(url)
                 if resp.status_code == 200:
                     payload = resp.json()
@@ -294,7 +294,7 @@ class GeoSensingService:
                     )
         except Exception as e:
             logger.warning("SoilGrids fetch error: %s", e)
-            return SoilEstimateData(
+            result = SoilEstimateData(
                 ph=None,
                 soil_type_hint=None,
                 source="ISRIC SoilGrids",
@@ -303,6 +303,8 @@ class GeoSensingService:
                 caveat=caveat_text,
                 error_message=f"Soil data service unavailable: {str(e)}",
             )
+            self._cache[cache_key] = {"data": result, "cached_at": now}
+            return result
 
     def get_geo_sensing_advisory(self, latitude: float, longitude: float) -> GeoSensingResult:
         """
@@ -315,9 +317,16 @@ class GeoSensingService:
         if not (-180.0 <= longitude <= 180.0):
             raise ValueError(f"Longitude must be between -180 and 180, received {longitude}")
 
-        loc = self.fetch_reverse_geocoding(latitude, longitude)
-        weather = self.fetch_weather(latitude, longitude)
-        soil = self.fetch_soil_estimate(latitude, longitude)
+        import concurrent.futures
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+            future_loc = executor.submit(self.fetch_reverse_geocoding, latitude, longitude)
+            future_weather = executor.submit(self.fetch_weather, latitude, longitude)
+            future_soil = executor.submit(self.fetch_soil_estimate, latitude, longitude)
+
+            loc = future_loc.result()
+            weather = future_weather.result()
+            soil = future_soil.result()
 
         overall = "success"
         if weather.status != "success" and soil.status != "success":
@@ -332,3 +341,56 @@ class GeoSensingService:
             timestamp=datetime.now(timezone.utc).isoformat(),
             overall_status=overall,
         )
+
+    def detect_coordinates_from_ip(self, client_ip: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Attempts to resolve approximate latitude and longitude from IP address.
+        Used as a high-reliability fallback when browser GPS times out or lacks hardware access.
+        """
+        cache_key = f"ipgeo:{client_ip or 'local'}"
+        now = time.time()
+        if cache_key in self._cache:
+            entry = self._cache[cache_key]
+            if now - entry["cached_at"] < self.soil_ttl:
+                return entry["data"]
+
+        is_local = not client_ip or client_ip in ("127.0.0.1", "localhost", "::1", "0.0.0.0")
+        url = "https://ipwho.is/" if is_local else f"https://ipwho.is/{client_ip}"
+
+        try:
+            with httpx.Client(timeout=min(self.http_timeout, 2.5)) as client:
+                resp = client.get(url)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    if data.get("success", False) or "latitude" in data:
+                        res = {
+                            "latitude": float(data["latitude"]),
+                            "longitude": float(data["longitude"]),
+                            "city": data.get("city"),
+                            "region": data.get("region"),
+                            "country": data.get("country"),
+                        }
+                        self._cache[cache_key] = {"data": res, "cached_at": now}
+                        return res
+        except Exception as e:
+            logger.warning("Primary IP geolocation lookup failed: %s", e)
+
+        try:
+            fb_url = "https://freeipapi.com/api/json" if is_local else f"https://freeipapi.com/api/json/{client_ip}"
+            with httpx.Client(timeout=self.http_timeout) as client:
+                resp = client.get(fb_url)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    if "latitude" in data and "longitude" in data:
+                        return {
+                            "latitude": float(data["latitude"]),
+                            "longitude": float(data["longitude"]),
+                            "city": data.get("cityName"),
+                            "region": data.get("regionName"),
+                            "country": data.get("countryName"),
+                        }
+        except Exception as e:
+            logger.warning("Fallback IP geolocation lookup failed: %s", e)
+
+        return None
+

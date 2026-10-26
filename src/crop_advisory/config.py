@@ -8,8 +8,26 @@ import os
 from pathlib import Path
 from typing import List
 
+from dotenv import load_dotenv
+
 # Root directory of the repository (3 levels up from this file: src/crop_advisory/config.py -> repo root)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+# External API Credentials & Integrations
+DATAGOV_API_KEY = os.getenv("DATAGOV_API_KEY")
+AGMARKNET_RESOURCE_ID = os.getenv("AGMARKNET_RESOURCE_ID", "9ef84268-d588-465a-a308-a864a43d0070")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
+
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")
+ELEVENLABS_MODEL_ID = os.getenv("ELEVENLABS_MODEL_ID", "eleven_multilingual_v2")
+
+# Z.ai Multimodal Vision AI Configuration
+ZAI_API_KEY = os.getenv("ZAI_API_KEY")
+ZAI_MODEL = os.getenv("ZAI_MODEL", "glm-5.3-flash")
+ZAI_BASE_URL = os.getenv("ZAI_BASE_URL", "https://api.z.ai/api/paas/v4")
 
 # Dataset directory configuration
 _ENV_DATASETS_DIR = os.getenv("CROP_ADVISORY_DATASETS_DIR")

@@ -73,3 +73,33 @@ def test_missing_crop_query_does_not_fabricate(voice_copilot):
     assert result["matched_crop"] is None
     assert result["data_category"] == "Unavailable"
     assert "पिकाचे नाव समजले नाही" in result["spoken_text"]
+
+
+def test_groq_nlu_phonetic_parsing(voice_copilot, monkeypatch):
+    from unittest.mock import MagicMock
+    import json
+
+    mock_groq = MagicMock()
+    mock_choice = MagicMock()
+    mock_choice.message.content = json.dumps({
+        "crop": "soybean",
+        "intent": "market_price",
+        "state": "Maharashtra",
+        "confidence": 0.98,
+    })
+    mock_groq.chat.completions.create.return_value.choices = [mock_choice]
+
+    voice_copilot.groq_client = mock_groq
+    # Remove PYTEST_CURRENT_TEST check for this specific unit test
+    monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+
+    parsed = voice_copilot.parse_query_with_groq("saybeen ka rate kya hai", language="hi")
+    assert parsed is not None
+    assert parsed["crop"] == "soybean"
+    assert parsed["intent"] == "market_price"
+
+    result = voice_copilot.process_query("saybeen ka rate kya hai", language="hi")
+    assert result["matched_crop"] == "soybean"
+    assert result["intent"] == "market_price"
+    assert result["data_category"] == "Observed"
+
