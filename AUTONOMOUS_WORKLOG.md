@@ -87,6 +87,34 @@
   - Interactive moisture percolation infiltration slider with real-time saturation front rendering.
   - Strictly labeled as `SIMULATION MODEL` with explicit scientific disclaimer preventing any illusion of biological scans.
   - Integrated into `YieldPredictionPage.tsx`; verified clean Vite build in 3.98s and 106 backend tests passing.
-- **Next Action**: Execute Final Quality Audit across Data, UI, and Engineering contracts; assemble comprehensive Final Engineering Report.
+- **Checkpoint 8 (Live Data.gov.in AGMARKNET Market Feed & Groq Multilingual Voice Copilot)**:
+  - Added `.env` configuration for Data.gov.in APMC API key, Agmarknet Resource ID, and Groq API key with model `qwen/qwen3.8-27b`. Added template documentation in `.env.example` while ensuring `.env` is git-ignored.
+  - Upgraded `MarketPriceService` (`src/crop_advisory/services/market_service.py`) with `fetch_live_agmarknet()`: live querying of current APMC daily mandi arrivals, with 1-hour in-memory cache and seamless fallback to reference records (`india-crop-prices.csv`).
+  - Integrated Groq LLM vernacular synthesis into `VoiceCopilotService` (`src/crop_advisory/services/voice_copilot_service.py`): generates natural spoken responses in Marathi, Hindi, and English strictly grounded in verified agronomic & market data with zero hallucination.
+  - Refined crop normalization with whole-word boundary regex matching and agricultural stopwords filtering to prevent false positive detections.
+  - Verified 107/107 unit, API, and integration tests passing (`uv run pytest`) and frontend clean build (`npm run lint`).
+- **Checkpoint 9 (ElevenLabs Free Tier Multilingual Text-to-Speech & Speech-to-Text Upgrade)**:
+  - Added `.env` configuration for `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID=JBFqnCBsd6RMkjVDRZzb` (George), and free model `ELEVENLABS_MODEL_ID=eleven_multilingual_v2`. Added template documentation in `.env.example`.
+  - Implemented `synthesize_speech_elevenlabs()` in `VoiceCopilotService` (`src/crop_advisory/services/voice_copilot_service.py`) with in-memory caching to conserve character quota on the Free plan (0 credits consumed on repeated queries or audio replays).
+  - Added endpoint `POST /api/v1/voice/speak` returning streamed MP3 audio (`audio/mpeg`).
+  - Upgraded `KisanVoiceAssistant.tsx`:
+    - Voice capture: Replaced fragile browser `webkitSpeechRecognition` with native HTML5 `MediaRecorder` + Groq Whisper (`whisper-large-v3-turbo`) to completely bypass Brave shields network errors.
+    - Speech playback: Plays studio-quality ElevenLabs MP3 audio with seamless fallback to browser `speechSynthesis` if offline or credits run out.
+    - Added phonetic sanitizer to repair common speech co-articulation (`mandip rice` -> `mandi price`).
+  - Added 2 new API tests in `tests/api/test_voice_endpoints.py`; all **110 tests passing** (`uv run pytest`); frontend verified clean with `npm run lint`.
+- **Checkpoint 10 (Groq NLU Structured Query Parsing & Speech Phonetic Tolerance)**:
+  - Integrated Groq LLM as the Natural Language Understanding (NLU) & Intent/Entity Extractor engine in `VoiceCopilotService.parse_query_with_groq()`.
+  - Configured Groq JSON Mode (`response_format={"type": "json_object"}`) with temperature 0.0 and canonical crop constraint rules (33 supported crops: Soybean, Cotton, Wheat, Rice, etc.).
+  - Resolves diverse regional phrasing, dialects (Marathi, Hindi, Hinglish), and speech-to-text phonetic misspellings (e.g., `saybeen`, `swayabean`, `स्वगाकिन` -> `soybean`; `wheat mandip rice` -> `wheat` + `market_price`).
+  - Preserved strict zero-hallucination boundary: Groq extracts structured JSON `{crop, intent, state, confidence}`, then deterministic backend fetches real Agmarknet/CACP benchmarks, and Groq converts verified metrics into natural vernacular speech.
+  - Retained deterministic regex matcher as offline fallback when Groq is unavailable or running in offline test environments.
+  - Added unit test `test_groq_nlu_phonetic_parsing`; all **111 tests passing** (`uv run pytest`); frontend verified clean.
+- **Checkpoint 11 (UI Simplification & Removal of Digital Twin Visualizer)**:
+  - Removed `FarmDigitalTwin` component from `YieldPredictionPage.tsx` and removed the component file.
+  - Streamlines the yield prediction screen to focus squarely on verified machine learning yield estimates, stress sensitivity simulation, and financial ROI.
+  - Verified clean TypeScript build (`npm run build` passed).
+
+
+
 
 
